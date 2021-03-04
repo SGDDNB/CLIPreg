@@ -16,45 +16,60 @@ CLIPReg <-function(symbol)
   #To ignore the warnings during usage
   options(warn=-1)
   options("getSymbols.warning4.0"=FALSE)
-  #Importing price data for the given symbol
-  data<-data.frame(xts::as.xts(get(quantmod::getSymbols(symbol))))
+  options(stringsAsFactors=FALSE);
 
-  #Assighning the column names
-  colnames(data) <- c("data.Open","data.High","data.Low","data.Close","data.Volume","data.Adjusted")
+  library(data.table)
 
-  #Creating lag and lead features of price column.
-  data <- xts::xts(data,order.by=as.Date(rownames(data)))
-  data <- as.data.frame(merge(data, lm1=stats::lag(data[,'data.Adjusted'],c(-1,1,3,5,10))))
+  # open files
+  folder="data/"
 
-  #Extracting features from Date
-  data$Date<-as.Date(rownames(data))
-  data$Day_of_month<-as.integer(format(as.Date(data$Date),"%d"))
-  data$Month_of_year<-as.integer(format(as.Date(data$Date),"%m"))
-  data$Year<-as.integer(format(as.Date(data$Date),"%y"))
-  data$Day_of_week<-as.factor(weekdays(data$Date))
+  bg=fread(paste0(folder,"bg.txt"),header = F)
+  rbp=fread(paste0(folder,"rbp_gene_postar.txt"))
+  cluster=fread(paste0(folder,"Tx_down.txt"),header = F)
+  iterations=10
 
-  #Naming variables for reference
-  today <- 'data.Adjusted'
-  tommorow <- 'data.Adjusted.5'
+  rbp_names=unique(rbp$V1)
+  RBP=list()
+  nb_genes=nrow(cluster)
 
-  #Creating outcome
-  data$up_down <- as.factor(ifelse(data[,tommorow] > data[,today], 1, 0))
 
-  #Creating train and test sets
-  train<-data[stats::complete.cases(data),]
-  test<-data[nrow(data),]
+  # Build the list of RBP and their targets
+  for (r in rbp_names) {
+    RBP[[r]]=rbp$V3[rbp$V1==r]
+  }
 
-  #Training model
-  model<-stats::glm(up_down~data.Open+data.High+data.Low+data.Close+
-                      data.Volume+data.Adjusted+data.Adjusted.1+
-                      data.Adjusted.2+data.Adjusted.3+data.Adjusted.4+
-                      Day_of_month+Month_of_year+Year+Day_of_week,
-                    family=binomial(link='logit'),data=train)
+  # Prepare the output table
+  overlap=data.frame(RBP=rbp_names,real_overlap=0,simulated_overlap_mean=0,simulated_overlap_sd=0,z=0,pval=0)
 
-  #Making Predictions
-  pred<-as.numeric(stats::predict(model,test[,c('data.Open','data.High','data.Low','data.Close','data.Volume','data.Adjusted','data.Adjusted.1','data.Adjusted.2','data.Adjusted.3','data.Adjusted.4','Day_of_month','Month_of_year','Year','Day_of_week')],type = 'response'))
+  # Get the real overlap
+  for (r in 1:nrow(overlap)) {
+    rbp_r=overlap$RBP[r]
+    overlap$real_overlap[r]=sum(cluster$V1%in%RBP[[rbp_r]])
+  }
 
-  #Printing results
-  print("Probability of Stock price going up tommorow:")
-  print(pred)
+
+  # Get simulated data
+  simulations=list()
+  for (i in 1:iterations) {
+    bg_shuffled=sample(bg$V1,nb_genes)
+    for (r in 1:nrow(overlap)) {
+      rbp_i=overlap$RBP[r]
+      simulations[[rbp_i]]=c(simulations[[rbp_i]],sum(bg_shuffled%in%RBP[[rbp_i]]))
+    }
+  }
+
+  # summarize the simulated data
+  overlap$simulated_overlap_mean=sapply(simulations,mean)
+  overlap$simulated_overlap_sd=sapply(simulations,sd)
+
+  # Calculate z-score and pvalue
+  z=(overlap$real_overlap-overlap$simulated_overlap_mean)/overlap$simulated_overlap_sd
+  overlap$z=z
+
+  for (i in 1:nrow(overlap)) {
+    rbp_i=overlap$RBP[i]
+    count_lower=sum(simulations[[i]]>overlap$real_overlap[i])
+    overlap$pval[i]=count_lower/iterations
+  }
+
 }
