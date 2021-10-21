@@ -17,6 +17,7 @@ imports:
     pheatmap,
     grid,
     doParallel,
+    foreach,
     data.table,
     fastmatch,
     ggnet
