@@ -1,12 +1,12 @@
 #' @title Draw_network
 #'
-#' @description This package draw a network from CLIPreg output
+#' @description This function draw a network from CLIPreg output. It plots the n most changing RBP and their target
 #'
-#' @param symbol
+#' @param symbol rbp_lfc, res, clusters, n
 #'
-#' @return NULL
+#' @return Plot network
 #'
-#' @examples
+#' @examples Draw_network(rbp_lfc=rbp_lfc,res=res_both,clusters=clusters,n=5)
 #'
 #' @export
 #'

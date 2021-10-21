@@ -3,7 +3,12 @@
 
 library(pheatmap)
 library(data.table)
+library(fastmatch)
+library(doParallel)
 library(ggnet)
+library(ggplot2)
+library(grid)
+library(stringr)
 
 # input
 
@@ -14,14 +19,12 @@ folder="C:/Users/e0545037/Desktop/Baptiste/PhD/CLIPreg"
 clusters_file="Fibroblasts/Clusters.csv"
 
 iterations=100000
-
 #res=CLIPReg_V3(folder=folder,RBP_data=RBP_data,cluster=clusters_file,iterations=100000)
 #save(res_Encode,file=paste0(folder,"/Fibroblasts/Res_RBP_Encode_V2.RData"))
 #save(res_Postar,file=paste0(folder,"/Fibroblasts/Res_RBP_Postar_V2.RData"))
 load(paste0(folder,"/Fibroblasts/Res_RBP_Postar.RData"))
 load(paste0(folder,"/Fibroblasts/Res_RBP_Encode_V2.RData"))
-#res_Encode=res
-#res_Postar=res
+
 
 
 # Combine RBP results from Postar and Encode
@@ -43,6 +46,7 @@ for (i in 1:nrow(res_Encode[[1]])) {
   }
 }
 
+
 # keep only significant RBPs
 
 to_keep=c()
@@ -58,7 +62,7 @@ res=res_both
 
 
 
-# load fold change
+# load fold change and tpm
 
 setwd("C:/Users/e0545037/Desktop/Baptiste/PhD/CLIPreg/Fibroblasts")
 
@@ -86,15 +90,25 @@ rbp_lfc=rbp_lfc[,-5]
 for (n in names(res_both)) {
   res_both[[n]]=res_both[[n]][res_both[[n]]$RBP%in%ribo_lfc$IDENTIFIER,]
 }
+
+
 # Heatmap of RBP scores
 
-HeatmapRBP(res=res,RBP_change=rbp_lfc)
-save_heatmap(res=res,RBP_change=rbp_lfc,location="C:/Users/e0545037/Desktop/Baptiste/PhD/CLIPreg/Fibroblasts/Heatmap_fibroblasts.pdf")
+e=HeatmapRBP(res=res,RBP_change=rbp_lfc,grid=F)
+e # Plot the heatmap
 
-# Get targets
+# Save the heatmap
+location="C:/Users/e0545037/Desktop/Baptiste/PhD/CLIPreg/Fibroblasts/Heatmap_fibroblasts_V4.pdf"
+n=length(e$tree_row$order)
+pdf(location,8,3+n*0.15)
+e
+dev.off()
 
-TargetsEncode=getTarget(folder = folder,RBP_data = "rbp_gene_sel.txt",background = background)
-TargetsPOSTAR=getTarget(folder = folder,RBP_data = "rbp_gene_postar.txt",background = background)
+
+# Get targets from POSTAR and ENCODE and combine them
+
+TargetsEncode=getTarget(folder = folder,RBP_data = "rbp_gene_sel.txt",background = clusters$geneID)
+TargetsPOSTAR=getTarget(folder = folder,RBP_data = "rbp_gene_postar.txt",background = clusters$geneID)
 Targets=c(TargetsEncode,TargetsPOSTAR)
 Targets=split(unlist(Targets, use.names = FALSE), rep(names(Targets), lengths(Targets)))
 for (t in names(Targets)) {
@@ -121,9 +135,12 @@ BubbleRBPs(RBP_res = res,clusters = clusters)
 
 # Draw network
 
-Draw_network(rbp_lfc=rbp_lfc,res=res_both[-2],clusters=clusters,n=5)
+Draw_network(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],clusters=clusters,n=5)
+Draw_network_by_group(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,clusters=clusters,n=5)
 
-
+# plot GO of nodes of size >th.
+Plot_GO(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,clusters=clusters,n=5,
+  all_genes=rownames(tpm_ribo),th=200,GO_to_show=3)
 
 
 

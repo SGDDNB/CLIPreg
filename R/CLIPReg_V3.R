@@ -19,10 +19,6 @@ CLIPReg_V3 <-function(folder="Folder",RBP_data="rbp_gene_postar.txt",cluster="Tx
   options("getSymbols.warning4.0"=FALSE)
   options(stringsAsFactors=FALSE);
 
-  library(doParallel)
-  library(data.table)
-  library(fastmatch)
-
   numCores <- detectCores()
   registerDoParallel(numCores-1)  # use multicore, set to the number of our cores
 

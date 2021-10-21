@@ -12,17 +12,15 @@
 #'
 #'
 #'
-getTarget <-function(folder="Folder",RBP_data="rbp_gene_postar.txt",background="bg.txt")
+getTarget <-function(folder="Folder",RBP_data="rbp_gene_postar.txt",background=clusters$geneID)
 {
   #To ignore the warnings during usage
   options(warn=-1)
   options("getSymbols.warning4.0"=FALSE)
   options(stringsAsFactors=FALSE);
 
-
-  bg=fread(paste0(folder,"/",background),header = F)
   rbp=fread(paste0(folder,"/",RBP_data))
-  rbp=rbp[rbp$V3%in%bg$V1,]
+  rbp=rbp[rbp$V3%in%background,]
 
   RBP=list()
   for (i in unique(rbp$V1)) {

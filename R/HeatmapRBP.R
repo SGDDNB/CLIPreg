@@ -12,7 +12,7 @@
 #'
 #'
 #'
-HeatmapRBP <-function(res=res,RBP_change=rbp_lfc)
+HeatmapRBP <-function(res=res,RBP_change=rbp_lfc,grid=F)
 {
   #To ignore the warnings during usage
   options(warn=-1)
@@ -34,12 +34,16 @@ HeatmapRBP <-function(res=res,RBP_change=rbp_lfc)
   pvalues$status=sign(RBP_change[rownames(pvalues)])
   pvalues$colors=ifelse(pvalues$status==1,"dodgerblue3","darkorange1")
   pvalues=pvalues[!is.na(pvalues$colors),]
-  e=pheatmap(pvalues[,1:(ncol(pvalues)-2)],breaks =0:5,color = colorRampPalette(c("oldlace","darkred"))(5),
-             angle_col = 45,legend = T,border_color = FALSE)#,fontsize_row = 6)
-  cols=pvalues[order(match(rownames(pvalues), e$gtable$grobs[[5]]$label)), ]$colors
-  e$gtable$grobs[[5]]$gp=gpar(col=cols)
-  e
 
+  if (grid==T) {
+    grid="grey"
+  }
+
+  e=pheatmap(pvalues[,1:(ncol(pvalues)-2)],breaks =0:5,color = colorRampPalette(c("oldlace","darkred"))(5),
+             angle_col = 45,legend = T,border_color = grid,main="-log(P) of RBP's targets enrichment per cluster")#,fontsize_row = 6)
+  cols=pvalues[order(match(rownames(pvalues), e$gtable$grobs[[6]]$label)), ]$colors
+  e$gtable$grobs[[6]]$gp=gpar(col=cols)
+  return(e)
 
 }
 
