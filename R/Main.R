@@ -7,13 +7,15 @@ library(fastmatch)
 library(doParallel)
 library(foreach)
 library(ggnet)
+library(ALL)
+library(topGO)
 library(ggplot2)
 library(grid)
 library(stringr)
 
 # input
 
-folder="C:/Users/e0545037/Desktop/Baptiste/PhD/CLIPreg"
+folder="C:/Users/e0545037/Desktop/Baptiste/PhD/CLIPreg" #folder=wget()
 # RBP_data="rbp_gene_sel.txt"
 # RBP_data="rbp_gene_postar.txt"
 
@@ -95,11 +97,11 @@ for (n in names(res_both)) {
 
 # Heatmap of RBP scores
 
-e=HeatmapRBP(res=res,RBP_change=rbp_lfc,grid=F)
+e=HeatmapRBP(res=res,RBP_change=rbp_lfc,grid=T)
 e # Plot the heatmap
 
 # Save the heatmap
-location="C:/Users/e0545037/Desktop/Baptiste/PhD/CLIPreg/Fibroblasts/Heatmap_fibroblasts_V4.pdf"
+location="C:/Users/e0545037/Desktop/Baptiste/PhD/CLIPreg/Fibroblasts/Heatmap_fibroblasts_V5.pdf"
 n=length(e$tree_row$order)
 pdf(location,8,3+n*0.15)
 e
@@ -107,6 +109,7 @@ dev.off()
 
 
 # Get targets from POSTAR and ENCODE and combine them
+clusters=fread(paste0(folder,"/",clusters_file),header = T)
 
 TargetsEncode=getTarget(folder = folder,RBP_data = "rbp_gene_sel.txt",background = clusters$geneID)
 TargetsPOSTAR=getTarget(folder = folder,RBP_data = "rbp_gene_postar.txt",background = clusters$geneID)
@@ -118,16 +121,15 @@ for (t in names(Targets)) {
 
 
 # Heatmap of targets of 1 RBP
-
-clusters=fread(paste0(folder,"/",clusters_file),header = T)
-index_geneID_clusters=match(clusters$geneID,ensembl$geneID)
-clusters$IDENTIFIER=ensembl$IDENTIFIER[index_geneID_clusters]
-
-HeatmapTargets(folder="Folder",Clusters=clusters,RBP_name="YTHDF3",targets=Targets,
-               counts_rna=counts_rna, counts_ribo=counts_ribo[,-16],scale=T,Not_DE=F)
-
-HeatmapTargets(folder="Folder",Clusters=clusters,RBP_name="YTHDF3",targets=Targets,
-               counts_rna=LFC_RNA[,c(2,8,14)], counts_ribo=LFC_RIBO[,c(3,8,13)],scale=F)
+#
+# index_geneID_clusters=match(clusters$geneID,ensembl$geneID)
+# clusters$IDENTIFIER=ensembl$IDENTIFIER[index_geneID_clusters]
+#
+# HeatmapTargets(folder="Folder",Clusters=clusters,RBP_name="YTHDF3",targets=Targets,
+#                counts_rna=tpm_rna[,1:20], counts_ribo=tpm_ribo[,1:20],scale=T,Not_DE=F)
+#
+# HeatmapTargets(folder="Folder",Clusters=clusters,RBP_name="YTHDF3",targets=Targets,
+#                counts_rna=LFC_RNA[,c(2,8,14)], counts_ribo=LFC_RIBO[,c(3,8,13)],scale=F)
 
 
 # Bubble plot clusters if clusters are
