@@ -15,20 +15,20 @@ library(stringr)
 
 # input
 
-folder="C:/Users/e0545037/Desktop/Baptiste/PhD/CLIPreg" #folder=wget()
-# RBP_data="rbp_gene_sel.txt"
-# RBP_data="rbp_gene_postar.txt"
+folder=getwd()
+#RBP_data="rbp_gene_sel.txt"
+#RBP_data="rbp_gene_postar.txt"
 
-clusters_file="Fibroblasts/Clusters.csv"
+#clusters_file="Fibroblasts/Clusters.csv"
+
+head(clusters)
 
 iterations=100000
-#res=CLIPReg_V3(folder=folder,RBP_data=RBP_data,cluster=clusters_file,iterations=100000)
+res=CLIPReg_V3(folder=folder,RBP_data=RBP_data,cluster=clusters,iterations=100000)
 #save(res_Encode,file=paste0(folder,"/Fibroblasts/Res_RBP_Encode_V2.RData"))
 #save(res_Postar,file=paste0(folder,"/Fibroblasts/Res_RBP_Postar_V2.RData"))
-load(paste0(folder,"/Fibroblasts/Res_RBP_Postar.RData"))
-load(paste0(folder,"/Fibroblasts/Res_RBP_Encode_V2.RData"))
-
-
+#load(paste0(folder,"/Fibroblasts/Res_RBP_Postar.RData"))
+#load(paste0(folder,"/Fibroblasts/Res_RBP_Encode_V2.RData"))
 
 # Combine RBP results from Postar and Encode
 all_RBPs=unique(c(res_Encode[[1]]$RBP,res_Postar[[1]]$RBP))
@@ -67,17 +67,13 @@ res=res_both
 
 # load fold change and tpm
 
-setwd("C:/Users/e0545037/Desktop/Baptiste/PhD/CLIPreg/Fibroblasts")
+#setwd("C:/Users/e0545037/Desktop/Baptiste/PhD/CLIPreg/Fibroblasts")
 
-rna_lfc = as.data.frame(read.delim(paste(sep="","Sig_genes_all3_RNA_time_series_pw_LRT.lfc")))
-ribo_lfc = as.data.frame(read.delim(paste(sep="","Sig_genes_all3_Ribo_time_series_pw_LRT.lfc")))
-ribOnly_lfc = as.data.frame(read.delim(paste(sep="","Sig_genes_all3_RibOnly_time_series_pw_LRT.lfc")))
-
-tpm_rna = read.delim("tpm_rna.tab")
-tpm_ribo = read.delim("tpm_ribo.tab ")
+head(ribo_lfc)
+head(tpm_ribo)
 
 # IDENTIFIER and geneID loading
-ensembl=read.csv("C:/Users/e0545037/Desktop/Baptiste/Bioinfo/Source/Homo_sapiens.GRCh38.95_ID_L_Name.csv")
+head(ensembl)
 ribo_lfc=ribo_lfc[rownames(ribo_lfc)%in%ensembl$geneID,]
 index_geneID=match(rownames(ribo_lfc),ensembl$geneID)
 ribo_lfc$IDENTIFIER=ensembl$IDENTIFIER[index_geneID]
@@ -101,7 +97,7 @@ e=HeatmapRBP(res=res,RBP_change=rbp_lfc,grid=T)
 e # Plot the heatmap
 
 # Save the heatmap
-location="C:/Users/e0545037/Desktop/Baptiste/PhD/CLIPreg/Fibroblasts/Heatmap_fibroblasts_V5.pdf"
+location=paste0(folder,"heatmap.pdf")
 n=length(e$tree_row$order)
 pdf(location,8,3+n*0.15)
 e
@@ -109,7 +105,7 @@ dev.off()
 
 
 # Get targets from POSTAR and ENCODE and combine them
-clusters=fread(paste0(folder,"/",clusters_file),header = T)
+head(clusters)
 
 TargetsEncode=getTarget(folder = folder,RBP_data = "rbp_gene_sel.txt",background = clusters$geneID)
 TargetsPOSTAR=getTarget(folder = folder,RBP_data = "rbp_gene_postar.txt",background = clusters$geneID)
@@ -118,18 +114,6 @@ Targets=split(unlist(Targets, use.names = FALSE), rep(names(Targets), lengths(Ta
 for (t in names(Targets)) {
   Targets[[t]]=unique(Targets[[t]])
 }
-
-
-# Heatmap of targets of 1 RBP
-#
-# index_geneID_clusters=match(clusters$geneID,ensembl$geneID)
-# clusters$IDENTIFIER=ensembl$IDENTIFIER[index_geneID_clusters]
-#
-# HeatmapTargets(folder="Folder",Clusters=clusters,RBP_name="YTHDF3",targets=Targets,
-#                counts_rna=tpm_rna[,1:20], counts_ribo=tpm_ribo[,1:20],scale=T,Not_DE=F)
-#
-# HeatmapTargets(folder="Folder",Clusters=clusters,RBP_name="YTHDF3",targets=Targets,
-#                counts_rna=LFC_RNA[,c(2,8,14)], counts_ribo=LFC_RIBO[,c(3,8,13)],scale=F)
 
 
 # Bubble plot clusters if clusters are

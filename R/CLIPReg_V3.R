@@ -12,7 +12,7 @@
 #'
 #'
 #'
-CLIPReg_V3 <-function(folder="Folder",RBP_data="rbp_gene_postar.txt",cluster="Tx_down.txt")
+CLIPReg_V3 <-function(folder="Folder",RBP_data="rbp_gene_postar.txt",cluster=clusters)
 {
   #To ignore the warnings during usage
   options(warn=-1)
@@ -31,7 +31,7 @@ CLIPReg_V3 <-function(folder="Folder",RBP_data="rbp_gene_postar.txt",cluster="Tx
 
   # open files
   rbp=fread(paste0(folder,"/",RBP_data))
-  clusters=fread(paste0(folder,"/",cluster),header = T)
+  #clusters=fread(paste0(folder,"/",cluster),header = T)
   #bg=fread(paste0(folder,"/",background),header = F)
 
   rbp_names=unique(rbp$V1)

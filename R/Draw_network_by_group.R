@@ -105,10 +105,17 @@ Draw_network_by_group <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=T
   node_color[!is.na(str_locate(pattern="up",rownames(new_adj))[,1])]="TE up"
   node_color[1:n]="RBP"
 
+
+  forscale=c(min(sizes),
+             sort(sizes)[round(length(sizes)/2)],
+             sort(sizes)[round(length(sizes)/4)*3],
+             max(sizes))
   sizes[1:n]=1.5*max(sizes)
 
-  ggnet2(new_adj,size = sizes,color = node_color,label = RBP_kept,
-         palette="Set1")+ guides(color=guide_legend(title="Regulation"))
+  ggnet2(new_adj,size = sizes,color = node_color,label = c(RBP_kept,1:(length(sizes)-n)),
+         palette="Set1",vjust=-0.6)+ guides(color=guide_legend(title="Regulation"))+
+    scale_size_discrete(breaks=forscale)+labs(size="Node size")+
+    scale_color_manual(values=c("red","blue","orange"))
 
 
 }

@@ -27,7 +27,7 @@ knitr::opts_chunk$set(
 Users may use following codes to check and install all the required packages.
 
 ``` r
-list.of.packages <- c("ggplot2","pheatmap","grid","doParallel","foreach,"data.table","fastmatch","GGally","ggnet","topGO","ALL","devtools")
+list.of.packages <- c("ggplot2","pheatmap","grid","doParallel","foreach","data.table","fastmatch","GGally","ggnet","topGO","ALL","devtools")
 
 ## for package "ggplot2", "pheatmap", "grid", "doParallel", "foreach", "data.table", "fastmatch", "GGally"
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
