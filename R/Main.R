@@ -21,7 +21,7 @@ folder=getwd()
 
 #clusters_file="Fibroblasts/Clusters.csv"
 
-head(clusters)
+# head(clusters)
 
 iterations=100000
 res=CLIPReg_V3(folder=folder,RBP_data=RBP_data,cluster=clusters,iterations=100000)
@@ -30,7 +30,7 @@ res=CLIPReg_V3(folder=folder,RBP_data=RBP_data,cluster=clusters,iterations=10000
 #load(paste0(folder,"/Fibroblasts/Res_RBP_Postar.RData"))
 #load(paste0(folder,"/Fibroblasts/Res_RBP_Encode_V2.RData"))
 
-res_Encode=Res_RBP_Postar_V2
+res_Encode=Res_RBP_Encode_V2
 res_Postar=Res_RBP_Postar_V2
 
 # Combine RBP results from Postar and Encode
@@ -72,11 +72,11 @@ res=res_both
 
 #setwd("C:/Users/e0545037/Desktop/Baptiste/PhD/CLIPreg/Fibroblasts")
 
-head(ribo_lfc)
-head(tpm_ribo)
+# head(ribo_lfc)
+# head(tpm_ribo)
 
 # IDENTIFIER and geneID loading
-head(ensembl)
+# head(ensembl)
 ribo_lfc=ribo_lfc[rownames(ribo_lfc)%in%ensembl$geneID,]
 index_geneID=match(rownames(ribo_lfc),ensembl$geneID)
 ribo_lfc$IDENTIFIER=ensembl$IDENTIFIER[index_geneID]
@@ -108,7 +108,7 @@ dev.off()
 
 
 # Get targets from POSTAR and ENCODE and combine them
-head(clusters)
+# head(clusters)
 
 TargetsEncode=getTarget(folder = folder,RBP_data = "rbp_gene_sel.txt",background = clusters$geneID)
 TargetsPOSTAR=getTarget(folder = folder,RBP_data = "rbp_gene_postar.txt",background = clusters$geneID)
