@@ -24,7 +24,7 @@ folder=getwd()
 # head(clusters)
 
 iterations=100000
-res=CLIPReg_V3(folder=folder,RBP_data=RBP_data,cluster=clusters,iterations=100000)
+res=CLIPReg_V3(folder=folder,RBP_data=RBP_data,cluster=clusters)
 #save(res_Encode,file=paste0(folder,"/Fibroblasts/Res_RBP_Encode_V2.RData"))
 #save(res_Postar,file=paste0(folder,"/Fibroblasts/Res_RBP_Postar_V2.RData"))
 #load(paste0(folder,"/Fibroblasts/Res_RBP_Postar.RData"))
