@@ -16,7 +16,7 @@ library(stringr)
 # input
 
 folder=getwd()
-#RBP_data="rbp_gene_sel.txt"
+RBP_data="rbp_gene_sel.txt"
 #RBP_data="rbp_gene_postar.txt"
 
 #clusters_file="Fibroblasts/Clusters.csv"
