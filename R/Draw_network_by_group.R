@@ -112,7 +112,7 @@ Draw_network_by_group <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=T
              max(sizes))
   sizes[1:n]=1.5*max(sizes)
 
-  ggnet2(new_adj,size = sizes,color = node_color,label = c(RBP_kept,1:(length(sizes)-n)),
+  ggnet2(new_adj,size = sizes,color = node_color,label = c(RBP_kept,paste0("ID",1:(length(sizes)-n))),
          palette="Set1",vjust=-0.6)+ guides(color=guide_legend(title="Regulation"))+
     scale_size_discrete(breaks=forscale)+labs(size="Node size")+
     scale_color_manual(values=c("red","blue","orange"))

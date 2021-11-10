@@ -13,8 +13,8 @@
 #'
 #'
 #'
-Plot_GO <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,clusters=clusters,n=5,
-                   all_genes=rownames(tpm_ribo),Nodes_to_keep=1,GO_to_show=3)
+Plot_GO_node_name <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,clusters=clusters,n=5,
+                   all_genes=rownames(tpm_ribo),Nodes_to_keep=c(19,15),GO_to_show=3)
 {
   #To ignore the warnings during usage
   options(warn=-1)
@@ -86,10 +86,13 @@ Plot_GO <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,cluster
 
   sizes=sizes[sizes>0]
 
-
   names(TypesList_up)=paste0(names(TypesList_up),"_up")
   TypesListAll=c(TypesList,TypesList_up)
+  color_nodes=rep("blue",length(TypesList))
+  color_nodes=c(color_nodes,rep("orange",length(TypesList_up)))
+  names(color_nodes)=names(TypesListAll)
   TypesListAll=subset(TypesListAll,names(TypesListAll)%in%names(sizes))
+  color_nodes=color_nodes[names(color_nodes)%in%names(sizes)]
 
   sizes[1:n]=1.5*max(sizes)
 
@@ -101,11 +104,15 @@ Plot_GO <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,cluster
   genes=as.character(ensembl$IDENTIFIER[ensembl$geneID%in%all_genes])
   genes=unique(genes)
 
+  names(TypesListAll)=paste0("ID",1:length(TypesListAll))
+  names(color_nodes)=names(TypesListAll)
+  TypesToKeep=TypesListAll[paste0("ID",Nodes_to_keep)]
+
   # Nodes_to_keep=c(19,16)
-  TypesToKeep=TypesListAll[Nodes_to_keep]
   GOterms=c()
   GOscore=c()
   NodeNames=c()
+  GOcolor=c()
   for (j in 1:length(TypesToKeep)) {
     i=names(TypesToKeep)[j]
     ToSelect=rep(1,length(genes))
@@ -119,15 +126,16 @@ Plot_GO <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,cluster
     GOterms=c(GOterms,goEnrichment$Term)
     GOscore=c(GOscore,goEnrichment$classicFisher)
     NodeNames=c(NodeNames,rep(Nodes_to_keep[j],length(goEnrichment$GO.ID)))
+    GOcolor=rep(color_nodes[names(TypesToKeep[j])],length(goEnrichment$GO.ID))
   }
 
 
 
 
-  GOtermsNamed=paste0(NodeNames," : ",GOterms)
-  df=data.frame(Term=GOtermsNamed,Pval=GOscore)
+  GOtermsNamed=paste0("ID",NodeNames," : ",GOterms)
+  df=data.frame(Term=GOtermsNamed,Pval=GOscore,Color=GOcolor)
 
-  ggplot(df, aes(x=Term, y=-log10(Pval),fill=0)) +
+  ggplot(df, aes(x=Term, y=-log10(Pval),fill=Color,colour=Color)) +
     stat_summary(geom = "bar", fun.y = mean, position = "dodge") +
     xlab("Biological process") +
     ylab("Enrichment") +
@@ -146,5 +154,7 @@ Plot_GO <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,cluster
       legend.text=element_text(size=18),  #Text size
       title=element_text(size=18)) +
     #guides(colour=guide_legend(override.aes=list(size=2.5))) +
-    coord_flip()
+    coord_flip()+
+    scale_color_manual(values = unique(GOcolor))+
+    scale_fill_manual(values = unique(GOcolor))
 }

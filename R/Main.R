@@ -16,15 +16,14 @@ library(stringr)
 # input
 
 folder=getwd()
-RBP_data="rbp_gene_sel.txt"
+#RBP_data="rbp_gene_sel.txt"
 #RBP_data="rbp_gene_postar.txt"
 
 #clusters_file="Fibroblasts/Clusters.csv"
 
 # head(clusters)
 
-iterations=100000
-res=CLIPReg_V3(folder=folder,RBP_data=RBP_data,cluster=clusters)
+#res=CLIPReg_V3(folder=folder,RBP_data=RBP_data,cluster=clusters)
 #save(res_Encode,file=paste0(folder,"/Fibroblasts/Res_RBP_Encode_V2.RData"))
 #save(res_Postar,file=paste0(folder,"/Fibroblasts/Res_RBP_Postar_V2.RData"))
 #load(paste0(folder,"/Fibroblasts/Res_RBP_Postar.RData"))
@@ -131,7 +130,9 @@ Draw_network_by_group(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,clus
 # plot GO of nodes of size >th.
 Plot_GO(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,clusters=clusters,n=5,
   all_genes=rownames(tpm_ribo),th=200,GO_to_show=3)
-
+Plot_GO_node_name(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,clusters=clusters,n=5,
+                  all_genes=rownames(tpm_ribo),Nodes_to_keep=c(19,15),GO_to_show=3)
+Plot_GO(rbp_of_interest="QKI",Targets=Targets,clusters=clusters,GO_to_show=3)
 
 
 

@@ -87,9 +87,14 @@ Plot_GO <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,cluster
   sizes=sizes[sizes>0]
 
 
+
   names(TypesList_up)=paste0(names(TypesList_up),"_up")
   TypesListAll=c(TypesList,TypesList_up)
+  color_nodes=rep("blue",length(TypesList))
+  color_nodes=c(color_nodes,rep("orange",length(TypesList_up)))
+  names(color_nodes)=names(TypesListAll)
   TypesListAll=subset(TypesListAll,names(TypesListAll)%in%names(sizes))
+  color_nodes=color_nodes[names(color_nodes)%in%names(sizes)]
 
   sizes[1:n]=1.5*max(sizes)
 
@@ -101,11 +106,14 @@ Plot_GO <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,cluster
   genes=as.character(ensembl$IDENTIFIER[ensembl$geneID%in%all_genes])
   genes=unique(genes)
 
-
+  names(TypesListAll)=paste0("ID",1:length(TypesListAll))
+  names(color_nodes)=names(TypesListAll)
   TypesToKeep=TypesListAll[lengths(TypesListAll)>th]
+
   GOterms=c()
   GOscore=c()
   NodeNames=c()
+  colorGO=c()
   for (i in names(TypesToKeep)) {
     ToSelect=rep(1,length(genes))
     names(ToSelect)=genes
@@ -118,15 +126,14 @@ Plot_GO <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,cluster
     GOterms=c(GOterms,goEnrichment$Term)
     GOscore=c(GOscore,goEnrichment$classicFisher)
     NodeNames=c(NodeNames,rep(i,length(goEnrichment$GO.ID)))
+    colorGO=c(colorGO,rep(color_nodes[i],length(goEnrichment$GO.ID)))
   }
 
-
-
-
   GOtermsNamed=paste0(NodeNames," : ",GOterms)
-  df=data.frame(Term=GOtermsNamed,Pval=GOscore)
+  df=data.frame(Term=GOtermsNamed,Pval=GOscore,Color=colorGO)
 
-  ggplot(df, aes(x=Term, y=-log10(Pval),fill=NodeNames)) +
+
+  ggplot(df, aes(x=Term, y=-log10(Pval),colour=Color,fill=Color)) +
     stat_summary(geom = "bar", fun.y = mean, position = "dodge") +
     xlab("Biological process") +
     ylab("Enrichment") +
@@ -145,5 +152,7 @@ Plot_GO <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,cluster
       legend.text=element_text(size=18),  #Text size
       title=element_text(size=18)) +
     guides(colour=guide_legend(override.aes=list(size=2.5))) +
-    coord_flip()
+    coord_flip()+
+    scale_color_manual(values = unique(colorGO))+
+    scale_fill_manual(values = unique(colorGO))
 }
