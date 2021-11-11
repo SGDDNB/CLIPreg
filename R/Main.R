@@ -26,8 +26,8 @@ library(stringr)
 #res=CLIPReg_V3(folder=folder,RBP_data=RBP_data,cluster=clusters)
 #save(res_Encode,file=paste0(folder,"/Fibroblasts/Res_RBP_Encode_V2.RData"))
 #save(res_Postar,file=paste0(folder,"/Fibroblasts/Res_RBP_Postar_V2.RData"))
-load("/Fibroblasts/Res_RBP_Postar_V2.RData"))
-load("/Fibroblasts/Res_RBP_Encode_V2.RData"))
+load("data/Res_RBP_Postar_V2.RData")
+load("data/Res_RBP_Encode_V2.RData")
 
 res_Encode=Res_RBP_Encode_V2
 res_Postar=Res_RBP_Postar_V2
