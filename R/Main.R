@@ -29,8 +29,8 @@ library(stringr)
 load("data/Res_RBP_Postar_V2.RData")
 load("data/Res_RBP_Encode_V2.RData")
 
-res_Encode=Res_RBP_Encode_V2
-res_Postar=Res_RBP_Postar_V2
+# res_Encode=Res_RBP_Encode_V2
+# res_Postar=Res_RBP_Postar_V2
 
 # Combine RBP results from Postar and Encode
 all_RBPs=unique(c(res_Encode[[1]]$RBP,res_Postar[[1]]$RBP))
