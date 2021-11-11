@@ -22,7 +22,7 @@ library(stringr)
 load("data/clusters.Rdata")
 
 # head(clusters)
-
+folder=getwd()
 
 #res=CLIPReg_V3(folder=folder,RBP_data=RBP_data,cluster=clusters)
 #save(res_Encode,file=paste0(folder,"/Fibroblasts/Res_RBP_Encode_V2.RData"))
