@@ -6,13 +6,13 @@
 #'
 #' @return List of clusters containing dataframe with all the enrichment score for each RBP
 #'
-#' @examples CLIPreg_V3(RBP_data=RBP_POSTAR,cluster=clusters)
+#' @examples CLIPreg_V4(RBP_data=RBP_POSTAR,cluster=clusters)
 #'
 #' @export
 #'
 #'
 #'
-CLIPReg_V3 <-function(RBP_data=RBP_POSTAR,cluster=clusters)
+CLIPReg_V4 <-function(RBP_data=RBP_POSTAR,cluster=clusters)
 {
   #To ignore the warnings during usage
   options(warn=-1)
