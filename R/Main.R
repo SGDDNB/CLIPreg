@@ -19,9 +19,10 @@ library(stringr)
 #RBP_data="rbp_gene_sel.txt"
 #RBP_data="rbp_gene_postar.txt"
 
-#clusters_file="Fibroblasts/Clusters.csv"
+load("data/clusters.Rdata")
 
 # head(clusters)
+
 
 #res=CLIPReg_V3(folder=folder,RBP_data=RBP_data,cluster=clusters)
 #save(res_Encode,file=paste0(folder,"/Fibroblasts/Res_RBP_Encode_V2.RData"))
@@ -69,13 +70,12 @@ res=res_both
 
 # load fold change and tpm
 
-#setwd("C:/Users/e0545037/Desktop/Baptiste/PhD/CLIPreg/Fibroblasts")
-
-# head(ribo_lfc)
-# head(tpm_ribo)
+load("data/tpm_ribo.Rdata")
+load("data/ensembl.Rdata")
 
 # IDENTIFIER and geneID loading
 # head(ensembl)
+load("data/ribo_lfc.Rdata")
 ribo_lfc=ribo_lfc[rownames(ribo_lfc)%in%ensembl$geneID,]
 index_geneID=match(rownames(ribo_lfc),ensembl$geneID)
 ribo_lfc$IDENTIFIER=ensembl$IDENTIFIER[index_geneID]
