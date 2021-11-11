@@ -14,24 +14,21 @@ library(grid)
 library(stringr)
 
 # input
-
-
-#RBP_data="rbp_gene_sel.txt"
-#RBP_data="rbp_gene_postar.txt"
-
 load("data/clusters.Rdata")
 
 # head(clusters)
 folder=getwd()
 
-#res=CLIPReg_V3(folder=folder,RBP_data=RBP_data,cluster=clusters)
-#save(res_Encode,file=paste0(folder,"/Fibroblasts/Res_RBP_Encode_V2.RData"))
-#save(res_Postar,file=paste0(folder,"/Fibroblasts/Res_RBP_Postar_V2.RData"))
-load("data/Res_RBP_Postar_V2.RData")
-load("data/Res_RBP_Encode_V2.RData")
+load("data/RBP_POSTAR.RData")
+load("data/RBP_ENCODE.RData")
 
-# res_Encode=Res_RBP_Encode_V2
-# res_Postar=Res_RBP_Postar_V2
+
+res_Postar=CLIPReg_V4(RBP_data=RBP_POSTAR,cluster=clusters) # run takes several minutes
+res_Encode=CLIPReg_V4(RBP_data=RBP_ENCODE,cluster=clusters) # run takes several minutes
+#save(res_Encode,file=paste0(folder,"/Fibroblasts/Res_Encode.RData"))
+#save(res_Postar,file=paste0(folder,"/Fibroblasts/Res_Postar.RData"))
+load("data/Res_Postar.RData") # load the results of the example set instead of running CLIP
+load("data/Res_Encode.RData") #
 
 # Combine RBP results from Postar and Encode
 all_RBPs=unique(c(res_Encode[[1]]$RBP,res_Postar[[1]]$RBP))
@@ -74,7 +71,6 @@ load("data/tpm_ribo.Rdata")
 load("data/ensembl.Rdata")
 
 # IDENTIFIER and geneID loading
-# head(ensembl)
 load("data/ribo_lfc.Rdata")
 ribo_lfc=ribo_lfc[rownames(ribo_lfc)%in%ensembl$geneID,]
 index_geneID=match(rownames(ribo_lfc),ensembl$geneID)
@@ -106,11 +102,9 @@ e
 dev.off()
 
 
-# Get targets from POSTAR and ENCODE and combine them
-# head(clusters)
-
-TargetsEncode=getTarget(folder = folder,RBP_data = "rbp_gene_sel.txt",background = clusters$geneID)
-TargetsPOSTAR=getTarget(folder = folder,RBP_data = "rbp_gene_postar.txt",background = clusters$geneID)
+# Gather targets from ENCODE and POSTAR that are in the clusters
+TargetsEncode=getTarget(RBP_data = RBP_ENCODE,background = clusters$geneID)
+TargetsPOSTAR=getTarget(RBP_data = RBP_POSTAR,background = clusters$geneID)
 Targets=c(TargetsEncode,TargetsPOSTAR)
 Targets=split(unlist(Targets, use.names = FALSE), rep(names(Targets), lengths(Targets)))
 for (t in names(Targets)) {

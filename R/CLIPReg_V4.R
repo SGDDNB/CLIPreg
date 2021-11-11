@@ -6,13 +6,13 @@
 #'
 #' @return List of clusters containing dataframe with all the enrichment score for each RBP
 #'
-#' @examples CLIPreg_V3(folder="Folder",RBP_data="rbp_gene_postar.txt",cluster="Tx_down.txt")
+#' @examples CLIPreg_V3(RBP_data=RBP_POSTAR,cluster=clusters)
 #'
 #' @export
 #'
 #'
 #'
-CLIPReg_V3 <-function(folder="Folder",RBP_data="rbp_gene_postar.txt",cluster=clusters)
+CLIPReg_V3 <-function(RBP_data=RBP_POSTAR,cluster=clusters)
 {
   #To ignore the warnings during usage
   options(warn=-1)
@@ -29,24 +29,14 @@ CLIPReg_V3 <-function(folder="Folder",RBP_data="rbp_gene_postar.txt",cluster=clu
     fmatch(x, table, nomatch = 0L) > 0L
   }
 
-  # open files
-  rbp=fread(paste0(folder,"/",RBP_data))
-  #clusters=fread(paste0(folder,"/",cluster),header = T)
-  #bg=fread(paste0(folder,"/",background),header = F)
-
-  rbp_names=unique(rbp$V1)
+  rbp_names=names(RBP_data)
   categories=unique(clusters$Cluster)
   out=list()
   for (cl in categories) {
     print(cl)
-    RBP=list()
+    RBP=RBP_data
     cluster=clusters$geneID[clusters$Cluster==cl]
     nb_genes=length(cluster)
-
-    # Build the list of RBP and their targets
-    for (r in rbp_names) {
-      RBP[[r]]=rbp$V3[rbp$V1==r]
-    }
 
     # Prepare the output table
     overlap=data.frame(RBP=rbp_names,real_overlap=0,simulated_overlap_mean=0,simulated_overlap_sd=0,z=0,pval=0)

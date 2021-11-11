@@ -6,26 +6,21 @@
 #'
 #' @return List of RBPs each containing 1 vector of targets in form of characters
 #'
-#' @examples GetTarget(folder="Folder",RBP_data="rbp_gene_postar.txt",background="bg.txt")
+#' @examples GetTarget(RBP_data=RBP_POSTAR, background=clusters$geneID)
 #'
 #' @export
 #'
 #'
 #'
-getTarget <-function(folder="Folder",RBP_data="rbp_gene_postar.txt",background=clusters$geneID)
+getTarget <-function(RBP_data=RBP_POSTAR, background=clusters$geneID)
 {
   #To ignore the warnings during usage
   options(warn=-1)
   options("getSymbols.warning4.0"=FALSE)
   options(stringsAsFactors=FALSE);
 
-  rbp=fread(paste0(folder,"/",RBP_data))
-  rbp=rbp[rbp$V3%in%background,]
-
-  RBP=list()
-  for (i in unique(rbp$V1)) {
-    RBP[[i]]=rbp$V3[rbp$V1==i]
-    RBP[[i]]=unique(RBP[[i]])
-  }
-  return(RBP)
+  for (i in names(RBP_data)) {
+    RBP_data[[i]]=subset(RBP_data[[i]],RBP_data[[i]]%in%background)
+    }
+  return(RBP_data)
 }
