@@ -81,7 +81,7 @@ CLIPReg_V4 <-function(RBP_data=RBP_POSTAR,cluster=clusters)
     for (i in 1:nrow(overlap)) {
       rbp_i=overlap$RBP[i]
       count_lower=sum(simulations[[i]]>overlap$real_overlap[i])
-      overlap$pval[i]=count_lower/iterations
+      overlap$pval[i]=count_lower/100000
     }
 
     out[[cl]]=overlap
