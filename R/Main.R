@@ -120,7 +120,7 @@ BubbleRBPs(RBP_res = res,clusters = clusters)
 
 # Draw network
 
-Draw_network(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],clusters=clusters,n=5)
+#Draw_network(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],clusters=clusters,n=5)
 Draw_network_by_group(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,clusters=clusters,n=5)
 
 # plot GO of nodes of size >th.
