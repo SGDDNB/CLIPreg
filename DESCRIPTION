@@ -20,6 +20,11 @@ imports:
     foreach,
     data.table,
     fastmatch,
-    ggnet
+    GGally,
+    ggnet,
+    ALL,
+    topGO,
+    stringr
+    
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1

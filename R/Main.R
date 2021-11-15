@@ -6,12 +6,14 @@ library(data.table)
 library(fastmatch)
 library(doParallel)
 library(foreach)
+library(GGally)
 library(ggnet)
 library(ALL)
 library(topGO)
 library(ggplot2)
 library(grid)
 library(stringr)
+
 
 # input
 load("data/clusters.Rdata")
