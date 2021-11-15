@@ -13,7 +13,7 @@
 #'
 #'
 #'
-Plot_GO <-function(rbp_of_interest="QKI",Targets=Targets,clusters=clusters,GO_to_show=3)
+Plot_GO_RBP <-function(rbp_of_interest="QKI",Targets=Targets,clusters=clusters,GO_to_show=3)
 {
   #To ignore the warnings during usage
   options(warn=-1)

@@ -12,7 +12,7 @@
 #'
 #'
 #'
-getTarget <-function(RBP_data=RBP_POSTAR, background=clusters$geneID)
+GetTarget <-function(RBP_data=RBP_POSTAR, background=clusters$geneID)
 {
   #To ignore the warnings during usage
   options(warn=-1)
