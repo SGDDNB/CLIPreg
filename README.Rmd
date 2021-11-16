@@ -59,84 +59,61 @@ Curated CLIP-seq data that can be downloaded from . RIBO and RNA lfc and TPM. (T
 library(CLIPreg)
 ```
 
-Let's have a look at the cluster file
+Let's have a look at the cluster file from the example data. It consists of 2 columns containing the geneID and the cluster for all the DE genes.
 
-```{r load data, message=FALSE}
+```{r load clusters, message=FALSE}
+data("clusters")
 head(clusters)
 ```
 
-```{r run enrichment analysis, message=FALSE}
-# Make sure all your files are reachable from the same folder
-folder=getwd()
-RBP_data_ENCODE="rbp_gene_sel.txt"
-RBP_data_POSTAR="rbp_gene_postar.txt"
-clusters_file="Fibroblasts/Clusters.csv"
-iterations=100000 # recommended for analysis
+You can input your own clusters by using the function load_clusters() and giving the file location of your file as input.
 
+```{r load clusters, message=FALSE}
+clusters=load_clusters(cluster_file = cluster_file)
+```
+
+Load POSTAR and ENCODE RBP data. Those are 2 public datasets which are processed in order to have lists of vector. Each vector is named after 1 RBP and contains the geneID of all the targets of that RBP.
+
+```{r load RBP data, message=FALSE}
+data("RBP_ENCODE")
+data("RBP_POSTAR")
+```
+
+Run the enrichment analysis using CLIPReg_V4() function. This takes several minutes. If you want to have a look at the example results skip this step.
+
+```{r run enrichment analysis, message=FALSE}
 # The CLIPreg_V3 function requires a few minutes to run, save the data after running it to be sure not to lose it
-res_Postar=CLIPReg_V3(folder=folder,RBP_data=RBP_data_POSTAR,cluster=clusters_file,iterations=100000)
-res_Encode=CLIPReg_V3(folder=folder,RBP_data=RBP_data_ENCODE,cluster=clusters_file,iterations=100000)
-save(res_Encode,file=paste0(folder,"/Fibroblasts/Res_RBP_Encode_V2.RData"))
-save(res_Postar,file=paste0(folder,"/Fibroblasts/Res_RBP_Postar_V2.RData"))
-load(paste0(folder,"/Fibroblasts/Res_RBP_Postar.RData"))
-load(paste0(folder,"/Fibroblasts/Res_RBP_Encode_V2.RData"))
+res_Postar=CLIPReg_V4(RBP_data=RBP_POSTAR,cluster=clusters)
+res_Encode=CLIPReg_V4(RBP_data=RBP_ENCODE,cluster=clusters)
+save(res_Encode,file="Res_RBP_Encode.RData")
+save(res_Postar,file="/Fibroblasts/Res_RBP_Postar.RData")
+```
+
+If you want to get the results directly you can load it by using the example data results. The output of CLIPReg_V4() is a list of dataframes. One dataframe per cluster containing the RBP and statistical information calculated during the analysis such as p-value and z-score.
+
+```{r load res, message=FALSE}
+data("Res_Encode")
+data("Res_Postar")
 head(res_Encode[[1]])
 ```
 
-The output from CLIPreg_V3 function is a list of dataframes named after the clusters. Each dataframe containing RBPs with their overlap details and pvalues.
-Then we want to combine POSTAR and ENCODE to work with only one dataframe
+Then we want to combine POSTAR and ENCODE to work with only one dataframe and only keep RBPs that are significant in at least one cluster.
 
 ```{r combining POSTAR and ENCODE, message=FALSE}
 
-# Combine RBP results from Postar and Encode
-all_RBPs=unique(c(res_Encode[[1]]$RBP,res_Postar[[1]]$RBP))
-
-res_both=res_Postar
-for (i in 1:nrow(res_Encode[[1]])) {
-  r=res_Encode[[1]]$RBP[i]
-  if (r%in%res_both[[1]]$RBP) {
-    for (n in names(res_both)) {
-      for (j in 2:6) {
-        res_both[[n]][which(res_both[[1]]$RBP==r),j]=(res_both[[n]][which(res_both[[1]]$RBP==r),j]+res_Encode[[n]][i,j])/2
-      }
-    }
-  } else {
-    for (n in names(res_both)) {
-      res_both[[n]]=rbind(res_both[[n]],res_Encode[[n]][i,])
-    }
-  }
-}
+res=combine(res1=res_Encode,res2=res_Postar)
 
 ```
 
-We are only interested in the significant RBPs in each cluster.
-
-```{r combining POSTAR and ENCODE, message=FALSE}
-# keep only significant RBPs
-
-to_keep=c()
-for (n in names(res_both)) {
-  to_keep=c(to_keep,res_both[[n]]$RBP[res_both[[n]]$pval<0.05])
-}
-to_keep=unique(to_keep)
-
-for (n in names(res_both)) {
-  res_both[[n]]=res_both[[n]][res_both[[n]]$RBP%in%to_keep,]
-}
-res=res_both
-```
+Load the log2foldchange and identify the RBPs
 
 ```{r loading LFC and TPM, message=FALSE}
 # load fold change and tpm
-rna_lfc = as.data.frame(read.delim(paste(sep="","Sig_genes_all3_RNA_time_series_pw_LRT.lfc")))
-ribo_lfc = as.data.frame(read.delim(paste(sep="","Sig_genes_all3_Ribo_time_series_pw_LRT.lfc")))
-ribOnly_lfc = as.data.frame(read.delim(paste(sep="","Sig_genes_all3_RibOnly_time_series_pw_LRT.lfc")))
-
-tpm_rna = read.delim("tpm_rna.tab")
-tpm_ribo = read.delim("tpm_ribo.tab ")
+data("ribo_lfc")
+data("tpm_ribo")
 
 # IDENTIFIER and geneID loading
-ensembl=read.csv("C:/Users/e0545037/Desktop/Baptiste/Bioinfo/Source/Homo_sapiens.GRCh38.95_ID_L_Name.csv")
+data("ensembl")
 ribo_lfc=ribo_lfc[rownames(ribo_lfc)%in%ensembl$geneID,]
 index_geneID=match(rownames(ribo_lfc),ensembl$geneID)
 ribo_lfc$IDENTIFIER=ensembl$IDENTIFIER[index_geneID]
@@ -171,39 +148,6 @@ n=length(e$tree_row$order)
 pdf(location,8,3+n*0.15)
 e
 dev.off()
-```
-
-Simplify target list from Encode and Postar. The Targets list created here will be used for the plots coming further down.
-
-```{r Simplify target list, message=FALSE}
-
-# Get targets from POSTAR and ENCODE and combine them
-
-TargetsEncode=getTarget(folder = folder,RBP_data = "rbp_gene_sel.txt",background = clusters$geneID)
-TargetsPOSTAR=getTarget(folder = folder,RBP_data = "rbp_gene_postar.txt",background = clusters$geneID)
-Targets=c(TargetsEncode,TargetsPOSTAR)
-Targets=split(unlist(Targets, use.names = FALSE), rep(names(Targets), lengths(Targets)))
-for (t in names(Targets)) {
-  Targets[[t]]=unique(Targets[[t]])
-}
-
-
-```
-
-We can generate a heatmap showing the LFC or TPM of one RBP's targets.
-
-```{r Heatmap per target, message=FALSE}
-# Heatmap of targets of 1 RBP
-
-clusters=fread(paste0(folder,"/",clusters_file),header = T)
-index_geneID_clusters=match(clusters$geneID,ensembl$geneID)
-clusters$IDENTIFIER=ensembl$IDENTIFIER[index_geneID_clusters]
-
-HeatmapTargets(folder="Folder",Clusters=clusters,RBP_name="YTHDF3",targets=Targets,
-               counts_rna=counts_rna, counts_ribo=counts_ribo[,-16],scale=T,Not_DE=F)
-
-HeatmapTargets(folder="Folder",Clusters=clusters,RBP_name="YTHDF3",targets=Targets,
-               counts_rna=LFC_RNA[,c(2,8,14)], counts_ribo=LFC_RIBO[,c(3,8,13)],scale=F)
 ```
 
 A bubble plot can be generated only if the clusters are the output of DeltaTE program.
