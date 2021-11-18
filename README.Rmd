@@ -57,6 +57,10 @@ Curated CLIP-seq data that can be downloaded from . RIBO and RNA lfc and TPM. (T
 ```{r load library, message=FALSE}
 ## load libraries
 library(CLIPreg)
+library(pheatmap)
+library(doParallel)
+library(ggnet)
+library(topGO)
 ```
 
 Let's have a look at the cluster file from the example data. It consists of 2 columns containing the geneID and the cluster for all the DE genes.
