@@ -11,8 +11,8 @@ load_clusters <-function(cluster_file=cluster_file) {
 }
 
 
-#' @title load_clusters
-#' @description Load the cluster file from user
+#' @title combine
+#' @description Combine 2 CLIPReg_V4 results
 #' @param symbol cluster_file
 #' @return NULL
 #' @examples
