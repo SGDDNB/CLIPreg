@@ -100,12 +100,3 @@ cure_res=function(res=res,rbp_lfc=rbp_lfc){
     res[[n]]=res[[n]][res[[n]]$RBP%in%rbp_lfc$IDENTIFIER,]
   }
 }
-
-
-
-
-
-
-
-
-
