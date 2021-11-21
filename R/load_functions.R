@@ -71,8 +71,6 @@ combine <- function(res1=res_Encode,res2=res_Postar){
   return(res_both)
 }
 
-
-
 #' @title rbp_change
 #' @description Subset ribo_lfc to keep only rbp_lfc
 #' @param symbol res, ribo_lfc
@@ -86,7 +84,6 @@ rbp_change=function(res=res,ribo_lfc=ribo_lfc){
   rownames(rbp_lfc)=rbp_lfc$IDENTIFIER
   return(rbp_lfc)
 }
-
 
 #' @title cure_res
 #' @description Remove RBPs that are not in rbp_lfc from res
