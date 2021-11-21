@@ -10,6 +10,30 @@ load_clusters <-function(cluster_file=cluster_file) {
   return(clusters)
 }
 
+#' @title load_ribo_lfc
+#' @description Load the ribo_lfc file from user
+#' @param symbol ribo_lfc
+#' @return NULL
+#' @examples
+#' @export
+#'
+load_ribo_lfc <-function(ribo_lfc_file=ribo_lfc_file) {
+  ribo_lfc=as.data.frame(fread(ribo_lfc_file))
+  return(ribo_lfc)
+}
+
+#' @title load_ribo_tpm
+#' @description Load the ribo_tpm file from user
+#' @param symbol ribo_tpm
+#' @return NULL
+#' @examples
+#' @export
+#'
+load_ribo_tpm <-function(ribo_tpm_file=ribo_tpm_file) {
+  ribo_tpm=as.data.frame(fread(ribo_tpm_file))
+  return(ribo_tpm)
+}
+
 
 #' @title load_clusters
 #' @description Load the cluster file from user
@@ -49,10 +73,33 @@ combine <- function(res1=res_Encode,res2=res_Postar){
 
 
 
+#' @title rbp_change
+#' @description Subset ribo_lfc to keep only rbp_lfc
+#' @param symbol res, ribo_lfc
+#' @return NULL
+#' @examples
+#' @export
+#'
+rbp_change=function(res=res,ribo_lfc=ribo_lfc){
+  rbp_lfc=ribo_lfc[ribo_lfc$IDENTIFIER%in%res[[1]]$RBP,1:3]
+  rbp_lfc=rbp_lfc[!duplicated(rbp_lfc$IDENTIFIER),]
+  rownames(rbp_lfc)=rbp_lfc$IDENTIFIER
+  return(rbp_lfc)
+}
 
 
-
-
+#' @title cure_res
+#' @description Remove RBPs that are not in rbp_lfc from res
+#' @param symbol res, ribo_lfc
+#' @return NULL
+#' @examples
+#' @export
+#'
+cure_res=function(res=res,rbp_lfc=rbp_lfc){
+  for (n in names(res)) {
+    res[[n]]=res[[n]][res[[n]]$RBP%in%rbp_lfc$IDENTIFIER,]
+  }
+}
 
 
 

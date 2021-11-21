@@ -2,7 +2,7 @@
 #'
 #' @description Plot a heatmap of the pvalues of enrichment of each RBP in each cluster
 #'
-#' @param symbol res, RBP_change
+#' @param symbol res, rbp_lfc, grid
 #'
 #' @return Plot a heatmap
 #'
@@ -12,14 +12,12 @@
 #'
 #'
 #'
-HeatmapRBP <-function(res=res,RBP_change=rbp_lfc,grid=F)
+HeatmapRBP <-function(res=res,rbp_lfc=rbp_lfc,grid=F)
 {
   #To ignore the warnings during usage
   options(warn=-1)
   options("getSymbols.warning4.0"=FALSE)
   options(stringsAsFactors=FALSE);
-
-  RBP_change=rowMeans(RBP_change)
 
   pvalues=data.frame(value1=res[[1]]$pval)
   for (i in names(res)[-1]) {
@@ -31,7 +29,8 @@ HeatmapRBP <-function(res=res,RBP_change=rbp_lfc,grid=F)
   colnames(pvalues)=names(res)
   pvalues=pvalues[rowSums(pvalues>-log10(0.05))>0,]
 
-  pvalues$status=sign(RBP_change[rownames(pvalues)])
+  pvalues$status=NA
+  pvalues$status[match(rbp_lfc$IDENTIFIER,rownames(pvalues))]=sign(rbp_lfc$FoldChange)
   pvalues$colors=ifelse(pvalues$status==1,"dodgerblue3","darkorange1")
   pvalues=pvalues[!is.na(pvalues$colors),]
 

@@ -32,8 +32,7 @@ Draw_network_by_group <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=T
   rm(c)
 
   rbp_lfc=rbp_lfc[RBPs,]
-  rbp_lfc$max=apply(abs(rbp_lfc), 1, max)
-  rbp_lfc=rbp_lfc[order(-rbp_lfc$max),]
+  rbp_lfc=rbp_lfc[order(-rbp_lfc$FoldChange),]
   rbp_lfc=rbp_lfc[1:n,]
 
   RBP_kept=rownames(rbp_lfc)

@@ -57,9 +57,14 @@ Curated CLIP-seq data that can be downloaded from . RIBO and RNA lfc and TPM. (T
 ```{r load library, message=FALSE}
 ## load libraries
 library(CLIPreg)
+library(pheatmap)
+library(grid)
+library(doParallel)
+library(ggnet)
+library(topGO)
 ```
 
-Let's have a look at the cluster file from the example data. It consists of 2 columns containing the geneID and the cluster for all the DE genes.
+Let's have a look at the cluster file from the example data. It consists of 2 columns containing the geneID and the cluster for all the DE genes. This is optional, if you want to provide your own clusters, go to next step.
 
 ```{r load clusters, message=FALSE}
 data("clusters")
@@ -86,7 +91,7 @@ Run the enrichment analysis using CLIPReg_V4() function. This takes several minu
 res_Postar=CLIPReg_V4(RBP_data=RBP_POSTAR,cluster=clusters)
 res_Encode=CLIPReg_V4(RBP_data=RBP_ENCODE,cluster=clusters)
 save(res_Encode,file="Res_RBP_Encode.RData")
-save(res_Postar,file="/Fibroblasts/Res_RBP_Postar.RData")
+save(res_Postar,file="Res_RBP_Postar.RData")
 ```
 
 If you want to get the results directly you can load it by using the example data results. The output of CLIPReg_V4() is a list of dataframes. One dataframe per cluster containing the RBP and statistical information calculated during the analysis such as p-value and z-score.
@@ -101,37 +106,34 @@ Then we want to combine POSTAR and ENCODE to work with only one dataframe and on
 
 ```{r combining POSTAR and ENCODE, message=FALSE}
 
-res=combine(res1=res_Encode,res2=res_Postar)
+res=CLIPreg::combine(res1=res_Encode,res2=res_Postar)
 
 ```
 
-Load the log2foldchange and identify the RBPs
+Load the fold change and identify the RBPs. If you have your own then provide your own data.
 
 ```{r loading LFC and TPM, message=FALSE}
-# load fold change and tpm
+# load fold change and tpm. optional if you want to use the input data
 data("ribo_lfc")
 data("tpm_ribo")
 
-# IDENTIFIER and geneID loading
-data("ensembl")
-ribo_lfc=ribo_lfc[rownames(ribo_lfc)%in%ensembl$geneID,]
-index_geneID=match(rownames(ribo_lfc),ensembl$geneID)
-ribo_lfc$IDENTIFIER=ensembl$IDENTIFIER[index_geneID]
+head(ribo_lfc)
+head(tpm_ribo)
+
+# If you want to input your own data
+load_ribo_lfc(ribo_lfc_file = ribo_lfc_file)
+load_ribo_tpm(ribo_tpm_file = ribo_tpm_file)
+
 ```
 
-Extract the RBP LFC from the RIBO_LFC
+Extract the RBP LFC from the RIBO_LFC and keep only detected RBPs in res
 
 ```{r Extract LFC of RBPs, message=FALSE}
 # Change of RBPs
-rbp_lfc=ribo_lfc[ribo_lfc$IDENTIFIER%in%res[[1]]$RBP,2:6]
-rbp_lfc=rbp_lfc[!duplicated(rbp_lfc$IDENTIFIER),]
-rownames(rbp_lfc)=rbp_lfc$IDENTIFIER
-rbp_lfc=rbp_lfc[,-5]
+rbp_lfc=rbp_change(res=res,ribo_lfc=ribo_lfc)
 
-for (n in names(res_both)) {
-  res_both[[n]]=res_both[[n]][res_both[[n]]$RBP%in%ribo_lfc$IDENTIFIER,]
-}
-
+# Cure res data by removing RBPs that are not in the rbp_lfc dataframe
+res=cure_res(res=res,rbp_lfc=rbp_lfc)
 ```
 
 Generate and save heatmap to pdf. The heatmap represents the -logP of each RBP for each cluster. The blue RBPs are downregulated and the orange RBPs are upregulated. Only RBPs that are significant in at least one cluster are shown.
@@ -139,7 +141,7 @@ Generate and save heatmap to pdf. The heatmap represents the -logP of each RBP f
 ```{r Generate and save heatmap, message=FALSE}
 # Heatmap of RBP scores
 
-e=HeatmapRBP(res=res,RBP_change=rbp_lfc,grid=F)
+e=HeatmapRBP(res=res,rbp_lfc=rbp_lfc,grid=F)
 e # Plot the heatmap
 
 # Save the heatmap
