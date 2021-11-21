@@ -35,7 +35,7 @@ load_ribo_tpm <-function(ribo_tpm_file=ribo_tpm_file) {
 }
 
 
-#' @title load_clusters
+#' @title combine
 #' @description Load the cluster file from user
 #' @param symbol cluster_file
 #' @return NULL
