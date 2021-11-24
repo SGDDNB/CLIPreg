@@ -131,10 +131,10 @@ Extract the RBP LFC from the RIBO_LFC and keep only detected RBPs in res
 
 ```{r Extract LFC of RBPs, message=FALSE}
 # Change of RBPs
-rbp_lfc=rbp_change(res=res,ribo_lfc=ribo_lfc)
+rbp_lfc=CLIPreg::rbp_change(res=res,ribo_lfc=ribo_lfc)
 
 # Cure res data by removing RBPs that are not in the rbp_lfc dataframe
-res=cure_res(res=res,rbp_lfc=rbp_lfc)
+res=CLIPreg::cure_res(res=res,rbp_lfc=rbp_lfc)
 ```
 
 Generate and save heatmap to pdf. The heatmap represents the -logP of each RBP for each cluster. The blue RBPs are downregulated and the orange RBPs are upregulated. Only RBPs that are significant in at least one cluster are shown.
@@ -146,7 +146,7 @@ e=HeatmapRBP(res=res,rbp_lfc=rbp_lfc,grid=F)
 e # Plot the heatmap
 
 # Save the heatmap
-location="C:/Users/e0545037/Desktop/Baptiste/PhD/CLIPreg/Fibroblasts/Heatmap_fibroblasts_V4.pdf"
+location="Heatmap_fibroblasts_V4.pdf"
 n=length(e$tree_row$order)
 pdf(location,8,3+n*0.15)
 e
