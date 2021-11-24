@@ -1,7 +1,6 @@
-
 ---
   output: github_document
-indent: true
+  indent: true
 ---
 
   <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -13,7 +12,7 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-"
   # out.width = "100%"
 )
-```
+  ```
 # CLIPreg
 
 <!-- badges: start -->
@@ -63,6 +62,7 @@ library(grid)
 library(doParallel)
 library(ggnet)
 library(topGO)
+library(data.table)
 ```
 
 Let's have a look at the cluster file from the example data. It consists of 2 columns containing the geneID and the cluster for all the DE genes. This is optional, if you want to provide your own clusters, go to next step.
@@ -74,8 +74,8 @@ head(clusters)
 
 You can input your own clusters by using the function load_clusters() and giving the file location of your file as input.
 
-```{r load clusters, message=FALSE}
-clusters=load_clusters(cluster_file = cluster_file)
+```{r load clusters from user, message=FALSE}
+#clusters=load_clusters(cluster_file = "cluster_file")
 ```
 
 Load POSTAR and ENCODE RBP data. Those are 2 public datasets which are processed in order to have lists of vector. Each vector is named after 1 RBP and contains the geneID of all the targets of that RBP.
@@ -88,11 +88,11 @@ data("RBP_POSTAR")
 Run the enrichment analysis using CLIPReg_V4() function. This takes several minutes. If you want to have a look at the example results skip this step.
 
 ```{r run enrichment analysis, message=FALSE}
-# The CLIPreg_V3 function requires a few minutes to run, save the data after running it to be sure not to lose it
-res_Postar=CLIPReg_V4(RBP_data=RBP_POSTAR,cluster=clusters)
-res_Encode=CLIPReg_V4(RBP_data=RBP_ENCODE,cluster=clusters)
-save(res_Encode,file="Res_RBP_Encode.RData")
-save(res_Postar,file="Res_RBP_Postar.RData")
+# The CLIPreg_V4 function requires a few minutes to run, save the data after running it to be sure not to lose it
+# res_Postar=CLIPReg_V4(RBP_data=RBP_POSTAR,clusters=clusters)
+# res_Encode=CLIPReg_V4(RBP_data=RBP_ENCODE,clusters=clusters)
+# save(res_Encode,file="Res_RBP_Encode.RData")
+# save(res_Postar,file="Res_RBP_Postar.RData")
 ```
 
 If you want to get the results directly you can load it by using the example data results. The output of CLIPReg_V4() is a list of dataframes. One dataframe per cluster containing the RBP and statistical information calculated during the analysis such as p-value and z-score.
@@ -122,8 +122,8 @@ head(ribo_lfc)
 head(tpm_ribo)
 
 # If you want to input your own data
-load_ribo_lfc(ribo_lfc_file = ribo_lfc_file)
-load_ribo_tpm(ribo_tpm_file = ribo_tpm_file)
+#load_ribo_lfc(ribo_lfc_file = "ribo_lfc_file")
+#load_ribo_tpm(ribo_tpm_file = "ribo_tpm_file")
 
 ```
 
