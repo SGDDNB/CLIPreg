@@ -79,6 +79,7 @@ combine <- function(res1=res_Encode,res2=res_Postar){
 #' @export
 #'
 rbp_change=function(res=res,ribo_lfc=ribo_lfc){
+  options(stringsAsFactors=FALSE)
   rbp_lfc=ribo_lfc[ribo_lfc$IDENTIFIER%in%res[[1]]$RBP,1:3]
   rbp_lfc=rbp_lfc[!duplicated(rbp_lfc$IDENTIFIER),]
   rownames(rbp_lfc)=rbp_lfc$IDENTIFIER
@@ -94,6 +95,6 @@ rbp_change=function(res=res,ribo_lfc=ribo_lfc){
 #'
 cure_res=function(res=res,rbp_lfc=rbp_lfc){
   for (n in names(res)) {
-    res[[n]]=res[[n]][res[[n]]$RBP%in%rbp_lfc$IDENTIFIER,]
+    res[[n]]=res[[n]][res[[n]]$RBP%in%as.character(rbp_lfc$IDENTIFIER),]
   }
 }
