@@ -99,5 +99,3 @@ cure_res=function(res=res,rbp_lfc=rbp_lfc){
   }
   return(res)
 }
-
-
