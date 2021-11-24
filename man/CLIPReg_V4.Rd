@@ -4,10 +4,10 @@
 \alias{CLIPReg_V4}
 \title{CLIPReg_V3}
 \usage{
-CLIPReg_V4(RBP_data = RBP_POSTAR, cluster = clusters)
+CLIPReg_V4(RBP_data = RBP_POSTAR, clusters = clusters)
 }
 \arguments{
-\item{symbol}{folder, RBP_data, cluster}
+\item{symbol}{folder, RBP_data, clusters}
 }
 \value{
 List of clusters containing dataframe with all the enrichment score for each RBP
@@ -16,6 +16,6 @@ List of clusters containing dataframe with all the enrichment score for each RBP
 Calculates the enrichment of each RBP for each cluster
 }
 \examples{
-CLIPreg_V4(RBP_data=RBP_POSTAR,cluster=clusters)
+CLIPreg_V4(RBP_data=RBP_POSTAR,clusters=clusters)
 
 }

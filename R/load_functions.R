@@ -98,3 +98,5 @@ cure_res=function(res=res,rbp_lfc=rbp_lfc){
     res[[n]]=res[[n]][res[[n]]$RBP%in%as.character(rbp_lfc$IDENTIFIER),]
   }
 }
+
+
