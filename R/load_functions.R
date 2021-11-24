@@ -94,8 +94,8 @@ rbp_change=function(res=res,ribo_lfc=ribo_lfc){
 #' @export
 #'
 cure_res=function(res=res,rbp_lfc=rbp_lfc){
-  for (n in names(res)) {
-    res[[n]]=subset(res[[n]],res[[n]]$RBP%in%as.character(rbp_lfc$IDENTIFIER))
+  for (n in 1:length(names(res))) {
+    res[[n]]=res[[n]][res[[n]]$RBP%in%as.character(rbp_lfc$IDENTIFIER),]
   }
 }
 
