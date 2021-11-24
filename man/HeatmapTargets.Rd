@@ -2,7 +2,7 @@
 % Please edit documentation in R/HeatmapTargets.R
 \name{HeatmapTargets}
 \alias{HeatmapTargets}
-\title{CLIPReg}
+\title{HeatmapTargets}
 \usage{
 HeatmapTargets(
   folder = "Folder",
@@ -16,12 +16,15 @@ HeatmapTargets(
 )
 }
 \arguments{
-\item{symbol}{}
+\item{symbol}{folder, Clusters, RBP_name, targets, counts_rna, counts_ribo, scale, Not_DE)}
+}
+\value{
+Plot a heatmap
 }
 \description{
-This package identifies...
+Plot the counts of the targets of a specified RBP
 }
 \examples{
-RbpReg('AAPL')
+HeatmapTargets(folder="Folder",Clusters=clusters,RBP_name="RBM47",targets=Targets,counts_rna=counts_rna, counts_ribo=counts_ribo,scale=T,Not_DE=F)
 
 }

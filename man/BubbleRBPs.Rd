@@ -2,17 +2,20 @@
 % Please edit documentation in R/BubbleRBPs.R
 \name{BubbleRBPs}
 \alias{BubbleRBPs}
-\title{CLIPReg}
+\title{BubbleRBPs}
 \usage{
 BubbleRBPs(RBP_res = res, clusters = clusters)
 }
 \arguments{
-\item{symbol}{}
+\item{symbol}{RBP_res, clusters}
+}
+\value{
+NULL. Generates a bubble plot
 }
 \description{
-This package identifies...
+Use clusters from DeltaTE output to generate enrichement plot of RBPs
 }
 \examples{
-RbpReg('AAPL')
+BubbleRBPs(RBP_res=res,clusters=clusters)
 
 }

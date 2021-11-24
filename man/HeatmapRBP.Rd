@@ -2,17 +2,20 @@
 % Please edit documentation in R/HeatmapRBP.R
 \name{HeatmapRBP}
 \alias{HeatmapRBP}
-\title{CLIPReg}
+\title{HeatmapRBP}
 \usage{
-HeatmapRBP(res = res, RBP_change = rbp_lfc)
+HeatmapRBP(res = res, rbp_lfc = rbp_lfc, grid = F)
 }
 \arguments{
-\item{symbol}{}
+\item{symbol}{res, rbp_lfc, grid}
+}
+\value{
+Plot a heatmap
 }
 \description{
-This package identifies...
+Plot a heatmap of the pvalues of enrichment of each RBP in each cluster
 }
 \examples{
-RbpReg('AAPL')
+HeatmapRBP(res=res,RBP_change=rbp_lfc)
 
 }

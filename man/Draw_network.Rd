@@ -7,11 +7,15 @@
 Draw_network(rbp_lfc = rbp_lfc, res = res_both, clusters = clusters, n = 5)
 }
 \arguments{
-\item{symbol}{}
+\item{symbol}{rbp_lfc, res, clusters, n}
+}
+\value{
+Plot network
 }
 \description{
-This package draw a network from CLIPreg output
+This function draw a network from CLIPreg output. It plots the n most changing RBP and their target
 }
 \examples{
+Draw_network(rbp_lfc=rbp_lfc,res=res_both,clusters=clusters,n=5)
 
 }
