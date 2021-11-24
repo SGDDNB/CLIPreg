@@ -146,7 +146,7 @@ Generate and save heatmap to pdf. The heatmap represents the -logP of each RBP f
 # Heatmap of RBP scores
 
 e=HeatmapRBP(res=res,rbp_lfc=rbp_lfc,grid=F)
-e # Plot the heatmap
+e # Plot the heatmap with updated colors for the RBPs
 
 # Save the heatmap
 # location="Heatmap_fibroblasts.pdf"
