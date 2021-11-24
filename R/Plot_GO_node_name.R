@@ -100,8 +100,8 @@ Plot_GO_node_name <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targe
   allGO2genes <- annFUN.org(whichOnto="BP", feasibleGenes=NULL, mapping="org.Hs.eg.db", ID="symbol")
 
 
-  genes=as.character(ensembl$IDENTIFIER[ensembl$geneID%in%all_genes])
-  genes=unique(genes)
+  tpm_ribo=tpm_ribo[!duplicated(tpm_ribo$IDENTIFIER),]
+  genes=tpm_ribo$IDENTIFIER
 
   names(TypesListAll)=paste0("ID",1:length(TypesListAll))
   names(color_nodes)=names(TypesListAll)
@@ -116,7 +116,7 @@ Plot_GO_node_name <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targe
     i=names(TypesToKeep)[j]
     ToSelect=rep(1,length(genes))
     names(ToSelect)=genes
-    ToSelect[as.character(ensembl$IDENTIFIER[ensembl$geneID%in%TypesListAll[[i]]])]=0
+    ToSelect[as.character(genes[tpm_ribo$geneID%in%TypesListAll[[i]]])]=0
     GOdata <- new("topGOdata",ontology="BP",allGenes=ToSelect,annot=annFUN.GO2genes,GO2genes=allGO2genes,geneSel=selection,
                   nodeSize=10)
     resultFisher <- runTest(GOdata, algorithm = "classic", statistic = "fisher")

@@ -12,7 +12,7 @@
 #'
 #'
 #'
-Draw_network_by_group <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,clusters=clusters,n=5)
+Draw_network_by_group <-function(rbp_lfc=rbp_lfc,res=res[-c(1,2)],Targets=Targets,clusters=clusters,n=5)
 {
   #To ignore the warnings during usage
   options(warn=-1)

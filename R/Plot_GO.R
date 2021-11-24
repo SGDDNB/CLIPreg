@@ -13,8 +13,8 @@
 #'
 #'
 #'
-Plot_GO <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,clusters=clusters,n=5,
-                                    all_genes=rownames(tpm_ribo),th=200,GO_to_show=3)
+Plot_GO <-function(rbp_lfc=rbp_lfc,res=res[-c(1,2)],Targets=Targets,clusters=clusters,n=5,
+                                    tpm_ribo=tpm_ribo,th=200,GO_to_show=3)
 {
   #To ignore the warnings during usage
   options(warn=-1)
@@ -101,9 +101,8 @@ Plot_GO <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,cluster
   selection <- function(allScore){ return(allScore < 0.05)} # function that returns TRUE/FALSE for p-values<0.05
   allGO2genes <- annFUN.org(whichOnto="BP", feasibleGenes=NULL, mapping="org.Hs.eg.db", ID="symbol")
 
-
-  genes=as.character(ensembl$IDENTIFIER[ensembl$geneID%in%all_genes])
-  genes=unique(genes)
+  tpm_ribo=tpm_ribo[!duplicated(tpm_ribo$IDENTIFIER),]
+  genes=tpm_ribo$IDENTIFIER
 
   names(TypesListAll)=paste0("ID",1:length(TypesListAll))
   names(color_nodes)=names(TypesListAll)
@@ -116,7 +115,7 @@ Plot_GO <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,cluster
   for (i in names(TypesToKeep)) {
     ToSelect=rep(1,length(genes))
     names(ToSelect)=genes
-    ToSelect[as.character(ensembl$IDENTIFIER[ensembl$geneID%in%TypesListAll[[i]]])]=0
+    ToSelect[as.character(genes[tpm_ribo$geneID%in%TypesListAll[[i]]])]=0
     GOdata <- new("topGOdata",ontology="BP",allGenes=ToSelect,annot=annFUN.GO2genes,GO2genes=allGO2genes,geneSel=selection,
                 nodeSize=10)
     resultFisher <- runTest(GOdata, algorithm = "classic", statistic = "fisher")

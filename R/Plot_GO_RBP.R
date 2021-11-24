@@ -37,8 +37,8 @@ Plot_GO_RBP <-function(rbp_of_interest="QKI",Targets=Targets,clusters=clusters,G
   allGO2genes <- annFUN.org(whichOnto="BP", feasibleGenes=NULL, mapping="org.Hs.eg.db", ID="symbol")
 
 
-  genes=as.character(ensembl$IDENTIFIER[ensembl$geneID%in%all_genes])
-  genes=unique(genes)
+  tpm_ribo=tpm_ribo[!duplicated(tpm_ribo$IDENTIFIER),]
+  genes=tpm_ribo$IDENTIFIER
 
 
   GOterms=c()
@@ -46,7 +46,7 @@ Plot_GO_RBP <-function(rbp_of_interest="QKI",Targets=Targets,clusters=clusters,G
   NodeNames=c()
   ToSelect=rep(1,length(genes))
   names(ToSelect)=genes
-  ToSelect[as.character(ensembl$IDENTIFIER[ensembl$geneID%in%RBP_t_down])]=0
+  ToSelect[as.character(genes[tpm_ribo$geneID%in%RBP_t_down])]=0
   GOdata <- new("topGOdata",ontology="BP",allGenes=ToSelect,annot=annFUN.GO2genes,GO2genes=allGO2genes,geneSel=selection,
                   nodeSize=10)
   resultFisher <- runTest(GOdata, algorithm = "classic", statistic = "fisher")
@@ -58,7 +58,7 @@ Plot_GO_RBP <-function(rbp_of_interest="QKI",Targets=Targets,clusters=clusters,G
 
   ToSelect=rep(1,length(genes))
   names(ToSelect)=genes
-  ToSelect[as.character(ensembl$IDENTIFIER[ensembl$geneID%in%RBP_t_up])]=0
+  ToSelect[as.character(genes[tpm_ribo$geneID%in%RBP_t_up])]=0
   GOdata <- new("topGOdata",ontology="BP",allGenes=ToSelect,annot=annFUN.GO2genes,GO2genes=allGO2genes,geneSel=selection,
                 nodeSize=10)
   resultFisher <- runTest(GOdata, algorithm = "classic", statistic = "fisher")

@@ -99,3 +99,21 @@ cure_res=function(res=res,rbp_lfc=rbp_lfc){
   }
   return(res)
 }
+
+#' @title combine_targets
+#' @description Combine targets from POSTAR and ENCODE and keep only genes from background
+#' @param symbol RBP_list1, RBP_list2, background
+#' @return NULL
+#' @examples
+#' @export
+#'
+combine_targets=function(RBP_list1=RBP_ENCODE,RBP_list2=RBP_POSTAR,background=clusters$geneID){
+  TargetsEncode=GetTarget(RBP_data = RBP_list1,background = background)
+  TargetsPOSTAR=GetTarget(RBP_data = RBP_list2,background = background)
+  Targets=c(TargetsEncode,TargetsPOSTAR)
+  Targets=split(unlist(Targets, use.names = FALSE), rep(names(Targets), lengths(Targets)))
+  for (t in names(Targets)) {
+    Targets[[t]]=unique(Targets[[t]])
+  }
+  return(Targets)
+}

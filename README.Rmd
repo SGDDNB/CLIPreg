@@ -57,12 +57,14 @@ Curated CLIP-seq data that can be downloaded from . RIBO and RNA lfc and TPM. (T
 ```{r load library, message=FALSE}
 ## load libraries
 library(CLIPreg)
+library(ggplot2)
 library(pheatmap)
 library(grid)
 library(doParallel)
 library(ggnet)
 library(topGO)
 library(data.table)
+library(stringr)
 ```
 
 Let's have a look at the cluster file from the example data. It consists of 2 columns containing the geneID and the cluster for all the DE genes. This is optional, if you want to provide your own clusters, go to next step.
@@ -78,11 +80,12 @@ You can input your own clusters by using the function load_clusters() and giving
 #clusters=load_clusters(cluster_file = "cluster_file")
 ```
 
-Load POSTAR and ENCODE RBP data. Those are 2 public datasets which are processed in order to have lists of vector. Each vector is named after 1 RBP and contains the geneID of all the targets of that RBP.
+Load POSTAR and ENCODE RBP data. Those are 2 public datasets which are processed in order to have lists of vector. Each vector is named after 1 RBP and contains the geneID of all the targets of that RBP. Combine both data in a target list. 
 
 ```{r load RBP data, message=FALSE}
 data("RBP_ENCODE")
 data("RBP_POSTAR")
+Targets=combine_targets(RBP_list1=RBP_ENCODE,RBP_list2=RBP_POSTAR,background=clusters$geneID)
 ```
 
 Run the enrichment analysis using CLIPReg_V4() function. This takes several minutes. If you want to have a look at the example results skip this step.
@@ -146,7 +149,7 @@ e=HeatmapRBP(res=res,rbp_lfc=rbp_lfc,grid=F)
 e # Plot the heatmap
 
 # Save the heatmap
-location="Heatmap_fibroblasts_V4.pdf"
+location="Heatmap_fibroblasts.pdf"
 n=length(e$tree_row$order)
 pdf(location,8,3+n*0.15)
 e
@@ -164,14 +167,14 @@ From the results, the user can choose a number of RBP to draw the network for by
 
 ```{r Network, message=FALSE}
 # Draw network
-Draw_network_by_group(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,clusters=clusters,n=5)
+Draw_network_by_group(rbp_lfc=rbp_lfc,res=res[-c(1,2)],Targets=Targets,clusters=clusters,n=5)
 ```
 
 ```{r GO of specific nodes, message=FALSE}
 # plot GO
-Plot_GO(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,clusters=clusters,n=5,
+Plot_GO(rbp_lfc=rbp_lfc,res=res[-c(1,2)],Targets=Targets,clusters=clusters,n=5,
   all_genes=rownames(tpm_ribo),th=200,GO_to_show=3)
-Plot_GO_node_name(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,clusters=clusters,n=5,
+Plot_GO_node_name(rbp_lfc=rbp_lfc,res=res[-c(1,2)],Targets=Targets,clusters=clusters,n=5,
                   all_genes=rownames(tpm_ribo),Nodes_to_keep=c(19,15),GO_to_show=3)
 Plot_GO_RBP(rbp_of_interest="QKI",Targets=Targets,clusters=clusters,GO_to_show=3)
 ```
