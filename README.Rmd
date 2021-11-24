@@ -149,11 +149,11 @@ e=HeatmapRBP(res=res,rbp_lfc=rbp_lfc,grid=F)
 e # Plot the heatmap
 
 # Save the heatmap
-location="Heatmap_fibroblasts.pdf"
-n=length(e$tree_row$order)
-pdf(location,8,3+n*0.15)
-e
-dev.off()
+# location="Heatmap_fibroblasts.pdf"
+# n=length(e$tree_row$order)
+# pdf(location,8,3+n*0.15)
+# e
+# dev.off()
 ```
 
 A bubble plot can be generated only if the clusters are the output of DeltaTE program.
@@ -173,8 +173,8 @@ Draw_network_by_group(rbp_lfc=rbp_lfc,res=res[-c(1,2)],Targets=Targets,clusters=
 ```{r GO of specific nodes, message=FALSE}
 # plot GO
 Plot_GO(rbp_lfc=rbp_lfc,res=res[-c(1,2)],Targets=Targets,clusters=clusters,n=5,
-  all_genes=rownames(tpm_ribo),th=200,GO_to_show=3)
+  tpm_ribo = tpm_ribo,th=200,GO_to_show=3)
 Plot_GO_node_name(rbp_lfc=rbp_lfc,res=res[-c(1,2)],Targets=Targets,clusters=clusters,n=5,
-                  all_genes=rownames(tpm_ribo),Nodes_to_keep=c(19,15),GO_to_show=3)
-Plot_GO_RBP(rbp_of_interest="QKI",Targets=Targets,clusters=clusters,GO_to_show=3)
+                  tpm_ribo = tpm_ribo,Nodes_to_keep=c(19,15),GO_to_show=3)
+Plot_GO_RBP(rbp_of_interest="QKI",tpm_ribo = tpm_ribo,Targets=Targets,clusters=clusters,GO_to_show=3)
 ```

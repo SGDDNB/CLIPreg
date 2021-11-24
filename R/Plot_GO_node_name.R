@@ -14,7 +14,7 @@
 #'
 #'
 Plot_GO_node_name <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,clusters=clusters,n=5,
-                   all_genes=rownames(tpm_ribo),Nodes_to_keep=c(19,15),GO_to_show=3)
+                             tpm_ribo = tpm_ribo,Nodes_to_keep=c(19,15),GO_to_show=3)
 {
   #To ignore the warnings during usage
   options(warn=-1)
