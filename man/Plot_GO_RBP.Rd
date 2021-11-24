@@ -6,6 +6,7 @@
 \usage{
 Plot_GO_RBP(
   rbp_of_interest = "QKI",
+  tpm_ribo = tpm_ribo,
   Targets = Targets,
   clusters = clusters,
   GO_to_show = 3

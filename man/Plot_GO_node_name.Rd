@@ -10,7 +10,7 @@ Plot_GO_node_name(
   Targets = Targets,
   clusters = clusters,
   n = 5,
-  all_genes = rownames(tpm_ribo),
+  tpm_ribo = tpm_ribo,
   Nodes_to_keep = c(19, 15),
   GO_to_show = 3
 )
