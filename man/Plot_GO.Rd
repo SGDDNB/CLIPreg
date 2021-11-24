@@ -6,11 +6,11 @@
 \usage{
 Plot_GO(
   rbp_lfc = rbp_lfc,
-  res = res_both[-c(1, 2)],
+  res = res[-c(1, 2)],
   Targets = Targets,
   clusters = clusters,
   n = 5,
-  all_genes = rownames(tpm_ribo),
+  tpm_ribo = tpm_ribo,
   th = 200,
   GO_to_show = 3
 )

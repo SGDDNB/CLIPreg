@@ -6,7 +6,7 @@
 \usage{
 Draw_network_by_group(
   rbp_lfc = rbp_lfc,
-  res = res_both[-c(1, 2)],
+  res = res[-c(1, 2)],
   Targets = Targets,
   clusters = clusters,
   n = 5
