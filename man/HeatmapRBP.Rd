@@ -4,10 +4,10 @@
 \alias{HeatmapRBP}
 \title{HeatmapRBP}
 \usage{
-HeatmapRBP(res = res, rbp_lfc = rbp_lfc, grid = F)
+HeatmapRBP(res = res, rbp_lfc = rbp_lfc)
 }
 \arguments{
-\item{symbol}{res, rbp_lfc, grid}
+\item{symbol}{res, rbp_lfc}
 }
 \value{
 Plot a heatmap

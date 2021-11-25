@@ -4,10 +4,10 @@
 \alias{BubbleRBPs}
 \title{BubbleRBPs}
 \usage{
-BubbleRBPs(RBP_res = res, clusters = clusters)
+BubbleRBPs(res = res, clusters = clusters, rbp_lfc = rbp_lfc)
 }
 \arguments{
-\item{symbol}{RBP_res, clusters}
+\item{symbol}{RBP_res, clusters, rbp_lfc}
 }
 \value{
 NULL. Generates a bubble plot
@@ -16,6 +16,6 @@ NULL. Generates a bubble plot
 Use clusters from DeltaTE output to generate enrichement plot of RBPs
 }
 \examples{
-BubbleRBPs(RBP_res=res,clusters=clusters)
+BubbleRBPs(RBP_res=res,clusters=clusters,rbp_lfc=rbp_lfc)
 
 }

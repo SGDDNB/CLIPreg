@@ -27,17 +27,19 @@ knitr::opts_chunk$set(
 Users may use following codes to check and install all the required packages.
 
 ``` r
-list.of.packages <- c("ggplot2","pheatmap","grid","doParallel","foreach","data.table","fastmatch","GGally","ggnet","topGO","ALL","devtools")
+list.of.packages <- c("ggplot2","grid","doParallel","foreach","data.table","fastmatch","GGally","ggnet","topGO","ALL","devtools")
 
 ## for package "ggplot2", "pheatmap", "grid", "doParallel", "foreach", "data.table", "fastmatch", "GGally"
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
-## for package "topGO", "ALL"
+## for package "topGO", "ALL", "ggnet", "ComplexHeatmap"
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages))  BiocManager::install(new.packages)
 if("ggnet"%in%new.packages)  devtools::install_github("briatte/ggnet")
+install_version("network", version = "1.16.1", repos = "http://cran.us.r-project.org")
+if("ComplexHeatmap"%in%new.packages)  devtools::install_github("jokergoo/ComplexHeatmap")
 ```
 
 ### Install CLIPreg
@@ -48,24 +50,24 @@ The source code of CLIPreg can be installed from [GitHub](https://github.com/) w
 devtools::install_github("SGDDNB/CLIPreg")
 ```
 
-
-## Input datasets
-
 CLIPreg requires 4 different inputs. A cluster input which is a dataframe containing geneID and the cluster given by DeltaTE output.
-Curated CLIP-seq data that can be downloaded from . RIBO and RNA lfc and TPM. (TPM are optional)
+Curated CLIP-seq data that can be downloaded from . RIBO lfc and TPM.
 
-```{r load library, message=FALSE}
+```{r load library, message=FALSE,warning=FALSE}
 ## load libraries
 library(CLIPreg)
 library(ggplot2)
-library(pheatmap)
+library(ComplexHeatmap)
 library(grid)
 library(doParallel)
 library(ggnet)
 library(topGO)
+library(GGally)
 library(data.table)
 library(stringr)
 ```
+
+## Step 1: Input datasets
 
 Let's have a look at the cluster file from the example data. It consists of 2 columns containing the geneID and the cluster for all the DE genes. This is optional, if you want to provide your own clusters, go to next step.
 
@@ -87,6 +89,24 @@ data("RBP_ENCODE")
 data("RBP_POSTAR")
 Targets=combine_targets(RBP_list1=RBP_ENCODE,RBP_list2=RBP_POSTAR,background=clusters$geneID)
 ```
+
+Load the fold change and identify the RBPs. If you have your own then provide your own data.
+
+```{r loading LFC and TPM, message=FALSE}
+# load fold change and tpm. optional if you want to use the input data
+data("ribo_lfc")
+data("tpm_ribo")
+
+head(ribo_lfc)
+head(tpm_ribo)
+
+# If you want to input your own data
+#load_ribo_lfc(ribo_lfc_file = "ribo_lfc_file")
+#load_ribo_tpm(ribo_tpm_file = "ribo_tpm_file")
+
+```
+
+## Step 2: Data integration and analysis
 
 Run the enrichment analysis using CLIPReg_V4() function. This takes several minutes. If you want to have a look at the example results skip this step.
 
@@ -114,22 +134,6 @@ res=CLIPreg::combine(res1=res_Encode,res2=res_Postar)
 
 ```
 
-Load the fold change and identify the RBPs. If you have your own then provide your own data.
-
-```{r loading LFC and TPM, message=FALSE}
-# load fold change and tpm. optional if you want to use the input data
-data("ribo_lfc")
-data("tpm_ribo")
-
-head(ribo_lfc)
-head(tpm_ribo)
-
-# If you want to input your own data
-#load_ribo_lfc(ribo_lfc_file = "ribo_lfc_file")
-#load_ribo_tpm(ribo_tpm_file = "ribo_tpm_file")
-
-```
-
 Extract the RBP LFC from the RIBO_LFC and keep only detected RBPs in res
 
 ```{r Extract LFC of RBPs, message=FALSE}
@@ -140,19 +144,22 @@ rbp_lfc=rbp_change(res=res,ribo_lfc=ribo_lfc)
 res=cure_res(res=res,rbp_lfc=rbp_lfc)
 ```
 
+
+## Step 3: Visualisation
+
 Generate and save heatmap to pdf. The heatmap represents the -logP of each RBP for each cluster. The blue RBPs are downregulated and the orange RBPs are upregulated. Only RBPs that are significant in at least one cluster are shown.
 
 ```{r Generate and save heatmap, message=FALSE}
 # Heatmap of RBP scores
 
-e=HeatmapRBP(res=res,rbp_lfc=rbp_lfc,grid=F)
-e # Plot the heatmap with updated colors for the RBPs
+HeatmapRBP(res=res,rbp_lfc=rbp_lfc)
+# Plot the heatmap with updated colors for the RBPs
 
 # Save the heatmap
 # location="Heatmap_fibroblasts.pdf"
 # n=length(e$tree_row$order)
 # pdf(location,8,3+n*0.15)
-# e
+# 
 # dev.off()
 ```
 
@@ -160,7 +167,7 @@ A bubble plot can be generated only if the clusters are the output of DeltaTE pr
 
 ```{r Bubble plot, message=FALSE}
 # Bubble plot clusters if clusters are from DeltaTE
-BubbleRBPs(RBP_res = res,clusters = clusters)
+BubbleRBPs(RBP_res = res,clusters = clusters,rbp_lfc = rbp_lfc)
 ```
 
 From the results, the user can choose a number of RBP to draw the network for by n. This will pick the n most changing RBPs.
