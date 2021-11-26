@@ -13,7 +13,7 @@ HeatmapRBP(res = res, rbp_lfc = rbp_lfc)
 Plot a heatmap
 }
 \description{
-Plot a heatmap of the pvalues of enrichment of each RBP in each cluster
+Plot a heatmap of the pvalues of enrichment of each RBP in each gene group
 }
 \examples{
 HeatmapRBP(res=res,RBP_change=rbp_lfc)

@@ -8,7 +8,7 @@ Plot_GO_RBP(
   rbp_of_interest = "QKI",
   tpm_ribo = tpm_ribo,
   Targets = Targets,
-  clusters = clusters,
+  gene_groups = gene_groups,
   GO_to_show = 3
 )
 }

@@ -8,13 +8,13 @@ Draw_network_by_group(
   rbp_lfc = rbp_lfc,
   res = res,
   Targets = Targets,
-  clusters = clusters,
+  gene_groups = gene_groups,
   n = 5,
   forwarded = F
 )
 }
 \arguments{
-\item{symbol}{rbp_lfc, res, Targets, clusters, n}
+\item{symbol}{rbp_lfc, res, Targets, gene_groups, n}
 }
 \value{
 Plot network
@@ -23,6 +23,6 @@ Plot network
 This function draw a network from CLIPreg output. It plots the n most changing RBP and their targets group by TE category
 }
 \examples{
-Draw_network(rbp_lfc=rbp_lfc,res=res_both,clusters=clusters,n=5)
+Draw_network(rbp_lfc=rbp_lfc,res=res_both,gene_groups=gene_groups,n=5)
 
 }

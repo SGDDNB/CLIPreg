@@ -8,7 +8,7 @@ Plot_GO_node_name(
   rbp_lfc = rbp_lfc,
   res = res,
   Targets = Targets,
-  clusters = clusters,
+  gene_groups = gene_groups,
   n = 5,
   tpm_ribo = tpm_ribo,
   Nodes_to_keep = c(19, 15),

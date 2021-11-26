@@ -135,7 +135,7 @@ head(ribo_lfc)
 
 ## Step 2: Data integration and analysis
 
-Run the enrichment analysis using CLIPReg_V4() function. This takes several minutes. If you want to have a look at the example results skip this step.
+Run the enrichment analysis using CLIPreg() function. This takes several minutes. If you want to have a look at the example results skip this step.
 
 ```{r run enrichment analysis, message=FALSE}
 # The CLIPreg function requires a few minutes to run, save the data after running it to be sure not to lose it

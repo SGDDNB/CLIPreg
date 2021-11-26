@@ -4,7 +4,7 @@
 \alias{GetTarget}
 \title{GetTarget}
 \usage{
-GetTarget(RBP_data = RBP_POSTAR, background = clusters$geneID)
+GetTarget(RBP_data = RBP_POSTAR, background = gene_groups$geneID)
 }
 \arguments{
 \item{symbol}{folder, RBP_data, background}
@@ -16,6 +16,6 @@ List of RBPs each containing 1 vector of targets in form of characters
 Summarize RBPs in a list with their targets
 }
 \examples{
-GetTarget(RBP_data=RBP_POSTAR, background=clusters$geneID)
+GetTarget(RBP_data=RBP_POSTAR, background=gene_groups$geneID)
 
 }

@@ -8,7 +8,7 @@ Plot_GO(
   rbp_lfc = rbp_lfc,
   res = res,
   Targets = Targets,
-  clusters = clusters,
+  gene_groups = gene_groups,
   n = 5,
   tpm_ribo = tpm_ribo,
   th = 200,

@@ -7,7 +7,7 @@
 combine_targets(
   RBP_list1 = RBP_ENCODE,
   RBP_list2 = RBP_POSTAR,
-  background = clusters$geneID
+  background = gene_groups$geneID
 )
 }
 \arguments{

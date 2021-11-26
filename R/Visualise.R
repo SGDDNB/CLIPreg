@@ -17,12 +17,12 @@ Visualise=function(results=results,folder=getwd()){
 
   A=HeatmapRBP(res=res,rbp_lfc = rbp_lfc)
   n=length(A@ht_list$`RBP direction`@matrix)
-  pdf(paste0(folder,"/Heatmap.pdf"),7,3+n*0.15)
+  pdf(paste0(folder,"/Heatmap.pdf"),7,3+n*0.15,useDingbats = F)
   print(A)
   dev.off()
 
   B=BubbleRBPs(res=res,gene_groups=gene_groups,rbp_lfc=rbp_lfc)
-  pdf(paste0(folder,"/Bubble_plot.pdf"),6,4.5)
+  pdf(paste0(folder,"/Bubble_plot.pdf"),6,4.5,useDingbats = F)
   print(B)
   dev.off()
 

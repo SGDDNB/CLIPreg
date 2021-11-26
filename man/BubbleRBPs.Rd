@@ -4,18 +4,18 @@
 \alias{BubbleRBPs}
 \title{BubbleRBPs}
 \usage{
-BubbleRBPs(res = res, clusters = clusters, rbp_lfc = rbp_lfc)
+BubbleRBPs(res = res, gene_groups = gene_groups, rbp_lfc = rbp_lfc)
 }
 \arguments{
-\item{symbol}{RBP_res, clusters, rbp_lfc}
+\item{symbol}{RBP_res, gene_groups, rbp_lfc}
 }
 \value{
 NULL. Generates a bubble plot
 }
 \description{
-Use clusters from DeltaTE output to generate enrichement plot of RBPs
+Use gene groups from DeltaTE output to generate enrichement plot of RBPs
 }
 \examples{
-BubbleRBPs(RBP_res=res,clusters=clusters,rbp_lfc=rbp_lfc)
+BubbleRBPs(RBP_res=res,gene_groups=gene_groups,rbp_lfc=rbp_lfc)
 
 }

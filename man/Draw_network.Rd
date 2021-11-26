@@ -4,10 +4,15 @@
 \alias{Draw_network}
 \title{Draw_network}
 \usage{
-Draw_network(rbp_lfc = rbp_lfc, res = res_both, clusters = clusters, n = 5)
+Draw_network(
+  rbp_lfc = rbp_lfc,
+  res = res_both,
+  gene_groups = gene_groups,
+  n = 5
+)
 }
 \arguments{
-\item{symbol}{rbp_lfc, res, clusters, n}
+\item{symbol}{rbp_lfc, res, gene_groups, n}
 }
 \value{
 Plot network
@@ -16,6 +21,6 @@ Plot network
 This function draw a network from CLIPreg output. It plots the n most changing RBP and their target
 }
 \examples{
-Draw_network(rbp_lfc=rbp_lfc,res=res_both,clusters=clusters,n=5)
+Draw_network(rbp_lfc=rbp_lfc,res=res_both,gene_groups=gene_groups,n=5)
 
 }

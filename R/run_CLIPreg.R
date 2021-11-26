@@ -17,8 +17,8 @@ run_CLIPreg=function(input_data=Example, is.example=T)
     res_Encode=CLIPreg::res_Encode
     res_Postar=CLIPreg::res_Postar
   } else {
-    res_Encode=CLIPReg_V4(RBP_data=RBP_ENCODE,gene_groups=gene_groups)
-    res_Postar=CLIPReg_V4(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
+    res_Encode=CLIPreg(RBP_data=RBP_ENCODE,gene_groups=gene_groups)
+    res_Postar=CLIPreg(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
   }
 
   Targets=combine_targets(RBP_list1=RBP_ENCODE,RBP_list2=RBP_POSTAR,background=gene_groups$geneID)
