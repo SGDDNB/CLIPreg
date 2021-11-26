@@ -1,0 +1,48 @@
+#' @title Visualise
+#' @description Generate visual output
+#' @param symbol
+#' @return
+#' @examples
+#' @export
+#'
+Visualise=function(results=results,folder=getwd()){
+  clusters=results$clusters
+  tpm_ribo=results$tpm_ribo
+  rbp_lfc=results$rbp_lfc
+  ribo_lfc=results$ribo_lfc
+  Targets=results$Targets
+  res=results$res
+
+  save(results,paste0(folder,"/Results_CLIPreg.Rdata"))
+
+  A=HeatmapRBP(res=res,rbp_lfc = rbp_lfc)
+  n=length(A@ht_list$`RBP direction`@matrix)
+  pdf(paste0(folder,"/Heatmap.pdf"),7,3+n*0.15)
+  print(A)
+  dev.off()
+
+  B=BubbleRBPs(res=res,clusters=clusters,rbp_lfc=rbp_lfc)
+  pdf(paste0(folder,"/Bubble_plot.pdf"),6,4.5)
+  print(B)
+  dev.off()
+
+  C=Draw_network_by_group(rbp_lfc=rbp_lfc,res=res,Targets=Targets,clusters=clusters,n=5,forwarded = F)
+  pdf(paste0(folder,"/Network_5_most_DE_RBP.pdf"),6,4.5)
+  print(C)
+  dev.off()
+
+  D=Plot_GO(rbp_lfc=rbp_lfc,res=res,Targets=Targets,clusters=clusters,n=5,
+          tpm_ribo = tpm_ribo,th=200,GO_to_show=3,forwarded=F)
+  n=nrow(D$data)
+  pdf(paste0(folder,"/GO_node_200+.pdf"),12,3+0.3*n)
+  print(D)
+  dev.off()
+
+  rbp_of_interest=as.character(rbp_lfc$IDENTIFIER)[1]
+  E=Plot_GO_RBP(rbp_of_interest=rbp_of_interest,tpm_ribo = tpm_ribo,Targets=Targets,clusters=clusters,GO_to_show=3)
+  pdf(paste0(folder,"/GO_RBP_",rbp_of_interest,".pdf"),12,3+n*0.3)
+  print(E)
+  dev.off()
+
+
+}

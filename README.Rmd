@@ -50,8 +50,8 @@ The source code of CLIPreg can be installed from [GitHub](https://github.com/) w
 devtools::install_github("SGDDNB/CLIPreg")
 ```
 
-CLIPreg requires 4 different inputs. A cluster input which is a dataframe containing geneID and the cluster given by DeltaTE output.
-Curated CLIP-seq data that can be downloaded from . RIBO lfc and TPM.
+CLIPreg requires 4 different inputs. A cluster input which is a dataframe containing geneID and the cluster given by DeltaTE output (ideally).
+Curated CLIP-seq data, POSTAR and ENCODE are pre-loaded in the package. RIBO lfc and TPM.
 
 ```{r load library, message=FALSE,warning=FALSE}
 ## load libraries
@@ -66,6 +66,32 @@ library(GGally)
 library(data.table)
 library(stringr)
 ```
+
+### Basic usage
+
+For testing the package with the example data
+```{r load example data, message=FALSE}
+Example=Load_example()
+```
+
+For using your own data, you must specify a folder that contains at least 3 txt files that are named: clusters.txt, ribo_lfc.txt and ribo_tpm.txt. For the format of those 3 files, please refer to Advance usage step 1.
+
+```{r load user data, message=FALSE}
+#Input_data=Load_input_files(folder = "path/to/folder")
+```
+
+Run the analysis with all default parameters.
+```{r Run default analysis, message=FALSE}
+results=run_CLIPreg(Example, is.example=T) # or run_CLIPreg(Input_data, is.example=F)
+```
+
+Generate the visual output from the results of the analysis. The Visualise function will create 2 new files in the folder given: an Rdata file containing the list object from the run_CLIPreg function and a pdf file with the main figures.
+
+```{r Run default analysis, message=FALSE}
+Visualise(results=results,folder=getwd())
+```
+
+### Advance usage
 
 ## Step 1: Input datasets
 
@@ -156,6 +182,7 @@ HeatmapRBP(res=res,rbp_lfc=rbp_lfc)
 # Plot the heatmap with updated colors for the RBPs
 
 # Save the heatmap
+# e=HeatmapRBP(res=res,rbp_lfc=rbp_lfc)
 # location="Heatmap_fibroblasts.pdf"
 # n=length(e$tree_row$order)
 # pdf(location,8,3+n*0.15)

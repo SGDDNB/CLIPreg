@@ -6,13 +6,14 @@
 \usage{
 Plot_GO(
   rbp_lfc = rbp_lfc,
-  res = res[-c(1, 2)],
+  res = res,
   Targets = Targets,
   clusters = clusters,
   n = 5,
   tpm_ribo = tpm_ribo,
   th = 200,
-  GO_to_show = 3
+  GO_to_show = 3,
+  forwarded = F
 )
 }
 \arguments{

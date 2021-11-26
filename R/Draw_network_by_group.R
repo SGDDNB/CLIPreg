@@ -12,13 +12,17 @@
 #'
 #'
 #'
-Draw_network_by_group <-function(rbp_lfc=rbp_lfc,res=res[-c(1,2)],Targets=Targets,clusters=clusters,n=5)
+Draw_network_by_group <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,clusters=clusters,n=5,forwarded=F)
 {
   #To ignore the warnings during usage
   options(warn=-1)
   options("getSymbols.warning4.0"=FALSE)
   options(stringsAsFactors=FALSE);
 
+  if (forwarded==F) {
+    fw=which(grepl("forwarded",names(res)))
+    res=res[-fw]
+  }
 
   RBPs=c()
   for (c in names(res)) {
@@ -32,7 +36,7 @@ Draw_network_by_group <-function(rbp_lfc=rbp_lfc,res=res[-c(1,2)],Targets=Target
   rm(c)
 
   rbp_lfc=rbp_lfc[RBPs,]
-  rbp_lfc=rbp_lfc[order(-rbp_lfc$FoldChange),]
+  rbp_lfc=rbp_lfc[order(-abs(rbp_lfc$FoldChange)),]
   rbp_lfc=rbp_lfc[1:n,]
 
   RBP_kept=rownames(rbp_lfc)

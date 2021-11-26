@@ -13,13 +13,19 @@
 #'
 #'
 #'
-Plot_GO <-function(rbp_lfc=rbp_lfc,res=res[-c(1,2)],Targets=Targets,clusters=clusters,n=5,
-                                    tpm_ribo=tpm_ribo,th=200,GO_to_show=3)
+Plot_GO <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,clusters=clusters,n=5,
+                  tpm_ribo=tpm_ribo,th=200,GO_to_show=3,forwarded=F)
 {
   #To ignore the warnings during usage
   options(warn=-1)
   options("getSymbols.warning4.0"=FALSE)
   options(stringsAsFactors=FALSE);
+
+
+  if (forwarded==F) {
+    fw=which(grepl("forwarded",names(res)))
+    res=res[-fw]
+  }
 
 
   RBPs=c()
@@ -34,7 +40,7 @@ Plot_GO <-function(rbp_lfc=rbp_lfc,res=res[-c(1,2)],Targets=Targets,clusters=clu
   rm(c)
 
   rbp_lfc=rbp_lfc[RBPs,]
-  rbp_lfc=rbp_lfc[order(-rbp_lfc$FoldChange),]
+  rbp_lfc=rbp_lfc[order(-abs(rbp_lfc$FoldChange)),]
   rbp_lfc=rbp_lfc[1:n,]
 
   RBP_kept=rownames(rbp_lfc)
@@ -133,9 +139,8 @@ Plot_GO <-function(rbp_lfc=rbp_lfc,res=res[-c(1,2)],Targets=Targets,clusters=clu
 
   ggplot(df, aes(x=Term, y=-log10(Pval),colour=Color,fill=Color)) +
     stat_summary(geom = "bar", fun.y = mean, position = "dodge") +
-    xlab("Biological process") +
-    ylab("Enrichment") +
-    ggtitle(paste0("GO signature of nodes of size >",th)) +
+    ylab("Enrichment") + xlab("")+
+    ggtitle(paste0("GO of nodes of size >",th)) +
     scale_y_continuous(breaks = round(seq(0, max(-log10(df$Pval)), by = 2), 1)) +
     theme_bw(base_size=24) +
     theme(
@@ -147,7 +152,7 @@ Plot_GO <-function(rbp_lfc=rbp_lfc,res=res[-c(1,2)],Targets=Targets,clusters=clu
       axis.title=element_text(size=24, face="bold"),
       legend.key=element_blank(),     #removes the border
       legend.key.size=unit(1, "cm"),      #Sets overall area/size of the legend
-      legend.text=element_text(size=18),  #Text size
+      legend.text=element_text(size=12),  #Text size
       title=element_text(size=18)) +
     guides(colour=guide_legend(override.aes=list(size=2.5))) +
     coord_flip()+

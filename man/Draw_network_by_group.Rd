@@ -6,10 +6,11 @@
 \usage{
 Draw_network_by_group(
   rbp_lfc = rbp_lfc,
-  res = res[-c(1, 2)],
+  res = res,
   Targets = Targets,
   clusters = clusters,
-  n = 5
+  n = 5,
+  forwarded = F
 )
 }
 \arguments{

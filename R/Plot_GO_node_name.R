@@ -13,14 +13,18 @@
 #'
 #'
 #'
-Plot_GO_node_name <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targets,clusters=clusters,n=5,
-                             tpm_ribo = tpm_ribo,Nodes_to_keep=c(19,15),GO_to_show=3)
+Plot_GO_node_name <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,clusters=clusters,n=5,
+                             tpm_ribo = tpm_ribo,Nodes_to_keep=c(19,15),GO_to_show=3,forwarded=F)
 {
   #To ignore the warnings during usage
   options(warn=-1)
   options("getSymbols.warning4.0"=FALSE)
   options(stringsAsFactors=FALSE);
 
+  if (forwarded==F) {
+    fw=which(grepl("forwarded",names(res)))
+    res=res[-fw]
+  }
 
   RBPs=c()
   for (c in names(res)) {
@@ -34,7 +38,7 @@ Plot_GO_node_name <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targe
   rm(c)
 
   rbp_lfc=rbp_lfc[RBPs,]
-  rbp_lfc=rbp_lfc[order(-rbp_lfc$FoldChange),]
+  rbp_lfc=rbp_lfc[order(-abs(rbp_lfc$FoldChange)),]
   rbp_lfc=rbp_lfc[1:n,]
 
   RBP_kept=rownames(rbp_lfc)
@@ -136,9 +140,9 @@ Plot_GO_node_name <-function(rbp_lfc=rbp_lfc,res=res_both[-c(1,2)],Targets=Targe
 
   ggplot(df, aes(x=Term, y=-log10(Pval),fill=Color,colour=Color)) +
     stat_summary(geom = "bar", fun.y = mean, position = "dodge") +
-    xlab("Biological process") +
+    xlab("") +
     ylab("Enrichment") +
-    ggtitle("GO signature of selected nodes") +
+    ggtitle("GO of selected nodes") +
     scale_y_continuous(breaks = round(seq(0, max(-log10(df$Pval)), by = 2), 1)) +
     theme_bw(base_size=24) +
     theme(

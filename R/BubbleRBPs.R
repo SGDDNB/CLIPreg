@@ -32,7 +32,7 @@ BubbleRBPs <-function(res=res,clusters=clusters,rbp_lfc=rbp_lfc)
 
 
   # Set up the vectors
-  RNA <- c("Trancription up","Transcription\ndown","Transcription\nunchanged")
+  RNA <- c("Trancription\nup","Transcription\ndown","Transcription\nunchanged")
   RIBO <- c("TE unchanged","TE down","TE up")
 
   # Create the data frame
