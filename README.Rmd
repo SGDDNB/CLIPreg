@@ -71,7 +71,7 @@ library(stringr)
 
 For testing the package with the example data
 ```{r load example data, message=FALSE}
-Example=Load_example()
+#Example=Load_example()
 ```
 
 For using your own data, you must specify a folder that contains at least 3 txt files that are named: clusters.txt, ribo_lfc.txt and ribo_tpm.txt. For the format of those 3 files, please refer to Advance usage step 1.
@@ -82,13 +82,13 @@ For using your own data, you must specify a folder that contains at least 3 txt 
 
 Run the analysis with all default parameters.
 ```{r Run default analysis, message=FALSE}
-results=run_CLIPreg(Example, is.example=T) # or run_CLIPreg(Input_data, is.example=F)
+#results=run_CLIPreg(Example, is.example=T) # or run_CLIPreg(Input_data, is.example=F)
 ```
 
 Generate the visual output from the results of the analysis. The Visualise function will create 2 new files in the folder given: an Rdata file containing the list object from the run_CLIPreg function and a pdf file with the main figures.
 
 ```{r RVisualize, message=FALSE}
-Visualise(results=results,folder=getwd())
+#Visualise(results=results,folder=getwd())
 ```
 
 ### Advance usage
@@ -194,21 +194,21 @@ A bubble plot can be generated only if the clusters are the output of DeltaTE pr
 
 ```{r Bubble plot, message=FALSE}
 # Bubble plot clusters if clusters are from DeltaTE
-BubbleRBPs(RBP_res = res,clusters = clusters,rbp_lfc = rbp_lfc)
+BubbleRBPs(res = res,clusters = clusters,rbp_lfc = rbp_lfc)
 ```
 
 From the results, the user can choose a number of RBP to draw the network for by n. This will pick the n most changing RBPs.
 
 ```{r Network, message=FALSE}
 # Draw network
-Draw_network_by_group(rbp_lfc=rbp_lfc,res=res[-c(1,2)],Targets=Targets,clusters=clusters,n=5)
+Draw_network_by_group(rbp_lfc=rbp_lfc,res=res,Targets=Targets,clusters=clusters,n=5,forwarded = F)
 ```
 
 ```{r GO of specific nodes, message=FALSE}
 # plot GO
-Plot_GO(rbp_lfc=rbp_lfc,res=res[-c(1,2)],Targets=Targets,clusters=clusters,n=5,
-  tpm_ribo = tpm_ribo,th=200,GO_to_show=3)
-Plot_GO_node_name(rbp_lfc=rbp_lfc,res=res[-c(1,2)],Targets=Targets,clusters=clusters,n=5,
-                  tpm_ribo = tpm_ribo,Nodes_to_keep=c(19,15),GO_to_show=3)
+Plot_GO(rbp_lfc=rbp_lfc,res=res,Targets=Targets,clusters=clusters,n=5,
+  tpm_ribo = tpm_ribo,th=200,GO_to_show=3,forwarded = F)
+Plot_GO_node_name(rbp_lfc=rbp_lfc,res=res,Targets=Targets,clusters=clusters,n=5,
+                  tpm_ribo = tpm_ribo,Nodes_to_keep=c(19,15),GO_to_show=3,forwarded = F)
 Plot_GO_RBP(rbp_of_interest="QKI",tpm_ribo = tpm_ribo,Targets=Targets,clusters=clusters,GO_to_show=3)
 ```
