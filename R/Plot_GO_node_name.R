@@ -23,7 +23,9 @@ Plot_GO_node_name <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups
 
   if (forwarded==F) {
     fw=which(grepl("forwarded",names(res)))
-    res=res[-fw]
+    if (length(fw)>0) {
+      res=res[-fw]
+    }
   }
 
   RBPs=c()

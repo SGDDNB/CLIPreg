@@ -43,9 +43,13 @@ The source code of CLIPreg can be installed from
 devtools::install_github("SGDDNB/CLIPreg")
 ```
 
-CLIPreg requires 4 different inputs. A cluster input which is a
-dataframe containing geneID and the cluster given by DeltaTE output
-(ideally). Curated CLIP-seq data, POSTAR and ENCODE are pre-loaded in
+CLIPreg requires 4 different inputs. A gene\_groups input which is a
+dataframe containing geneID and the gene\_groups given by DeltaTE output
+(ideally). The DeltaTE method can be found in the paper here:
+<https://doi.org/10.1002/cpmb.108>. It categorizes transcriptionally
+and/or translationally regulated genes into 4 categories: forwarded,
+intensified, exclusive and buffered, each category with an up or down
+direction. Summarized CLIP-seq data, POSTAR and ENCODE are pre-loaded in
 the package. RIBO lfc and TPM.
 
 ``` r
@@ -71,7 +75,7 @@ For testing the package with the example data
 ```
 
 For using your own data, you must specify a folder that contains at
-least 3 txt files that are named: clusters.txt, ribo\_lfc.txt and
+least 3 txt files that are named: gene\_groups.txt, ribo\_lfc.txt and
 ribo\_tpm.txt. For the format of those 3 files, please refer to Advance
 usage step 1.
 
@@ -99,15 +103,15 @@ file with the main figures.
 
 ## Step 1: Input datasets
 
-Let’s have a look at the cluster file from the example data. It consists
-of 2 columns containing the geneID and the cluster for all the DE genes.
-This is optional, if you want to provide your own clusters, go to next
-step.
+Let’s have a look at the gene\_groups file from the example data. It
+consists of 2 columns containing the geneID and the gene groups for all
+the DE genes. This is optional, if you want to provide your own gene
+groups, go to next step.
 
 ``` r
-data("clusters")
-head(clusters)
-#>             geneID      Cluster
+data("gene_groups")
+head(gene_groups)
+#>             geneID   Gene_group
 #> 1:       LOC728392 forwarded_up
 #> 2:      WRB-SH3BGR forwarded_up
 #> 3: ENSG00000162408 forwarded_up
@@ -116,11 +120,11 @@ head(clusters)
 #> 6: ENSG00000116649 forwarded_up
 ```
 
-You can input your own clusters by using the function load\_clusters()
-and giving the file location of your file as input.
+You can input your own gene groups by using the function
+load\_gene\_groups() and giving the file location of your file as input.
 
 ``` r
-#clusters=load_clusters(cluster_file = "cluster_file")
+#gene_groups=load_gene_groups(gene_groups_file = "path/to/gene_groups_file")
 ```
 
 Load POSTAR and ENCODE RBP data. Those are 2 public datasets which are
@@ -131,7 +135,7 @@ data in a target list.
 ``` r
 data("RBP_ENCODE")
 data("RBP_POSTAR")
-Targets=combine_targets(RBP_list1=RBP_ENCODE,RBP_list2=RBP_POSTAR,background=clusters$geneID)
+Targets=combine_targets(RBP_list1=RBP_ENCODE,RBP_list2=RBP_POSTAR,background=gene_groups$geneID)
 ```
 
 Load the fold change and identify the RBPs. If you have your own then
@@ -159,21 +163,21 @@ head(ribo_lfc)
 
 ## Step 2: Data integration and analysis
 
-Run the enrichment analysis using CLIPReg\_V4() function. This takes
-several minutes. If you want to have a look at the example results skip
-this step.
+Run the enrichment analysis using CLIPreg() function. This takes several
+minutes. If you want to have a look at the example results skip this
+step.
 
 ``` r
-# The CLIPreg_V4 function requires a few minutes to run, save the data after running it to be sure not to lose it
-# res_Postar=CLIPReg_V4(RBP_data=RBP_POSTAR,clusters=clusters)
-# res_Encode=CLIPReg_V4(RBP_data=RBP_ENCODE,clusters=clusters)
+# The CLIPreg function requires a few minutes to run, save the data after running it to be sure not to lose it
+# res_Postar=CLIPreg(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
+# res_Encode=CLIPreg(RBP_data=RBP_ENCODE,gene_groups=gene_groups)
 # save(res_Encode,file="Res_RBP_Encode.RData")
 # save(res_Postar,file="Res_RBP_Postar.RData")
 ```
 
 If you want to get the results directly you can load it by using the
-example data results. The output of CLIPReg\_V4() is a list of
-dataframes. One dataframe per cluster containing the RBP and statistical
+example data results. The output of CLIPreg() is a list of dataframes.
+One dataframe per gene group containing the RBP and statistical
 information calculated during the analysis such as p-value and z-score.
 
 ``` r
@@ -197,8 +201,8 @@ head(res_Encode[[1]])
 ```
 
 Then we want to combine POSTAR and ENCODE to work with only one
-dataframe and only keep RBPs that are significant in at least one
-cluster.
+dataframe and only keep RBPs that are significant in at least one gene
+group.
 
 ``` r
 
@@ -219,9 +223,9 @@ res=cure_res(res=res,rbp_lfc=rbp_lfc)
 ## Step 3: Visualisation
 
 Generate and save heatmap to pdf. The heatmap represents the -logP of
-each RBP for each cluster. The blue RBPs are downregulated and the
+each RBP for each gene group. The blue RBPs are downregulated and the
 orange RBPs are upregulated. Only RBPs that are significant in at least
-one cluster are shown.
+one gene group are shown.
 
 ``` r
 # Heatmap of RBP scores
@@ -243,12 +247,12 @@ HeatmapRBP(res=res,rbp_lfc=rbp_lfc)
 # dev.off()
 ```
 
-A bubble plot can be generated only if the clusters are the output of
+A bubble plot can be generated only if the gene groups are the output of
 DeltaTE program.
 
 ``` r
-# Bubble plot clusters if clusters are from DeltaTE
-BubbleRBPs(res = res,clusters = clusters,rbp_lfc = rbp_lfc)
+# Bubble plot gene_groups if gene_groups are from DeltaTE
+BubbleRBPs(res = res,gene_groups = gene_groups,rbp_lfc = rbp_lfc)
 ```
 
 ![](man/figures/README-Bubble%20plot-1.png)<!-- -->
@@ -258,28 +262,28 @@ network for by n. This will pick the n most changing RBPs.
 
 ``` r
 # Draw network
-Draw_network_by_group(rbp_lfc=rbp_lfc,res=res,Targets=Targets,clusters=clusters,n=5,forwarded = F)
+Draw_network_by_group(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
 ```
 
 ![](man/figures/README-Network-1.png)<!-- -->
 
 ``` r
 # plot GO
-Plot_GO(rbp_lfc=rbp_lfc,res=res,Targets=Targets,clusters=clusters,n=5,
+Plot_GO(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,
   tpm_ribo = tpm_ribo,th=200,GO_to_show=3,forwarded = F)
 ```
 
 ![](man/figures/README-GO%20of%20specific%20nodes-1.png)<!-- -->
 
 ``` r
-Plot_GO_node_name(rbp_lfc=rbp_lfc,res=res,Targets=Targets,clusters=clusters,n=5,
+Plot_GO_node_name(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,
                   tpm_ribo = tpm_ribo,Nodes_to_keep=c(19,15),GO_to_show=3,forwarded = F)
 ```
 
 ![](man/figures/README-GO%20of%20specific%20nodes-2.png)<!-- -->
 
 ``` r
-Plot_GO_RBP(rbp_of_interest="QKI",tpm_ribo = tpm_ribo,Targets=Targets,clusters=clusters,GO_to_show=3)
+Plot_GO_RBP(rbp_of_interest="QKI",tpm_ribo = tpm_ribo,Targets=Targets,gene_groups=gene_groups,GO_to_show=3)
 ```
 
 ![](man/figures/README-GO%20of%20specific%20nodes-3.png)<!-- -->

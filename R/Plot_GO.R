@@ -24,7 +24,9 @@ Plot_GO <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_grou
 
   if (forwarded==F) {
     fw=which(grepl("forwarded",names(res)))
-    res=res[-fw]
+    if (length(fw)>0) {
+      res=res[-fw]
+    }
   }
 
 
