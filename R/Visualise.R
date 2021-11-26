@@ -13,7 +13,7 @@ Visualise=function(results=results,folder=getwd()){
   Targets=results$Targets
   res=results$res
 
-  save(results,paste0(folder,"/Results_CLIPreg.Rdata"))
+  save(results,file=paste0(folder,"/Results_CLIPreg.Rdata"))
 
   A=HeatmapRBP(res=res,rbp_lfc = rbp_lfc)
   n=length(A@ht_list$`RBP direction`@matrix)
@@ -34,7 +34,7 @@ Visualise=function(results=results,folder=getwd()){
   D=Plot_GO(rbp_lfc=rbp_lfc,res=res,Targets=Targets,clusters=clusters,n=5,
           tpm_ribo = tpm_ribo,th=200,GO_to_show=3,forwarded=F)
   n=nrow(D$data)
-  pdf(paste0(folder,"/GO_node_200+.pdf"),12,3+0.3*n)
+  pdf(paste0(folder,"/GO_from_nodes_200+.pdf"),12,3+0.3*n)
   print(D)
   dev.off()
 

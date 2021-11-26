@@ -88,7 +88,8 @@ Run the analysis with all default parameters.
 Generate the visual output from the results of the analysis. The Visualise function will create 2 new files in the folder given: an Rdata file containing the list object from the run_CLIPreg function and a pdf file with the main figures.
 
 ```{r RVisualize, message=FALSE}
-#Visualise(results=results,folder=getwd())
+#dir.create("Results_CLIPreg")
+#Visualise(results=results,folder="Results_CLIPreg")
 ```
 
 ### Advance usage
@@ -124,7 +125,7 @@ data("ribo_lfc")
 data("tpm_ribo")
 
 head(ribo_lfc)
-head(tpm_ribo)
+#head(tpm_ribo)
 
 # If you want to input your own data
 #load_ribo_lfc(ribo_lfc_file = "ribo_lfc_file")
@@ -175,7 +176,7 @@ res=cure_res(res=res,rbp_lfc=rbp_lfc)
 
 Generate and save heatmap to pdf. The heatmap represents the -logP of each RBP for each cluster. The blue RBPs are downregulated and the orange RBPs are upregulated. Only RBPs that are significant in at least one cluster are shown.
 
-```{r Generate and save heatmap, message=FALSE}
+```{r Generate and save heatmap,fig.height=15,fig.width=10}
 # Heatmap of RBP scores
 
 HeatmapRBP(res=res,rbp_lfc=rbp_lfc)
@@ -199,12 +200,12 @@ BubbleRBPs(res = res,clusters = clusters,rbp_lfc = rbp_lfc)
 
 From the results, the user can choose a number of RBP to draw the network for by n. This will pick the n most changing RBPs.
 
-```{r Network, message=FALSE}
+```{r Network,message=FALSE}
 # Draw network
 Draw_network_by_group(rbp_lfc=rbp_lfc,res=res,Targets=Targets,clusters=clusters,n=5,forwarded = F)
 ```
 
-```{r GO of specific nodes, message=FALSE}
+```{r GO of specific nodes,fig.width=15, message=FALSE}
 # plot GO
 Plot_GO(rbp_lfc=rbp_lfc,res=res,Targets=Targets,clusters=clusters,n=5,
   tpm_ribo = tpm_ribo,th=200,GO_to_show=3,forwarded = F)
