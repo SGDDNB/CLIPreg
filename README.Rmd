@@ -74,7 +74,7 @@ For testing the package with the example data
 #Example=Load_example()
 ```
 
-For using your own data, you must specify a folder that contains at least 3 txt files that are named: clusters.txt, ribo_lfc.txt and ribo_tpm.txt. For the format of those 3 files, please refer to Advance usage step 1.
+For using your own data, you must specify a folder that contains at least 3 txt files that are named: gene_groups.txt, ribo_lfc.txt and ribo_tpm.txt. For the format of those 3 files, please refer to Advance usage step 1.
 
 ```{r load user data, message=FALSE}
 #Input_data=Load_input_files(folder = "path/to/folder")
@@ -96,7 +96,7 @@ Generate the visual output from the results of the analysis. The Visualise funct
 
 ## Step 1: Input datasets
 
-Let's have a look at the cluster file from the example data. It consists of 2 columns containing the geneID and the cluster for all the DE genes. This is optional, if you want to provide your own clusters, go to next step.
+Let's have a look at the gene_groups file from the example data. It consists of 2 columns containing the geneID and the gene groups for all the DE genes. This is optional, if you want to provide your own gene groups, go to next step.
 
 ```{r load gene_groups, message=FALSE}
 data("gene_groups")
