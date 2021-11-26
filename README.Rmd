@@ -87,7 +87,7 @@ results=run_CLIPreg(Example, is.example=T) # or run_CLIPreg(Input_data, is.examp
 
 Generate the visual output from the results of the analysis. The Visualise function will create 2 new files in the folder given: an Rdata file containing the list object from the run_CLIPreg function and a pdf file with the main figures.
 
-```{r Run default analysis, message=FALSE}
+```{r RVisualize, message=FALSE}
 Visualise(results=results,folder=getwd())
 ```
 
