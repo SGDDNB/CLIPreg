@@ -7,7 +7,7 @@
 #'
 run_CLIPreg=function(input_data=Example, is.example=T)
 {
-  clusters=input_data$clusters
+  gene_groups=input_data$gene_groups
   tpm_ribo=input_data$tpm_ribo
   ribo_lfc=input_data$ribo_lfc
   RBP_ENCODE=input_data$RBP_ENCODE
@@ -17,16 +17,16 @@ run_CLIPreg=function(input_data=Example, is.example=T)
     res_Encode=CLIPreg::res_Encode
     res_Postar=CLIPreg::res_Postar
   } else {
-    res_Encode=CLIPReg_V4(RBP_data=RBP_ENCODE,clusters=clusters)
-    res_Postar=CLIPReg_V4(RBP_data=RBP_POSTAR,clusters=clusters)
+    res_Encode=CLIPReg_V4(RBP_data=RBP_ENCODE,gene_groups=gene_groups)
+    res_Postar=CLIPReg_V4(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
   }
 
-  Targets=combine_targets(RBP_list1=RBP_ENCODE,RBP_list2=RBP_POSTAR,background=clusters$geneID)
+  Targets=combine_targets(RBP_list1=RBP_ENCODE,RBP_list2=RBP_POSTAR,background=gene_groups$geneID)
   res=CLIPreg::combine(res1=res_Encode,res2=res_Postar)
   rbp_lfc=rbp_change(res=res,ribo_lfc=ribo_lfc)
   res=cure_res(res=res,rbp_lfc=rbp_lfc)
 
-  L=list(clusters=clusters,
+  L=list(gene_groups=gene_groups,
          tpm_ribo=tpm_ribo,
          rbp_lfc=rbp_lfc,
          ribo_lfc=ribo_lfc,

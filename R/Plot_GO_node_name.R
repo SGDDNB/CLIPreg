@@ -13,7 +13,7 @@
 #'
 #'
 #'
-Plot_GO_node_name <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,clusters=clusters,n=5,
+Plot_GO_node_name <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,
                              tpm_ribo = tpm_ribo,Nodes_to_keep=c(19,15),GO_to_show=3,forwarded=F)
 {
   #To ignore the warnings during usage
@@ -43,12 +43,12 @@ Plot_GO_node_name <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,clusters=cl
 
   RBP_kept=rownames(rbp_lfc)
 
-  clusters=clusters[clusters$Cluster%in%names(res),]
-  adjacency_matrix=as.data.frame(matrix(0,nrow = n+nrow(clusters),ncol = n+nrow(clusters)))
-  colnames(adjacency_matrix)=c(RBP_kept,clusters$geneID)
-  rownames(adjacency_matrix)=c(RBP_kept,clusters$geneID)
+  gene_groups=gene_groups[gene_groups$Gene_group%in%names(res),]
+  adjacency_matrix=as.data.frame(matrix(0,nrow = n+nrow(gene_groups),ncol = n+nrow(gene_groups)))
+  colnames(adjacency_matrix)=c(RBP_kept,gene_groups$geneID)
+  rownames(adjacency_matrix)=c(RBP_kept,gene_groups$geneID)
   for (r in RBP_kept) {
-    for (j in clusters$geneID) {
+    for (j in gene_groups$geneID) {
       if (j%in%Targets[[r]]) {
         adjacency_matrix[r,j]=1
         adjacency_matrix[j,r]=1
@@ -62,9 +62,9 @@ Plot_GO_node_name <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,clusters=cl
 
   all_types=unique(type)[-1]
 
-  UpOrDown=rep("Down",nrow(clusters))
-  UpOrDown[which(grepl("up",clusters$Cluster,fixed = T))]="Up"
-  clusters$Direction=UpOrDown
+  UpOrDown=rep("Down",nrow(gene_groups))
+  UpOrDown[which(grepl("up",gene_groups$Gene_group,fixed = T))]="Up"
+  gene_groups$Direction=UpOrDown
 
   #adj_Down
   size_down=rep(1,n)
@@ -73,7 +73,7 @@ Plot_GO_node_name <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,clusters=cl
   TypesList_up=list()
   for (i in all_types) {
     genes_in_group=names(which(type==i))
-    genes_Down=genes_in_group[clusters$Direction[clusters$geneID==genes_in_group]=="Down"]
+    genes_Down=genes_in_group[gene_groups$Direction[gene_groups$geneID==genes_in_group]=="Down"]
     genes_Up=genes_in_group[!(genes_in_group%in%genes_Down)]
     TypesList[[i]]=genes_Down
     TypesList_up[[i]]=genes_Up

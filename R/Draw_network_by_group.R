@@ -2,17 +2,17 @@
 #'
 #' @description This function draw a network from CLIPreg output. It plots the n most changing RBP and their targets group by TE category
 #'
-#' @param symbol rbp_lfc, res, Targets, clusters, n
+#' @param symbol rbp_lfc, res, Targets, gene_groups, n
 #'
 #' @return Plot network
 #'
-#' @examples Draw_network(rbp_lfc=rbp_lfc,res=res_both,clusters=clusters,n=5)
+#' @examples Draw_network(rbp_lfc=rbp_lfc,res=res_both,gene_groups=gene_groups,n=5)
 #'
 #' @export
 #'
 #'
 #'
-Draw_network_by_group <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,clusters=clusters,n=5,forwarded=F)
+Draw_network_by_group <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded=F)
 {
   #To ignore the warnings during usage
   options(warn=-1)
@@ -41,12 +41,12 @@ Draw_network_by_group <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,cluster
 
   RBP_kept=rownames(rbp_lfc)
 
-  clusters=clusters[clusters$Cluster%in%names(res),]
-  adjacency_matrix=as.data.frame(matrix(0,nrow = n+nrow(clusters),ncol = n+nrow(clusters)))
-  colnames(adjacency_matrix)=c(RBP_kept,clusters$geneID)
-  rownames(adjacency_matrix)=c(RBP_kept,clusters$geneID)
+  gene_groups=gene_groups[gene_groups$Gene_group%in%names(res),]
+  adjacency_matrix=as.data.frame(matrix(0,nrow = n+nrow(gene_groups),ncol = n+nrow(gene_groups)))
+  colnames(adjacency_matrix)=c(RBP_kept,gene_groups$geneID)
+  rownames(adjacency_matrix)=c(RBP_kept,gene_groups$geneID)
   for (r in RBP_kept) {
-    for (j in clusters$geneID) {
+    for (j in gene_groups$geneID) {
       if (j%in%Targets[[r]]) {
         adjacency_matrix[r,j]=1
         adjacency_matrix[j,r]=1
@@ -64,9 +64,9 @@ Draw_network_by_group <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,cluster
   colnames(new_adj)=c(RBP_kept,all_types)
   rownames(new_adj)=c(RBP_kept,all_types)
 
-  UpOrDown=rep("Down",nrow(clusters))
-  UpOrDown[which(grepl("up",clusters$Cluster,fixed = T))]="Up"
-  clusters$Direction=UpOrDown
+  UpOrDown=rep("Down",nrow(gene_groups))
+  UpOrDown[which(grepl("up",gene_groups$Gene_group,fixed = T))]="Up"
+  gene_groups$Direction=UpOrDown
 
   adj_up=new_adj
   adj_down=new_adj
@@ -76,7 +76,7 @@ Draw_network_by_group <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,cluster
   size_up=c()
   for (i in all_types) {
     genes_in_group=names(which(type==i))
-    genes_Down=genes_in_group[clusters$Direction[clusters$geneID==genes_in_group]=="Down"]
+    genes_Down=genes_in_group[gene_groups$Direction[gene_groups$geneID==genes_in_group]=="Down"]
     genes_Up=genes_in_group[!(genes_in_group%in%genes_Down)]
     RBP_concerned=str_locate_all(pattern="1",i)[[1]][,1]
     if (length(RBP_concerned)>0) {

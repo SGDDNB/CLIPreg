@@ -13,7 +13,7 @@
 #'
 #'
 #'
-Plot_GO_RBP <-function(rbp_of_interest="QKI",tpm_ribo = tpm_ribo,Targets=Targets,clusters=clusters,GO_to_show=3)
+Plot_GO_RBP <-function(rbp_of_interest="QKI",tpm_ribo = tpm_ribo,Targets=Targets,gene_groups=gene_groups,GO_to_show=3)
 {
   #To ignore the warnings during usage
   options(warn=-1)
@@ -22,14 +22,14 @@ Plot_GO_RBP <-function(rbp_of_interest="QKI",tpm_ribo = tpm_ribo,Targets=Targets
 
   Targets_RBP=Targets[[rbp_of_interest]]
 
-  UpOrDown=rep("Down",nrow(clusters))
-  UpOrDown[which(grepl("up",clusters$Cluster,fixed = T))]="Up"
-  clusters$Direction=UpOrDown
+  UpOrDown=rep("Down",nrow(gene_groups))
+  UpOrDown[which(grepl("up",gene_groups$Gene_group,fixed = T))]="Up"
+  gene_groups$Direction=UpOrDown
 
-  RBP_t_up=subset(clusters$geneID,clusters$Direction=="Up")
+  RBP_t_up=subset(gene_groups$geneID,gene_groups$Direction=="Up")
   RBP_t_up=subset(RBP_t_up,RBP_t_up%in%Targets_RBP)
 
-  RBP_t_down=subset(clusters$geneID,clusters$Direction=="Down")
+  RBP_t_down=subset(gene_groups$geneID,gene_groups$Direction=="Down")
   RBP_t_down=subset(RBP_t_up,RBP_t_down%in%Targets_RBP)
 
 

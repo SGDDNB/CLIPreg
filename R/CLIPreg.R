@@ -1,18 +1,17 @@
-#' @title CLIPReg_V3
+#' @title CLIPreg
 #'
-#' @description Calculates the enrichment of each RBP for each cluster
+#' @description Calculates the enrichment of each RBP for each gene group
 #'
-#' @param symbol folder, RBP_data, clusters
+#' @param symbol folder, RBP_data, gene_groups
 #'
-#' @return List of clusters containing dataframe with all the enrichment score for each RBP
+#' @return List of gene_groups containing dataframe with all the enrichment score for each RBP
 #'
-#' @examples CLIPreg_V4(RBP_data=RBP_POSTAR,clusters=clusters)
-#'
+#' @examples CLIPreg(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
 #' @export
 #'
 #'
 #'
-CLIPReg_V4 <-function(RBP_data=RBP_POSTAR,clusters=clusters)
+CLIPreg <-function(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
 {
   #To ignore the warnings during usage
   options(warn=-1)
@@ -30,13 +29,13 @@ CLIPReg_V4 <-function(RBP_data=RBP_POSTAR,clusters=clusters)
   }
 
   rbp_names=names(RBP_data)
-  categories=unique(clusters$Cluster)
+  categories=unique(gene_groups$Gene_group)
   out=list()
   for (cl in categories) {
     print(cl)
     RBP=RBP_data
-    cluster=clusters$geneID[clusters$Cluster==cl]
-    nb_genes=length(cluster)
+    gene_group=gene_groups$geneID[gene_groups$Gene_group==cl]
+    nb_genes=length(gene_group)
 
     # Prepare the output table
     overlap=data.frame(RBP=rbp_names,real_overlap=0,simulated_overlap_mean=0,simulated_overlap_sd=0,z=0,pval=0)
@@ -44,14 +43,14 @@ CLIPReg_V4 <-function(RBP_data=RBP_POSTAR,clusters=clusters)
     # Get the real overlap
     for (r in 1:nrow(overlap)) {
       rbp_r=overlap$RBP[r]
-      overlap$real_overlap[r]=sum(cluster%fin%RBP[[rbp_r]])
+      overlap$real_overlap[r]=sum(gene_group%fin%RBP[[rbp_r]])
     }
 
 
     # Function for the loop in parallel
-    Get_simulation=function(clusters,nb_genes,simulations,rbp_names,RBP,iterations=1000){
+    Get_simulation=function(gene_groups,nb_genes,simulations,rbp_names,RBP,iterations=1000){
       for(j in 1:iterations) {
-        bg_shuffled=sample(clusters$geneID,nb_genes)
+        bg_shuffled=sample(gene_groups$geneID,nb_genes)
         for (r in rbp_names) {
           simulations[[r]]=c(simulations[[r]],sum(bg_shuffled%fin%RBP[[r]]))
         }
@@ -62,7 +61,7 @@ CLIPReg_V4 <-function(RBP_data=RBP_POSTAR,clusters=clusters)
     simulations=list()
     # Get simulated data
     finalMatrix <- foreach(i=1:100, .combine='c') %dopar% {
-      tempMatrix =  Get_simulation(clusters,nb_genes,simulations,rbp_names,RBP,iterations = 1000)#calling a function
+      tempMatrix =  Get_simulation(gene_groups,nb_genes,simulations,rbp_names,RBP,iterations = 1000)#calling a function
       tempMatrix #Equivalent to finalMatrix = cbind(finalMatrix, tempMatrix)
     }
 

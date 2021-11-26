@@ -2,17 +2,17 @@
 #'
 #' @description This function draw a network from CLIPreg output. It plots the n most changing RBP and their target
 #'
-#' @param symbol rbp_lfc, res, clusters, n
+#' @param symbol rbp_lfc, res, gene_groups, n
 #'
 #' @return Plot network
 #'
-#' @examples Draw_network(rbp_lfc=rbp_lfc,res=res_both,clusters=clusters,n=5)
+#' @examples Draw_network(rbp_lfc=rbp_lfc,res=res_both,gene_groups=gene_groups,n=5)
 #'
 #' @export
 #'
 #'
 #'
-Draw_network <-function(rbp_lfc=rbp_lfc,res=res_both,clusters=clusters,n=5)
+Draw_network <-function(rbp_lfc=rbp_lfc,res=res_both,gene_groups=gene_groups,n=5)
 {
   #To ignore the warnings during usage
   options(warn=-1)
@@ -38,12 +38,12 @@ Draw_network <-function(rbp_lfc=rbp_lfc,res=res_both,clusters=clusters,n=5)
 
   RBP_kept=rownames(rbp_lfc)
 
-  clusters=clusters[clusters$Cluster%in%names(res),]
-  adjacency_matrix=as.data.frame(matrix(0,nrow = n+nrow(clusters),ncol = n+nrow(clusters)))
-  colnames(adjacency_matrix)=c(RBP_kept,clusters$geneID)
-  rownames(adjacency_matrix)=c(RBP_kept,clusters$geneID)
+  gene_groups=gene_groups[gene_groups$Gene_group%in%names(res),]
+  adjacency_matrix=as.data.frame(matrix(0,nrow = n+nrow(gene_groups),ncol = n+nrow(gene_groups)))
+  colnames(adjacency_matrix)=c(RBP_kept,gene_groups$geneID)
+  rownames(adjacency_matrix)=c(RBP_kept,gene_groups$geneID)
   for (r in RBP_kept) {
-    for (j in clusters$geneID) {
+    for (j in gene_groups$geneID) {
       if (j%in%Targets[[r]]) {
         adjacency_matrix[r,j]=1
         adjacency_matrix[j,r]=1
@@ -55,13 +55,13 @@ Draw_network <-function(rbp_lfc=rbp_lfc,res=res_both,clusters=clusters,n=5)
 
 
   node_color=rep(0,nrow(adjacency_matrix))
-  node_color=clusters$Cluster[match(rownames(adjacency_matrix),clusters$geneID)]
+  node_color=gene_groups$Gene_group[match(rownames(adjacency_matrix),gene_groups$geneID)]
   node_color[1:n]="RBP"
 
   node_size=rep(0.5,nrow(adjacency_matrix))
   node_size[1:n]=10
   ggnet2(adjacency_matrix,size = node_size,color = node_color,label = RBP_kept,
-         palette="Set1")+ guides(size = FALSE,color=guide_legend(title="Clusters"))
+         palette="Set1")+ guides(size = FALSE,color=guide_legend(title="Gene groups"))
 
 
 }

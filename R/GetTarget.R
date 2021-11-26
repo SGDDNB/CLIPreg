@@ -6,13 +6,13 @@
 #'
 #' @return List of RBPs each containing 1 vector of targets in form of characters
 #'
-#' @examples GetTarget(RBP_data=RBP_POSTAR, background=clusters$geneID)
+#' @examples GetTarget(RBP_data=RBP_POSTAR, background=gene_groups$geneID)
 #'
 #' @export
 #'
 #'
 #'
-GetTarget <-function(RBP_data=RBP_POSTAR, background=clusters$geneID)
+GetTarget <-function(RBP_data=RBP_POSTAR, background=gene_groups$geneID)
 {
   #To ignore the warnings during usage
   options(warn=-1)

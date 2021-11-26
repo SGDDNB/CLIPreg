@@ -1,6 +1,6 @@
 #' @title HeatmapRBP
 #'
-#' @description Plot a heatmap of the pvalues of enrichment of each RBP in each cluster
+#' @description Plot a heatmap of the pvalues of enrichment of each RBP in each gene group
 #'
 #' @param symbol res, rbp_lfc
 #'

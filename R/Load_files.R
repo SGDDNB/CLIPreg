@@ -6,13 +6,13 @@
 #' @export
 #'
 Load_example <-function(){
-  data("clusters")
+  data("gene_groups")
   data("tpm_ribo")
   data("ribo_lfc")
   data("RBP_ENCODE")
   data("RBP_POSTAR")
 
-  L=list(clusters=clusters,
+  L=list(gene_groups=gene_groups,
          tpm_ribo=tpm_ribo,
          ribo_lfc=ribo_lfc,
          RBP_ENCODE=RBP_ENCODE,
@@ -28,12 +28,12 @@ Load_example <-function(){
 #' @export
 #'
 Load_input_files <-function(folder="Path/to/folder"){
-  clusters=fread(paste0(folder,"/clusters.txt"))
+  gene_groups=fread(paste0(folder,"/gene_groups.txt"))
   tpm_ribo=fread(paste0(folder,"/tpm_ribo.txt"))
   ribo_lfc=fread(paste0(folder,"/ribo_lfc.txt"))
   data("RBP_ENCODE")
   data("RBP_POSTAR")
-  L=list(clusters=clusters,
+  L=list(gene_groups=gene_groups,
          tpm_ribo=tpm_ribo,
          ribo_lfc=ribo_lfc,
          RBP_ENCODE=RBP_ENCODE,

@@ -1,13 +1,13 @@
-#' @title load_clusters
-#' @description Load the cluster file from user
-#' @param symbol cluster_file
+#' @title load_gene_groups
+#' @description Load the gene group file from user
+#' @param symbol gene_groups_file
 #' @return NULL
 #' @examples
 #' @export
 #'
-load_clusters <-function(cluster_file=cluster_file) {
-  clusters=as.data.frame(fread(cluster_file))
-  return(clusters)
+load_gene_groups <-function(gene_groups_file=gene_groups_file) {
+  gene_groups=as.data.frame(fread(gene_groups_file))
+  return(gene_groups)
 }
 
 #' @title load_ribo_lfc
@@ -36,8 +36,8 @@ load_ribo_tpm <-function(ribo_tpm_file=ribo_tpm_file) {
 
 
 #' @title combine
-#' @description Load the cluster file from user
-#' @param symbol cluster_file
+#' @description Load the gene_groups file from user
+#' @param symbol gene_groups_file
 #' @return NULL
 #' @examples
 #' @export
@@ -107,7 +107,7 @@ cure_res=function(res=res,rbp_lfc=rbp_lfc){
 #' @examples
 #' @export
 #'
-combine_targets=function(RBP_list1=RBP_ENCODE,RBP_list2=RBP_POSTAR,background=clusters$geneID){
+combine_targets=function(RBP_list1=RBP_ENCODE,RBP_list2=RBP_POSTAR,background=gene_groups$geneID){
   TargetsEncode=GetTarget(RBP_data = RBP_list1,background = background)
   TargetsPOSTAR=GetTarget(RBP_data = RBP_list2,background = background)
   Targets=c(TargetsEncode,TargetsPOSTAR)

@@ -1,18 +1,18 @@
 #' @title BubbleRBPs
 #'
-#' @description Use clusters from DeltaTE output to generate enrichement plot of RBPs
+#' @description Use gene groups from DeltaTE output to generate enrichement plot of RBPs
 #'
-#' @param symbol RBP_res, clusters, rbp_lfc
+#' @param symbol RBP_res, gene_groups, rbp_lfc
 #'
 #' @return NULL. Generates a bubble plot
 #'
-#' @examples BubbleRBPs(RBP_res=res,clusters=clusters,rbp_lfc=rbp_lfc)
+#' @examples BubbleRBPs(RBP_res=res,gene_groups=gene_groups,rbp_lfc=rbp_lfc)
 #'
 #' @export
 #'
 #'
 #'
-BubbleRBPs <-function(res=res,clusters=clusters,rbp_lfc=rbp_lfc)
+BubbleRBPs <-function(res=res,gene_groups=gene_groups,rbp_lfc=rbp_lfc)
 {
   #To ignore the warnings during usage
   options(warn=-1)
@@ -48,15 +48,15 @@ BubbleRBPs <-function(res=res,clusters=clusters,rbp_lfc=rbp_lfc)
              mean(sig_res$exclusive_up$z))
   df$value=round(df$value,1)
 
-  df$Regulators=c(perc_in(clusters$geneID[clusters$Cluster=="forwarded_up"],rbp_lfc$geneID),
-                  perc_in(clusters$geneID[clusters$Cluster=="forwarded_down"],rbp_lfc$geneID),
+  df$Regulators=c(perc_in(gene_groups$geneID[gene_groups$Gene_group=="forwarded_up"],rbp_lfc$geneID),
+                  perc_in(gene_groups$geneID[gene_groups$Gene_group=="forwarded_down"],rbp_lfc$geneID),
                   NA,
-                  perc_in(clusters$geneID[clusters$Cluster=="buffered_down"],rbp_lfc$geneID),
-                  perc_in(clusters$geneID[clusters$Cluster=="intensified_down"],rbp_lfc$geneID),
-                  perc_in(clusters$geneID[clusters$Cluster=="exclusive_down"],rbp_lfc$geneID),
-                  perc_in(clusters$geneID[clusters$Cluster=="intensified_up"],rbp_lfc$geneID),
-                  perc_in(clusters$geneID[clusters$Cluster=="buffered_up"],rbp_lfc$geneID),
-                  perc_in(clusters$geneID[clusters$Cluster=="exclusive_up"],rbp_lfc$geneID))
+                  perc_in(gene_groups$geneID[gene_groups$Gene_group=="buffered_down"],rbp_lfc$geneID),
+                  perc_in(gene_groups$geneID[gene_groups$Gene_group=="intensified_down"],rbp_lfc$geneID),
+                  perc_in(gene_groups$geneID[gene_groups$Gene_group=="exclusive_down"],rbp_lfc$geneID),
+                  perc_in(gene_groups$geneID[gene_groups$Gene_group=="intensified_up"],rbp_lfc$geneID),
+                  perc_in(gene_groups$geneID[gene_groups$Gene_group=="buffered_up"],rbp_lfc$geneID),
+                  perc_in(gene_groups$geneID[gene_groups$Gene_group=="exclusive_up"],rbp_lfc$geneID))
 
   df$Regulators[is.na(df$Regulators)]=0
   df$label=c("forwarded_up","forwarded_down",NA,"buffered_down","intensified_down",
