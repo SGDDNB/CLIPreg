@@ -27,13 +27,13 @@ knitr::opts_chunk$set(
 Users may use following codes to check and install all the required packages.
 
 ``` r
-list.of.packages <- c("ggplot2","grid","doParallel","foreach","data.table","fastmatch","GGally","ggnet","topGO","ALL","devtools")
+list.of.packages <- c("ggplot2","grid","doParallel","foreach","data.table","fastmatch","GGally","ggnet","topGO","ALL","devtools","org.Hs.eg.db")
 
 ## for package "ggplot2", "pheatmap", "grid", "doParallel", "foreach", "data.table", "fastmatch", "GGally"
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
-## for package "topGO", "ALL", "ggnet", "ComplexHeatmap"
+## for package "topGO", "ALL", "ggnet", "ComplexHeatmap","org.Hs.eg.db"
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages))  BiocManager::install(new.packages)
@@ -106,7 +106,7 @@ head(gene_groups)
 You can input your own gene groups by using the function load_gene_groups() and giving the file location of your file as input.
 
 ```{r load gene_groups from user, message=FALSE}
-#gene_groups=load_gene_groups(gene_groups_file = "path/to/gene_groups_file")
+#gene_groups=load_gene_groups(gene_groups_file = "path/to/gene_groups_file.txt")
 ```
 
 Load POSTAR and ENCODE RBP data. Those are 2 public datasets which are processed in order to have lists of vector. Each vector is named after 1 RBP and contains the geneID of all the targets of that RBP. Combine both data in a target list. 
