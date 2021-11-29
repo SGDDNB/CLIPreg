@@ -29,7 +29,7 @@ HeatmapRBP <-function(res=res,rbp_lfc=rbp_lfc)
   pvalues[which(pvalues == Inf, arr.ind = T)] = 5
   rownames(pvalues) = res[[1]]$RBP
   colnames(pvalues) = names(res)
-  pvalues = pvalues[rowSums(pvalues > -log10(0.05)) > 0, ]
+  pvalues = pvalues[rowSums(pvalues > -log10(0.1)) > 0, ]
   pvalues=trunc(pvalues)
   pvalues$status = NA
   pvalues$status[match(rbp_lfc$IDENTIFIER, rownames(pvalues))] = sign(rbp_lfc$FoldChange)
