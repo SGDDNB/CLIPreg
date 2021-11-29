@@ -19,13 +19,13 @@ Users may use following codes to check and install all the required
 packages.
 
 ``` r
-list.of.packages <- c("ggplot2","grid","doParallel","foreach","data.table","fastmatch","GGally","ggnet","topGO","ALL","devtools")
+list.of.packages <- c("ggplot2","grid","doParallel","foreach","data.table","fastmatch","GGally","ggnet","topGO","ALL","devtools","org.Hs.eg.db")
 
 ## for package "ggplot2", "pheatmap", "grid", "doParallel", "foreach", "data.table", "fastmatch", "GGally"
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
-## for package "topGO", "ALL", "ggnet", "ComplexHeatmap"
+## for package "topGO", "ALL", "ggnet", "ComplexHeatmap","org.Hs.eg.db"
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages))  BiocManager::install(new.packages)
@@ -124,7 +124,7 @@ You can input your own gene groups by using the function
 load\_gene\_groups() and giving the file location of your file as input.
 
 ``` r
-#gene_groups=load_gene_groups(gene_groups_file = "path/to/gene_groups_file")
+#gene_groups=load_gene_groups(gene_groups_file = "path/to/gene_groups_file.txt")
 ```
 
 Load POSTAR and ENCODE RBP data. Those are 2 public datasets which are
@@ -191,13 +191,13 @@ head(res_Encode[[1]])
 #> 4   RBM15          461              476.04563            14.839723 -1.0138754
 #> 5   DDX24          370              406.79695            14.246241 -2.5829235
 #> 6   XRCC6          142              146.71529             9.573704 -0.4925252
-#>      pval
-#> 1 0.86594
-#> 2 0.63920
-#> 3 0.99986
-#> 4 0.83574
-#> 5 0.99474
-#> 6 0.66889
+#>      pval padj
+#> 1 0.86594    1
+#> 2 0.63920    1
+#> 3 0.99986    1
+#> 4 0.83574    1
+#> 5 0.99474    1
+#> 6 0.66889    1
 ```
 
 Then we want to combine POSTAR and ENCODE to work with only one
@@ -205,7 +205,6 @@ dataframe and only keep RBPs that are significant in at least one gene
 group.
 
 ``` r
-
 res=CLIPreg::combine(res1=res_Encode,res2=res_Postar)
 ```
 
