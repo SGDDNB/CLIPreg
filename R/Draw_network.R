@@ -22,7 +22,7 @@ Draw_network <-function(rbp_lfc=rbp_lfc,res=res_both,gene_groups=gene_groups,n=5
 
   RBPs=c()
   for (c in names(res)) {
-    res[[c]]=res[[c]][res[[c]]$pval<0.05,]
+    res[[c]]=res[[c]][res[[c]]$padj<0.1,]
     if (length(res[[c]][,1])==0) {
       res=res[-which(names(res)==c)]
     }

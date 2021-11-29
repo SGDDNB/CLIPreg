@@ -38,7 +38,7 @@ CLIPreg <-function(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
     nb_genes=length(gene_group)
 
     # Prepare the output table
-    overlap=data.frame(RBP=rbp_names,real_overlap=0,simulated_overlap_mean=0,simulated_overlap_sd=0,z=0,pval=0)
+    overlap=data.frame(RBP=rbp_names,real_overlap=0,simulated_overlap_mean=0,simulated_overlap_sd=0,z=0,pval=0,padj=0)
 
     # Get the real overlap
     for (r in 1:nrow(overlap)) {
@@ -78,11 +78,10 @@ CLIPreg <-function(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
 
 
     for (i in 1:nrow(overlap)) {
-      rbp_i=overlap$RBP[i]
       count_lower=sum(simulations[[i]]>overlap$real_overlap[i])
       overlap$pval[i]=count_lower/100000
     }
-
+    overlap$padj=p.adjust(overlap$pval,method="BH")
     out[[cl]]=overlap
 
 

@@ -61,7 +61,7 @@ combine <- function(res1=res_Encode,res2=res_Postar){
 
   to_keep=c()
   for (n in names(res_both)) {
-    to_keep=c(to_keep,res_both[[n]]$RBP[res_both[[n]]$pval<0.05])
+    to_keep=c(to_keep,res_both[[n]]$RBP[res_both[[n]]$padj<0.1])
   }
   to_keep=unique(to_keep)
 

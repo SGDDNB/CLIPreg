@@ -28,7 +28,7 @@ Draw_network_by_group <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_gr
 
   RBPs=c()
   for (c in names(res)) {
-    res[[c]]=res[[c]][res[[c]]$pval<0.05,]
+    res[[c]]=res[[c]][res[[c]]$padj<0.1,]
     if (length(res[[c]][,1])==0) {
       res=res[-which(names(res)==c)]
     }
