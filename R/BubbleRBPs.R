@@ -58,14 +58,27 @@ BubbleRBPs <-function(res=res,gene_groups=gene_groups,rbp_lfc=rbp_lfc)
                   perc_in(gene_groups$geneID[gene_groups$Gene_group=="buffered_up"],rbp_lfc$geneID),
                   perc_in(gene_groups$geneID[gene_groups$Gene_group=="exclusive_up"],rbp_lfc$geneID))
 
+  df$Regulators=c(length(sig_res$forwarded_up$RBP)*100/length(gene_groups$geneID[gene_groups$Gene_group=="forwarded_up"]),
+                  length(sig_res$forwarded_down$RBP)*100/length(gene_groups$geneID[gene_groups$Gene_group=="forwarded_down"]),
+                  NA,
+                  length(sig_res$buffered_down$RBP)*100/length(gene_groups$geneID[gene_groups$Gene_group=="buffered_down"]),
+                  length(sig_res$intensified_down$RBP)*100/length(gene_groups$geneID[gene_groups$Gene_group=="intensified_down"]),
+                  length(sig_res$exclusive_down$RBP)*100/length(gene_groups$geneID[gene_groups$Gene_group=="exclusive_down"]),
+                  length(sig_res$intensified_up$RBP)*100/length(gene_groups$geneID[gene_groups$Gene_group=="intensified_up"]),
+                  length(sig_res$buffered_up$RBP)*100/length(gene_groups$geneID[gene_groups$Gene_group=="buffered_up"]),
+                  length(sig_res$exclusive_up$RBP)*100/length(gene_groups$geneID[gene_groups$Gene_group=="exclusive_up"]))
+
+
   df$Regulators[is.na(df$Regulators)]=0
   df$label=c("forwarded_up","forwarded_down",NA,"buffered_down","intensified_down",
              "exclusive_down","intensified_up","buffered_up","exclusive_up")
 
   #Plot the Data
-  ggplot(df, aes(Var1, Var2,label=value)) + geom_point(aes(size = value, colour = Regulators)) +
+  ggplot(df, aes(Var1, Var2,label=value))+
+    #geom_point(aes(size=value),fill=NA,color="black") +
+    geom_point(aes(size = value, fill = Regulators),shape=21) +
     scale_size_continuous(range = c(1,10))+
-    scale_colour_gradient(low = "white", high = "darkblue")+
+    scale_fill_continuous(low = "white", high = "darkblue")+
     theme_bw() + xlab("") + ylab("")+  geom_text(hjust=0.5, vjust=-2)+
     ggtitle("Mean z-score per gene group")+
     theme(panel.border = element_blank(), panel.grid.major = element_blank(),
