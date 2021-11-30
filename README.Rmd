@@ -148,8 +148,8 @@ Run the enrichment analysis using CLIPreg() function. This takes several minutes
 If you want to get the results directly you can load it by using the example data results. The output of CLIPreg() is a list of dataframes. One dataframe per gene group containing the RBP and statistical information calculated during the analysis such as p-value and z-score.
 
 ```{r load res, message=FALSE}
-data("Res_Encode")
-data("Res_Postar")
+data("res_Encode")
+data("res_Postar")
 head(res_Encode[[1]])
 ```
 

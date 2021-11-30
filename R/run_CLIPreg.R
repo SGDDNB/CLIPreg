@@ -14,8 +14,8 @@ run_CLIPreg=function(input_data=Example, is.example=T)
   RBP_POSTAR=input_data$RBP_POSTAR
 
   if (is.example==T) {
-    data("Res_Encode")
-    data("Res_Postar")
+    data("res_Encode")
+    data("res_Postar")
   } else {
     res_Encode=CLIPreg(RBP_data=RBP_ENCODE,gene_groups=gene_groups)
     res_Postar=CLIPreg(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
