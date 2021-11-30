@@ -48,16 +48,6 @@ BubbleRBPs <-function(res=res,gene_groups=gene_groups,rbp_lfc=rbp_lfc)
              mean(sig_res$exclusive_up$z))
   df$value=round(df$value,1)
 
-  df$Regulators=c(perc_in(gene_groups$geneID[gene_groups$Gene_group=="forwarded_up"],rbp_lfc$geneID),
-                  perc_in(gene_groups$geneID[gene_groups$Gene_group=="forwarded_down"],rbp_lfc$geneID),
-                  NA,
-                  perc_in(gene_groups$geneID[gene_groups$Gene_group=="buffered_down"],rbp_lfc$geneID),
-                  perc_in(gene_groups$geneID[gene_groups$Gene_group=="intensified_down"],rbp_lfc$geneID),
-                  perc_in(gene_groups$geneID[gene_groups$Gene_group=="exclusive_down"],rbp_lfc$geneID),
-                  perc_in(gene_groups$geneID[gene_groups$Gene_group=="intensified_up"],rbp_lfc$geneID),
-                  perc_in(gene_groups$geneID[gene_groups$Gene_group=="buffered_up"],rbp_lfc$geneID),
-                  perc_in(gene_groups$geneID[gene_groups$Gene_group=="exclusive_up"],rbp_lfc$geneID))
-
   df$Regulators=c(length(sig_res$forwarded_up$RBP)*100/length(gene_groups$geneID[gene_groups$Gene_group=="forwarded_up"]),
                   length(sig_res$forwarded_down$RBP)*100/length(gene_groups$geneID[gene_groups$Gene_group=="forwarded_down"]),
                   NA,
@@ -75,7 +65,6 @@ BubbleRBPs <-function(res=res,gene_groups=gene_groups,rbp_lfc=rbp_lfc)
 
   #Plot the Data
   ggplot(df, aes(Var1, Var2,label=value))+
-    #geom_point(aes(size=value),fill=NA,color="black") +
     geom_point(aes(size = value, fill = Regulators),shape=21) +
     scale_size_continuous(range = c(1,10))+
     scale_fill_continuous(low = "white", high = "darkblue")+
