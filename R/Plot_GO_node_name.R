@@ -131,7 +131,7 @@ Plot_GO_node_name <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups
     GOterms=c(GOterms,goEnrichment$Term)
     GOscore=c(GOscore,goEnrichment$classicFisher)
     NodeNames=c(NodeNames,rep(Nodes_to_keep[j],length(goEnrichment$GO.ID)))
-    GOcolor=rep(color_nodes[names(TypesToKeep[j])],length(goEnrichment$GO.ID))
+    GOcolor=c(GOcolor,rep(color_nodes[names(TypesToKeep)[j]],length(goEnrichment$GO.ID)))
   }
 
 
