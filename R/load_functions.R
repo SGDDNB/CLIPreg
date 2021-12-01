@@ -48,7 +48,7 @@ combine <- function(res1=res_Encode,res2=res_Postar){
     r=res1[[1]]$RBP[i]
     if (r%in%res_both[[1]]$RBP) {
       for (n in names(res_both)) {
-        for (j in 2:6) {
+        for (j in 2:7) {
           res_both[[n]][which(res_both[[1]]$RBP==r),j]=(res_both[[n]][which(res_both[[1]]$RBP==r),j]+res1[[n]][i,j])/2
         }
       }

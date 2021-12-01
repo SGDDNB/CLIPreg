@@ -79,6 +79,9 @@ CLIPreg <-function(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
 
     for (i in 1:nrow(overlap)) {
       count_lower=sum(simulations[[i]]>overlap$real_overlap[i])
+      if (count_lower=0) {
+        count_lower=1
+      }
       overlap$pval[i]=count_lower/100000
     }
     overlap$padj=p.adjust(overlap$pval,method="fdr")
