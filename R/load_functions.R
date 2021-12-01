@@ -48,8 +48,10 @@ combine <- function(res1=res_Encode,res2=res_Postar){
     r=res1[[1]]$RBP[i]
     if (r%in%res_both[[1]]$RBP) {
       for (n in names(res_both)) {
-        for (j in 2:7) {
-          res_both[[n]][which(res_both[[1]]$RBP==r),j]=(res_both[[n]][which(res_both[[1]]$RBP==r),j]+res1[[n]][i,j])/2
+        if (res_both[[n]][which(res_both[[1]]$RBP==r),7]>res1[[n]][i,7]) {
+          for (j in 2:7) {
+            res_both[[n]][which(res_both[[1]]$RBP==r),j]=res1[[n]][i,j]
+          }
         }
       }
     } else {
@@ -61,7 +63,7 @@ combine <- function(res1=res_Encode,res2=res_Postar){
 
   to_keep=c()
   for (n in names(res_both)) {
-    to_keep=c(to_keep,res_both[[n]]$RBP[res_both[[n]]$padj<0.1])
+    to_keep=c(to_keep,res_both[[n]]$RBP[res_both[[n]]$padj<0.01])
   }
   to_keep=unique(to_keep)
 
@@ -69,6 +71,7 @@ combine <- function(res1=res_Encode,res2=res_Postar){
     res_both[[n]]=res_both[[n]][res_both[[n]]$RBP%in%to_keep,]
   }
   return(res_both)
+
 }
 
 #' @title rbp_change
@@ -117,3 +120,9 @@ combine_targets=function(RBP_list1=RBP_ENCODE,RBP_list2=RBP_POSTAR,background=ge
   }
   return(Targets)
 }
+
+
+
+
+
+
