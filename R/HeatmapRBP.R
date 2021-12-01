@@ -19,10 +19,10 @@ HeatmapRBP <-function(res=res,rbp_lfc=rbp_lfc)
   options("getSymbols.warning4.0"=FALSE)
   options(stringsAsFactors=FALSE);
 
-  pvalues = data.frame(value1 = res[[1]]$FRD)
+  pvalues = data.frame(value1 = res[[1]]$padj)
 
   for (i in names(res)[-1]) {
-    pvalues = cbind(pvalues, res[[i]]$FDR)
+    pvalues = cbind(pvalues, res[[i]]$padj)
   }
 
   pvalues = -log10(pvalues)

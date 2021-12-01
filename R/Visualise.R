@@ -13,7 +13,7 @@ Visualise=function(results=results,folder=getwd()){
   Targets=results$Targets
   res=results$res
 
-  save(results,file=paste0(folder,"/Results_CLIPreg.Rdata"))
+  save(results,file=paste0(folder,"/Results_CLIPreg.RData"))
 
   A=HeatmapRBP(res=res,rbp_lfc = rbp_lfc)
   n=length(A@ht_list$`RBP direction`@matrix)
