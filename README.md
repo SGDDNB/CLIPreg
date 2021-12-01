@@ -83,7 +83,7 @@ usage step 1.
 #Input_data=Load_input_files(folder = "path/to/folder")
 ```
 
-Run the analysis with all default parameters.
+Run the analysis with all default parameters. 
 
 ``` r
 #results=run_CLIPreg(Example, is.example=T) # or run_CLIPreg(Input_data, is.example=F)
