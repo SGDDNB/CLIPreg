@@ -30,7 +30,7 @@ HeatmapRBP <-function(res=res,rbp_lfc=rbp_lfc)
   rownames(pvalues) = res[[1]]$RBP
   colnames(pvalues) = names(res)
   pvalues = pvalues[rowSums(pvalues > -log10(0.1)) > 0, ]
-  pvalues=trunc(pvalues)
+  pvalues=round(pvalues)
   pvalues$status = NA
   pvalues$status[match(rbp_lfc$IDENTIFIER, rownames(pvalues))] = sign(rbp_lfc$FoldChange)
   pvalues$colors = ifelse(pvalues$status == 1, "dodgerblue3",
