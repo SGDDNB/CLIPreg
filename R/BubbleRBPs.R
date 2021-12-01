@@ -58,18 +58,27 @@ BubbleRBPs <-function(res=res,gene_groups=gene_groups,rbp_lfc=rbp_lfc,FDR=0.1)
                   length(sig_res$buffered_up$RBP)*100/length(gene_groups$geneID[gene_groups$Gene_group=="buffered_up"]),
                   length(sig_res$exclusive_up$RBP)*100/length(gene_groups$geneID[gene_groups$Gene_group=="exclusive_up"]))
 
+  df$nb_reg=c(length(sig_res$forwarded_up$RBP),
+              length(sig_res$forwarded_down$RBP),
+              NA,
+              length(sig_res$buffered_down$RBP),
+              length(sig_res$intensified_down$RBP),
+              length(sig_res$exclusive_down$RBP),
+              length(sig_res$intensified_up$RBP),
+              length(sig_res$buffered_up$RBP),
+              length(sig_res$exclusive_up$RBP))
 
   df$Regulators[is.na(df$Regulators)]=0
   df$label=c("forwarded_up","forwarded_down",NA,"buffered_down","intensified_down",
              "exclusive_down","intensified_up","buffered_up","exclusive_up")
 
   #Plot the Data
-  ggplot(df, aes(Var1, Var2,label=value))+
+  ggplot(df, aes(Var1, Var2,label=nb_reg))+
     geom_point(aes(size = value, fill = Regulators),shape=21) +
     scale_size_continuous(range = c(1,10))+
     scale_fill_continuous(low = "white", high = "darkblue")+
     theme_bw() + xlab("") + ylab("")+  geom_text(hjust=0.5, vjust=-2)+
-    ggtitle("Mean z-score per gene group")+
+    ggtitle("RBP target overrepresentation per group")+
     theme(panel.border = element_blank(), panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))+
     guides(size=guide_legend(title="Mean z-score"))+labs(fill="# of RBP per 100 genes")
