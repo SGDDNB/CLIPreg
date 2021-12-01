@@ -4,7 +4,7 @@
 \alias{BubbleRBPs}
 \title{BubbleRBPs}
 \usage{
-BubbleRBPs(res = res, gene_groups = gene_groups, rbp_lfc = rbp_lfc)
+BubbleRBPs(res = res, gene_groups = gene_groups, rbp_lfc = rbp_lfc, FDR = 0.1)
 }
 \arguments{
 \item{symbol}{RBP_res, gene_groups, rbp_lfc}
