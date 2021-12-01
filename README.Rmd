@@ -157,7 +157,7 @@ Then we want to combine POSTAR and ENCODE to work with only one dataframe and on
 
 ```{r combining POSTAR and ENCODE, message=FALSE}
 
-res=CLIPreg::combine(res1=res_Encode,res2=res_Postar)
+res=CLIPreg::combine(res1=res_Encode,res2=res_Postar,FDR=0.1)
 
 ```
 
@@ -194,8 +194,8 @@ HeatmapRBP(res=res,rbp_lfc=rbp_lfc)
 A bubble plot can be generated only if the gene groups are the output of DeltaTE program.
 
 ```{r Bubble plot, message=FALSE}
-# Bubble plot gene_groups if gene_groups are from DeltaTE
-BubbleRBPs(res = res,gene_groups = gene_groups,rbp_lfc = rbp_lfc)
+# Bubble plot gene_groups if gene_groups are from DeltaTE. FDR has to be lower or equal to the FDR put in CLIPreg::combine() step
+BubbleRBPs(res = res,gene_groups = gene_groups,rbp_lfc = rbp_lfc,FDR=0.1)
 ```
 
 From the results, the user can choose a number of RBP to draw the network for by n. This will pick the n most changing RBPs.
