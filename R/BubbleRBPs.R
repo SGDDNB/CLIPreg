@@ -72,6 +72,5 @@ BubbleRBPs <-function(res=res,gene_groups=gene_groups,rbp_lfc=rbp_lfc)
     ggtitle("Mean z-score per gene group")+
     theme(panel.border = element_blank(), panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))+
-    guides(col=guide_legend(title="# of RBP per 100 genes"),
-           size=guide_legend(title="Mean z-score"))
+    guides(size=guide_legend(title="Mean z-score"))+labs(fill="# of RBP per 100 genes")
 }
