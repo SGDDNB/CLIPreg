@@ -73,5 +73,5 @@ BubbleRBPs <-function(res=res,gene_groups=gene_groups,rbp_lfc=rbp_lfc)
     theme(panel.border = element_blank(), panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))+
     guides(col=guide_legend(title="Percentage of RBP"),
-           size=guide_legend(title="mean z-score"))
+           size=guide_legend(title="Mean z-score"))
 }
