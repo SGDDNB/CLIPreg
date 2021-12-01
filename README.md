@@ -147,13 +147,13 @@ data("ribo_lfc")
 data("tpm_ribo")
 
 head(ribo_lfc)
-#>                          geneID IDENTIFIER  FoldChange
-#> ENSG00000000003 ENSG00000000003     TSPAN6  0.36690410
-#> ENSG00000000419 ENSG00000000419       DPM1  0.10266923
-#> ENSG00000000457 ENSG00000000457      SCYL3 -0.42380808
-#> ENSG00000000971 ENSG00000000971        CFH -0.21626115
-#> ENSG00000001036 ENSG00000001036      FUCA2 -0.04897555
-#> ENSG00000001084 ENSG00000001084       GCLC -0.10033803
+#>                          geneID IDENTIFIER FoldChange
+#> ENSG00000000003 ENSG00000000003     TSPAN6  0.3669041
+#> ENSG00000000419 ENSG00000000419       DPM1  0.1026692
+#> ENSG00000000457 ENSG00000000457      SCYL3 -0.4238081
+#> ENSG00000000971 ENSG00000000971        CFH -0.2162611
+#> ENSG00000001084 ENSG00000001084       GCLC -0.1003380
+#> ENSG00000001461 ENSG00000001461     NIPAL3 -0.3866424
 #head(tpm_ribo)
 
 # If you want to input your own data
@@ -181,8 +181,8 @@ One dataframe per gene group containing the RBP and statistical
 information calculated during the analysis such as p-value and z-score.
 
 ``` r
-data("Res_Encode")
-data("Res_Postar")
+data("res_Encode")
+data("res_Postar")
 head(res_Encode[[1]])
 #>       RBP real_overlap simulated_overlap_mean simulated_overlap_sd          z
 #> 1 ZC3H11A          268              282.41101            12.590167 -1.1446242
@@ -205,7 +205,8 @@ dataframe and only keep RBPs that are significant in at least one gene
 group.
 
 ``` r
-res=CLIPreg::combine(res1=res_Encode,res2=res_Postar)
+
+res=CLIPreg::combine(res1=res_Encode,res2=res_Postar,FDR=0.1)
 ```
 
 Extract the RBP LFC from the RIBO\_LFC and keep only detected RBPs in
@@ -250,8 +251,8 @@ A bubble plot can be generated only if the gene groups are the output of
 DeltaTE program.
 
 ``` r
-# Bubble plot gene_groups if gene_groups are from DeltaTE
-BubbleRBPs(res = res,gene_groups = gene_groups,rbp_lfc = rbp_lfc)
+# Bubble plot gene_groups if gene_groups are from DeltaTE. FDR has to be lower or equal to the FDR put in CLIPreg::combine() step
+BubbleRBPs(res = res,gene_groups = gene_groups,rbp_lfc = rbp_lfc,FDR=0.1)
 ```
 
 ![](man/figures/README-Bubble%20plot-1.png)<!-- -->
