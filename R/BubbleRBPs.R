@@ -12,7 +12,7 @@
 #'
 #'
 #'
-BubbleRBPs <-function(res=res,gene_groups=gene_groups,rbp_lfc=rbp_lfc)
+BubbleRBPs <-function(res=res,gene_groups=gene_groups,rbp_lfc=rbp_lfc,FDR=0.1)
 {
   #To ignore the warnings during usage
   options(warn=-1)
@@ -27,7 +27,7 @@ BubbleRBPs <-function(res=res,gene_groups=gene_groups,rbp_lfc=rbp_lfc)
 
   sig_res=res
   for (cl in names(res)) {
-    sig_res[[cl]]=sig_res[[cl]][sig_res[[cl]]$padj<0.1,]
+    sig_res[[cl]]=sig_res[[cl]][sig_res[[cl]]$padj<FDR,]
   }
 
 

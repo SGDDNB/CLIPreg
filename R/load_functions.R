@@ -42,7 +42,7 @@ load_ribo_tpm <-function(ribo_tpm_file=ribo_tpm_file) {
 #' @examples
 #' @export
 #'
-combine <- function(res1=res_Encode,res2=res_Postar){
+combine <- function(res1=res_Encode,res2=res_Postar,FDR=0.1){
   res_both=res2
   for (i in 1:nrow(res1[[1]])) {
     r=res1[[1]]$RBP[i]
@@ -63,7 +63,7 @@ combine <- function(res1=res_Encode,res2=res_Postar){
 
   to_keep=c()
   for (n in names(res_both)) {
-    to_keep=c(to_keep,res_both[[n]]$RBP[res_both[[n]]$padj<0.1])
+    to_keep=c(to_keep,res_both[[n]]$RBP[res_both[[n]]$padj<FDR])
   }
   to_keep=unique(to_keep)
 

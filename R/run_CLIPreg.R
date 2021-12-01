@@ -22,7 +22,7 @@ run_CLIPreg=function(input_data=Example, is.example=T)
   }
 
   Targets=combine_targets(RBP_list1=RBP_ENCODE,RBP_list2=RBP_POSTAR,background=gene_groups$geneID)
-  res=CLIPreg::combine(res1=res_Encode,res2=res_Postar)
+  res=CLIPreg::combine(res1=res_Encode,res2=res_Postar,FDR=0.1)
   rbp_lfc=rbp_change(res=res,ribo_lfc=ribo_lfc)
   res=cure_res(res=res,rbp_lfc=rbp_lfc)
 

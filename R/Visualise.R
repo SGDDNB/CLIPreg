@@ -21,7 +21,7 @@ Visualise=function(results=results,folder=getwd()){
   print(A)
   dev.off()
 
-  B=BubbleRBPs(res=res,gene_groups=gene_groups,rbp_lfc=rbp_lfc)
+  B=BubbleRBPs(res=res,gene_groups=gene_groups,rbp_lfc=rbp_lfc,FDR=0.1)
   pdf(paste0(folder,"/Bubble_plot.pdf"),6,4.5,useDingbats = F)
   print(B)
   dev.off()
