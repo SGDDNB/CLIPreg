@@ -70,26 +70,26 @@ library(stringr)
 ### Basic usage
 
 For testing the package with the example data
-```{r load example data, message=FALSE}
-#Example=Load_example()
+```{r load example data, message=FALSE, eval=F}
+Example=Load_example()
 ```
 
 For using your own data, you must specify a folder that contains at least 3 txt files that are named: gene_groups.txt, ribo_lfc.txt and ribo_tpm.txt. For the format of those 3 files, please refer to Advance usage step 1.
 
-```{r load user data, message=FALSE}
-#Input_data=Load_input_files(folder = "path/to/folder")
+```{r load user data, message=FALSE, eval=F}
+Input_data=Load_input_files(folder = "path/to/folder")
 ```
 
 Run the analysis with all default parameters.
-```{r Run default analysis, message=FALSE}
-#results=run_CLIPreg(Example, is.example=T) # or run_CLIPreg(Input_data, is.example=F)
+```{r Run default analysis, message=FALSE, eval=F}
+results=run_CLIPreg(Example, is.example=T) # or run_CLIPreg(Input_data, is.example=F)
 ```
 
 Generate the visual output from the results of the analysis. The Visualise function will create 2 new files in the folder given: an Rdata file containing the list object from the run_CLIPreg function and a pdf file with the main figures.
 
-```{r RVisualize, message=FALSE,warning=FALSE}
-#dir.create("Results_CLIPreg")
-#Visualise(results=results,folder="Results_CLIPreg")
+```{r RVisualize, message=FALSE,warning=FALSE, eval=F}
+dir.create("Results_CLIPreg")
+Visualise(results=results,folder="Results_CLIPreg")
 ```
 
 ### Advance usage
