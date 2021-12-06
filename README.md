@@ -83,7 +83,7 @@ usage step 1.
 Input_data=Load_input_files(folder = "path/to/folder")
 ```
 
-Run the analysis with all default parameters. 
+Run the analysis with all default parameters.
 
 ``` r
 results=run_CLIPreg(Example, is.example=T) # or run_CLIPreg(Input_data, is.example=F)
@@ -101,7 +101,7 @@ Visualise(results=results,folder="Results_CLIPreg")
 
 ### Advance usage
 
-## Step 1: Input datasets
+#### Step 1: Input datasets
 
 Let’s have a look at the gene\_groups file from the example data. It
 consists of 2 columns containing the geneID and the gene groups for all
@@ -161,7 +161,7 @@ head(ribo_lfc)
 #load_ribo_tpm(ribo_tpm_file = "ribo_tpm_file")
 ```
 
-## Step 2: Data integration and analysis
+#### Step 2: Data integration and analysis
 
 Run the enrichment analysis using CLIPreg() function. This takes several
 minutes. If you want to have a look at the example results skip this
@@ -220,7 +220,7 @@ rbp_lfc=rbp_change(res=res,ribo_lfc=ribo_lfc)
 res=cure_res(res=res,rbp_lfc=rbp_lfc)
 ```
 
-## Step 3: Visualisation
+#### Step 3: Visualisation
 
 Generate and save heatmap to pdf. The heatmap represents the -logP of
 each RBP for each gene group. The blue RBPs are downregulated and the
