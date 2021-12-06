@@ -71,7 +71,7 @@ library(stringr)
 For testing the package with the example data
 
 ``` r
-#Example=Load_example()
+Example=Load_example()
 ```
 
 For using your own data, you must specify a folder that contains at
@@ -80,13 +80,13 @@ ribo\_tpm.txt. For the format of those 3 files, please refer to Advance
 usage step 1.
 
 ``` r
-#Input_data=Load_input_files(folder = "path/to/folder")
+Input_data=Load_input_files(folder = "path/to/folder")
 ```
 
 Run the analysis with all default parameters. 
 
 ``` r
-#results=run_CLIPreg(Example, is.example=T) # or run_CLIPreg(Input_data, is.example=F)
+results=run_CLIPreg(Example, is.example=T) # or run_CLIPreg(Input_data, is.example=F)
 ```
 
 Generate the visual output from the results of the analysis. The
@@ -95,8 +95,8 @@ file containing the list object from the run\_CLIPreg function and a pdf
 file with the main figures.
 
 ``` r
-#dir.create("Results_CLIPreg")
-#Visualise(results=results,folder="Results_CLIPreg")
+dir.create("Results_CLIPreg")
+Visualise(results=results,folder="Results_CLIPreg")
 ```
 
 ### Advance usage
