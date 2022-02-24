@@ -18,4 +18,5 @@ export(Load_example)
 export(Load_input_files)
 export(run_CLIPreg)
 export(Visualise)
+export(deltaTE_gene_groups)
 

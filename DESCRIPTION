@@ -24,6 +24,7 @@ imports:
     ggnet,
     ALL,
     topGO,
-    stringr
+    stringr,
+    DESeq2
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
