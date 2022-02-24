@@ -65,6 +65,7 @@ library(topGO)
 library(GGally)
 library(data.table)
 library(stringr)
+library(DESeq2)
 ```
 
 ### Basic usage
@@ -93,6 +94,16 @@ Visualise(results=results,folder="Results_CLIPreg")
 ```
 
 ### Advance usage
+
+#### Step 0 : Run deltaTE on your dataset from raw counts of RIBO and RNA as well as a sample_file that can run through DESeq2. Put batch =1 if you have a batch column in your design
+
+
+```{r load gene_groups, message=FALSE}
+gene_groups=deltaTE_gene_groups(counts=counts,coldata=coldata,batch=0)
+```
+
+
+
 
 #### Step 1: Input datasets
 
