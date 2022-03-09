@@ -313,19 +313,14 @@ data("tpm_ribo_HeLa_EGF.RData")
 data("miR_data")
 
 res_miR=CLIPreg(RBP_data=miR_data,gene_groups=gene_groups)
-res=CLIPreg::combine(res1=res_Encode,res2=res_Postar,FDR=0.1)
-rbp_lfc=rbp_change(res=res,ribo_lfc=ribo_lfc)
-res=cure_res(res=res,rbp_lfc=rbp_lfc)
+#save(res_miR,file="Res_miR_HeLa_EGF.RData")
+res=CLIPreg::combine(res1=res_miR,res2=res_miR,FDR=0.1)
 
 HeatmapmiRNA(res=res) # The RBP are not changing --> need to use the miRNA heatmap
 Targets=GetTarget(RBP_data=miR_data,background=gene_groups$geneID)
-Draw_network_by_group(rbp_lfc=rbp_lfc[c("GRWD1","GRSF1","SUGP2","DHX30","LSM11"),],res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
-Plot_GO_RBP(rbp_of_interest="GRWD1",tpm_ribo = tpm_ribo,Targets=Targets,gene_groups=gene_groups,GO_to_show=3)
-
-
-
-
-
+Draw_network_by_group(rbp_lfc=c("hsa-miR-652-3p","hsa-miR-499a-5p","hsa-miR-99b-5p","hsa-miR-875-5p","hsa-miR-501-3p"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
+Plot_GO_RBP(rbp_of_interest="hsa-miR-501-3p",tpm_ribo=tpm_ribo,Targets=Targets,gene_groups=gene_groups,
+            GO_to_show=3)
 ```
 
 

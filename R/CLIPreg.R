@@ -18,6 +18,8 @@ CLIPreg <-function(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
   options("getSymbols.warning4.0"=FALSE)
   options(stringsAsFactors=FALSE);
 
+  RBP_data=RBP_data[sort(names(RBP_data))]
+
   numCores <- detectCores()
   registerDoParallel(numCores-1)  # use multicore, set to the number of our cores
 
