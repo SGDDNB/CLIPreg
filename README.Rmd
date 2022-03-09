@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
   <!-- badges: end -->
 
   The goal of CLIPreg is to discover key RBP regulators in different datasets. It combines CLIP-seq with RNA- and RIBO-seq to calculate  enrichment of RBP and generate plots for publications.
+  Another feature that can be analyzed by CLIPreg is enrichment of miRNA targets from TargetScan database.
 
 ## Installation
 
@@ -38,7 +39,7 @@ if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocMana
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages))  BiocManager::install(new.packages)
 if("ggnet"%in%new.packages)  devtools::install_github("briatte/ggnet")
-install_version("network", version = "1.16.1", repos = "http://cran.us.r-project.org")
+devtools::install_version("network", version = "1.16.1", repos = "http://cran.us.r-project.org")
 if("ComplexHeatmap"%in%new.packages)  devtools::install_github("jokergoo/ComplexHeatmap")
 ```
 
@@ -50,8 +51,8 @@ The source code of CLIPreg can be installed from [GitHub](https://github.com/) w
 devtools::install_github("SGDDNB/CLIPreg")
 ```
 
-CLIPreg requires 4 different inputs. A gene_groups input which is a dataframe containing geneID and the gene_groups given by DeltaTE output (ideally). The DeltaTE method can be found in the paper here: https://doi.org/10.1002/cpmb.108. It categorizes transcriptionally and/or translationally regulated genes into 4 categories: forwarded, intensified, exclusive and buffered, each category with an up or down direction.
-Summarized CLIP-seq data, POSTAR and ENCODE are pre-loaded in the package. RIBO lfc and TPM.
+CLIPreg requires 4 different inputs. A gene_groups input which is a dataframe containing geneID and the gene_groups given by DeltaTE output (ideally). The DeltaTE method can be found in the paper here: https://doi.org/10.1002/cpmb.108. It categorizes transcriptionally and/or translationally regulated genes into 4 categories: forwarded, intensified, exclusive and buffered, each category with an up or down direction. A deltaTE function is included in this package, it can be found in advance usage step 0.
+The 3 other required files are : summarized CLIP-seq data, with POSTAR and ENCODE which are pre-loaded in the package, RIBO log fold change (lfc) and TPM.
 
 ```{r load library, message=FALSE,warning=FALSE}
 ## load libraries
@@ -70,7 +71,7 @@ library(DESeq2)
 
 ### Basic usage
 
-For testing the package with the example data
+For testing the package with the example data. This will load the summary data of POSTAR and ENCODE as well as the TPM, lfc and gene_groups from the fibroblast dataset used in the paper.
 ```{r load example data, message=FALSE, eval=F}
 Example=Load_example()
 ```
@@ -95,10 +96,13 @@ Visualise(results=results,folder="Results_CLIPreg")
 
 ### Advance usage
 
-#### Step 0 : Run deltaTE on your dataset from raw counts of RIBO and RNA as well as a sample_file that can run through DESeq2. Put batch =1 if you have a batch column in your design
+#### Step 0 : Run deltaTE
+This has to be done on your dataset from raw counts of RIBO and RNA as well as a coldata dataframe that can run through DESeq2. Put batch = 1 if you have a batch column in your design.
+The counts must have a first column containing the geneID or gene names, they must be unique. The other columns are the counts of RNA and RIBO. The column names for the counts must be the same names as filled in the "SampleID" column of coldata.
+The coldata dataframe must have column names "SampleID", "SeqType", "Condition" and "Batch". (Batch is an optional column). Condition must contain 1 and 2. For example, in a untreated vs treatment drug experiment, set the untreated sample condition to 1 and treatment to 2.
 
 
-```{r load gene_groups, message=FALSE}
+```{r create gene groups from deltaTE, message=FALSE, eval=F}
 gene_groups=deltaTE_gene_groups(counts=counts,coldata=coldata,batch=0)
 ```
 
@@ -107,17 +111,17 @@ gene_groups=deltaTE_gene_groups(counts=counts,coldata=coldata,batch=0)
 
 #### Step 1: Input datasets
 
-Let's have a look at the gene_groups file from the example data. It consists of 2 columns containing the geneID and the gene groups for all the DE genes. This is optional, if you want to provide your own gene groups, go to next step.
+Let's have a look at the gene_groups file from the example data. It consists of 2 columns containing the "geneID" and the "Gene_group" for all the DE genes. This is as an example on fibroblasts stimulated by TGFB, if you start with your own gene groups, go to next step.
 
 ```{r load gene_groups, message=FALSE}
 data("gene_groups")
 head(gene_groups)
 ```
 
-You can input your own gene groups by using the function load_gene_groups() and giving the file location of your file as input.
+You can input your own gene groups by using the function load_gene_groups() and giving the file location of your file as input. Each gene group must contain "up" or "down" in the name or you won't be able to plot the network and gene ontology.
 
-```{r load gene_groups from user, message=FALSE}
-#gene_groups=load_gene_groups(gene_groups_file = "path/to/gene_groups_file.txt")
+```{r load gene_groups from user, message=FALSE, eval=F}
+gene_groups=load_gene_groups(gene_groups_file = "path/to/gene_groups_file.txt")
 ```
 
 Load POSTAR and ENCODE RBP data. Those are 2 public datasets which are processed in order to have lists of vector. Each vector is named after 1 RBP and contains the geneID of all the targets of that RBP. Combine both data in a target list. 
@@ -137,23 +141,28 @@ data("tpm_ribo")
 
 head(ribo_lfc)
 #head(tpm_ribo)
+```
 
+
+To load your own data use
+```{r loading your own LFC and TPM, message=FALSE,eval=F}
 # If you want to input your own data
-#load_ribo_lfc(ribo_lfc_file = "ribo_lfc_file")
-#load_ribo_tpm(ribo_tpm_file = "ribo_tpm_file")
-
+load_ribo_lfc(ribo_lfc_file = "ribo_lfc_file")
+load_ribo_tpm(ribo_tpm_file = "ribo_tpm_file")
 ```
 
 #### Step 2: Data integration and analysis
 
-Run the enrichment analysis using CLIPreg() function. This takes several minutes. If you want to have a look at the example results skip this step.
+Run the enrichment analysis using CLIPreg() function. This takes several minutes depending on how many gene groups and how many genes per gene group there are. If you want to have a look at the example results skip this step.
 
-```{r run enrichment analysis, message=FALSE}
+```{r run enrichment analysis, message=FALSE,eval=F}
 # The CLIPreg function requires a few minutes to run, save the data after running it to be sure not to lose it
-# res_Postar=CLIPreg(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
-# res_Encode=CLIPreg(RBP_data=RBP_ENCODE,gene_groups=gene_groups)
-# save(res_Encode,file="Res_RBP_Encode.RData")
-# save(res_Postar,file="Res_RBP_Postar.RData")
+res_Postar=CLIPreg(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
+res_Encode=CLIPreg(RBP_data=RBP_ENCODE,gene_groups=gene_groups)
+#res_miR=CLIPreg(RBP_data=miR_data,gene_groups=gene_groups)
+save(res_Encode,file="Res_RBP_Encode.RData")
+save(res_Postar,file="Res_RBP_Postar.RData")
+#save(res_miR,file="Res_miR.RData")
 ```
 
 If you want to get the results directly you can load it by using the example data results. The output of CLIPreg() is a list of dataframes. One dataframe per gene group containing the RBP and statistical information calculated during the analysis such as p-value and z-score.
@@ -169,7 +178,7 @@ Then we want to combine POSTAR and ENCODE to work with only one dataframe and on
 ```{r combining POSTAR and ENCODE, message=FALSE}
 
 res=CLIPreg::combine(res1=res_Encode,res2=res_Postar,FDR=0.1)
-
+head(res)
 ```
 
 Extract the RBP LFC from the RIBO_LFC and keep only detected RBPs in res
@@ -177,9 +186,10 @@ Extract the RBP LFC from the RIBO_LFC and keep only detected RBPs in res
 ```{r Extract LFC of RBPs, message=FALSE}
 # Change of RBPs
 rbp_lfc=rbp_change(res=res,ribo_lfc=ribo_lfc)
-
+head(rbp_lfc)
 # Cure res data by removing RBPs that are not in the rbp_lfc dataframe
 res=cure_res(res=res,rbp_lfc=rbp_lfc)
+head(res)
 ```
 
 
@@ -187,19 +197,25 @@ res=cure_res(res=res,rbp_lfc=rbp_lfc)
 
 Generate and save heatmap to pdf. The heatmap represents the -logP of each RBP for each gene group. The blue RBPs are downregulated and the orange RBPs are upregulated. Only RBPs that are significant in at least one gene group are shown.
 
-```{r Generate and save heatmap,fig.height=15,fig.width=10}
+```{r Generate heatmap,fig.height=15,fig.width=10}
 # Heatmap of RBP scores
 
 HeatmapRBP(res=res,rbp_lfc=rbp_lfc)
-# Plot the heatmap with updated colors for the RBPs
 
+# If there is not at least 1 positive and 1 negative RBP lfc then use the heatmap for miRNA
+# HeatmapmiRNA(res=res)
+
+```
+
+Suggestion for saving your heatmap
+```{r save heatmap to pdf, eval=F}
 # Save the heatmap
-# e=HeatmapRBP(res=res,rbp_lfc=rbp_lfc)
-# location="Heatmap_fibroblasts.pdf"
-# n=length(e$tree_row$order)
-# pdf(location,8,3+n*0.15)
-# 
-# dev.off()
+e=HeatmapRBP(res=res,rbp_lfc=rbp_lfc)
+location="Heatmap_fibroblasts.pdf"
+n=length(e$tree_row$order)
+pdf(location,length(names(res)),3+n*0.15)
+e
+dev.off()
 ```
 
 A bubble plot can be generated only if the gene groups are the output of DeltaTE program.
@@ -212,8 +228,11 @@ BubbleRBPs(res = res,gene_groups = gene_groups,rbp_lfc = rbp_lfc,FDR=0.1)
 From the results, the user can choose a number of RBP to draw the network for by n. This will pick the n most changing RBPs.
 
 ```{r Network,message=FALSE,warning=FALSE}
-# Draw network
+# Draw network of the RBP that are most changing or choose specific RBPs
 Draw_network_by_group(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
+
+# You can subset your RBP_lfc to keep only your RBPs of interest
+
 ```
 
 ```{r GO of specific nodes,fig.width=15, message=FALSE,warning=FALSE}
@@ -224,3 +243,73 @@ Plot_GO_node_name(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_group
                   tpm_ribo = tpm_ribo,Nodes_to_keep=c(19,15),GO_to_show=3,forwarded = F)
 Plot_GO_RBP(rbp_of_interest="QKI",tpm_ribo = tpm_ribo,Targets=Targets,gene_groups=gene_groups,GO_to_show=3)
 ```
+
+
+### Analysis of miRNA target enrichment
+
+The same analysis can be applied to run miRNA target enrichment. Here is an example of the code that is very similar to the steps followed for the RBPs.
+
+```{r Scipt for miRNA,eval=F}
+data("miR_data") # preparation can be found in Example/data_processing.R
+data("gene_groups") # for example on fibroblasts
+Targets=GetTarget(RBP_data=miR_data,background=gene_groups$geneID)
+data("ribo_lfc")
+data("tpm_ribo")
+
+res_miR=CLIPreg(RBP_data=miR_data,gene_groups=gene_groups) # Takes several minutes
+save(res_miR,file="Res_miR.RData")
+res=CLIPreg::combine(res1=res_miR,res2 = res_miR,FDR=0.1)
+HeatmapmiRNA(res=res)
+
+
+# Save the heatmap
+e=HeatmapmiRNA(res=res)
+location="Heatmap_HeLa_EGF_miRNA.pdf"
+n=nrow(e@matrix)
+pdf(location,length(names(res))+3,3+n*0.15)
+e
+dev.off()
+
+
+# Network and GO
+Draw_network_by_group(rbp_lfc=c("hsa-miR-133a-3p.1","hsa-miR-590-5p","hsa-miR-29a-3p","hsa-miR-30a-5p","hsa-miR-155-5p"),
+                      res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
+Plot_GO_RBP(rbp_of_interest="hsa-miR-133a-3p.1",tpm_ribo = tpm_ribo,Targets=Targets,gene_groups=gene_groups,GO_to_show=3)
+```
+
+
+
+### Another example
+
+HeLa stimulated by EGF. groups were obtained by categorizing into TE up and down from data given in the paper. Data preparation can be found in Example/data_processing.R on github.
+
+``` {r CLIPreg on HeLa stimulated by EGF, fig.width=15, message=FALSE,warning=FALSE,eval=F}
+data("gene_groups_HeLa_EGF")
+data("ribo_lfc_HeLa_EGF")
+data("tpm_ribo")
+
+data("RBP_ENCODE")
+data("RBP_POSTAR")
+Targets=combine_targets(RBP_list1=RBP_ENCODE,RBP_list2=RBP_POSTAR,background=gene_groups$geneID)
+
+res=CLIPreg::combine(res1=res_Encode,res2=res_Postar,FDR=0.1)
+rbp_lfc=rbp_change(res=res,ribo_lfc=ribo_lfc)
+res=cure_res(res=res,rbp_lfc=rbp_lfc)
+
+HeatmapmiRNA(res=res)
+Draw_network_by_group(rbp_lfc=rbp_lfc[c("GRWD1","GRSF1","SUGP2","DHX30","LSM11"),],res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
+Plot_GO_RBP(rbp_of_interest="GRWD1",tpm_ribo = tpm_ribo,Targets=Targets,gene_groups=gene_groups,GO_to_show=3)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+

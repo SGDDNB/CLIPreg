@@ -1,5 +1,5 @@
 Package: CLIPreg
-Title: Analyze and generate figures for enrichment of RBP targets.
+Title: Analyze and generate figures for enrichment of RBP targets and miRNA targets.
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Baptiste",

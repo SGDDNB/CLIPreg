@@ -41,14 +41,14 @@ HeatmapRBP <-function(res=res,rbp_lfc=rbp_lfc)
   colorRBP=as.character(pvalues$status)
   names(colorRBP)=rownames(pvalues)
 
-  HT1=Heatmap(pvalues[,-c(9,10)],column_title = "RBP enrichment per gene group",
+  HT1=Heatmap(pvalues[,-c(ncol(pvalues)-1,ncol(pvalues))],column_title = "RBP enrichment per gene group",
               col = colorRampPalette(c("oldlace", "darkred"))(5),name = "-log(P)",
-              column_names_rot=45,show_row_names = T,width = unit(10,"cm"),
+              column_names_rot=45,show_row_names = T,width = unit(ncol(pvalues),"cm"),
               heatmap_legend_param =list(at = 0:5))
 
   HT2=Heatmap(colorRBP,show_column_names=F,
               show_row_names = T,name = "RBP direction",
-              col=c("dodgerblue3","darkorange1"),width = unit(0.5,"cm"),
+              #col=c("dodgerblue3","darkorange1"),width = unit(0.5,"cm"),
               heatmap_legend_param = list(at=c("-1","1"),labels=c("Down","Up")))
 
   A=HT1+HT2

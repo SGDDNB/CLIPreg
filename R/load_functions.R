@@ -43,6 +43,9 @@ load_ribo_tpm <-function(ribo_tpm_file=ribo_tpm_file) {
 #' @export
 #'
 combine <- function(res1=res_Encode,res2=res_Postar,FDR=0.1){
+  if (!exists("res2")) {
+    res2=res1
+  }
   res_both=res2
   for (i in 1:nrow(res1[[1]])) {
     r=res1[[1]]$RBP[i]
@@ -112,7 +115,9 @@ cure_res=function(res=res,rbp_lfc=rbp_lfc){
 #'
 combine_targets=function(RBP_list1=RBP_ENCODE,RBP_list2=RBP_POSTAR,background=gene_groups$geneID){
   TargetsEncode=GetTarget(RBP_data = RBP_list1,background = background)
-  TargetsPOSTAR=GetTarget(RBP_data = RBP_list2,background = background)
+  if (exists("RBP_list2")) {
+    TargetsPOSTAR=GetTarget(RBP_data = RBP_list2,background = background)
+  } else {TargetsPOSTAR=c()}
   Targets=c(TargetsEncode,TargetsPOSTAR)
   Targets=split(unlist(Targets, use.names = FALSE), rep(names(Targets), lengths(Targets)))
   for (t in names(Targets)) {
