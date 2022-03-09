@@ -141,7 +141,7 @@ Plot_GO <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_grou
 
   ggplot(df, aes(x=Term, y=-log10(Pval),colour=Color,fill=Color)) +
     stat_summary(geom = "bar", fun.y = mean, position = "dodge") +
-    ylab("Enrichment (-logP)") + xlab("")+
+    ylab("Enrichment (-log(adj.P))") + xlab("")+
     ggtitle(paste0("GO of nodes of size >",th)) +
     scale_y_continuous(breaks = round(seq(0, max(-log10(df$Pval)), by = 2), 1)) +
     theme_bw(base_size=24) +

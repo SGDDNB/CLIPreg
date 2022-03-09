@@ -83,6 +83,9 @@ CLIPreg <-function(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
         count_lower=1
       }
       overlap$pval[i]=count_lower/100000
+      if (overlap$z[i]=="NaN") {
+        overlap$pval[i]=1
+      }
     }
     overlap$padj=p.adjust(overlap$pval,method="fdr")
     out[[cl]]=overlap

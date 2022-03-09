@@ -17,6 +17,7 @@ for (i in miR_names) {
   miR_data[[i]]=unique(miR_i$`Gene ID`)
   miR_data[[i]]=gsub("\\..*","",miR_data[[i]])
 }
+miR_data=miR_data[sort(names(miR_data))]
 
 save(miR_data,file = "data/miR_data.RData")
 

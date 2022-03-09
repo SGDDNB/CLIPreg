@@ -39,7 +39,7 @@ Draw_network_by_group <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_gr
   RBPs=unique(RBPs)
   rm(c)
 
-  if (type(rbp_lfc)=="character") {
+  if (class(rbp_lfc)=="character") {
     RBP_kept=rbp_lfc
   } else {
     rbp_lfc=rbp_lfc[RBPs,]
