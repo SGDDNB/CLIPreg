@@ -1,9 +1,21 @@
+# Processing of CLIPseq summary files
+
+
+# Step 1 : Download all RBP clip-seq bed files from encode and combine them into 1 be
+# Step 2 : Filter to keep high score peaks only. >8fold enrichment and P value <10e-5
+# Step 3 : Intersect bed file with Ensembl genes gtf file to find target genes
+# Step 4 : Shortlist columns to keep RBP and targets
+
+# For Postar data, download from POSTAR3 website CLIPdb
+# Start from step3 of ENCODE
+
+
 # Processing of miRNA file
 
 library(data.table)
 
 # miR file was downloaded from TargetScan context++
-miR=fread("C:/Users/e0545037/Downloads/Predicted_Targets_Context_Scores.default_predictions.txt/Predicted_Targets_Context_Scores.default_predictions.txt")
+miR=fread("~/Downloads/Predicted_Targets_Context_Scores.default_predictions.txt/Predicted_Targets_Context_Scores.default_predictions.txt")
 miR$`Predicted relative KD`[miR$`Predicted relative KD`=="NULL"]=0
 miR$`Predicted relative KD`=as.numeric(miR$`Predicted relative KD`)
 miR=miR[abs(miR$`Predicted relative KD`)>0]

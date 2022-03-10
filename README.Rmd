@@ -189,7 +189,7 @@ rbp_lfc=rbp_change(res=res,ribo_lfc=ribo_lfc)
 head(rbp_lfc)
 # Cure res data by removing RBPs that are not in the rbp_lfc dataframe
 res=cure_res(res=res,rbp_lfc=rbp_lfc)
-head(res)
+#head(res)
 ```
 
 
@@ -275,7 +275,7 @@ dev.off()
 # Network and GO
 Draw_network_by_group(rbp_lfc=c("hsa-miR-133a-3p.1","hsa-miR-590-5p","hsa-miR-29a-3p","hsa-miR-30a-5p","hsa-miR-155-5p"),
                       res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
-Plot_GO_RBP(rbp_of_interest="hsa-miR-133a-3p.1",tpm_ribo = tpm_ribo,Targets=Targets,gene_groups=gene_groups,GO_to_show=3)
+Plot_GO_RBP(rbp_of_interest="hsa-miR-155-5p",tpm_ribo = tpm_ribo,Targets=Targets,gene_groups=gene_groups,GO_to_show=3)
 ```
 
 
