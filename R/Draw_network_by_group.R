@@ -86,7 +86,7 @@ Draw_network_by_group <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_gr
   size_up=c()
   for (i in all_types) {
     genes_in_group=names(which(type==i))
-    genes_Down=genes_in_group[gene_groups$Direction[gene_groups$geneID==genes_in_group]=="Down"]
+    genes_Down=genes_in_group[gene_groups$Direction[gene_groups$geneID%in%genes_in_group]=="Down"]
     genes_Up=genes_in_group[!(genes_in_group%in%genes_Down)]
     RBP_concerned=str_locate_all(pattern="1",i)[[1]][,1]
     if (length(RBP_concerned)>0) {
