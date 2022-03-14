@@ -101,6 +101,7 @@ This has to be done on your dataset from raw counts of RIBO and RNA as well as a
 The counts must have a first column containing the geneID or gene names, they must be unique. The other columns are the counts of RNA and RIBO. The column names for the counts must be the same names as filled in the "SampleID" column of coldata.
 The coldata dataframe must have column names "SampleID", "SeqType", "Condition" and "Batch". (Batch is an optional column). Condition must contain 1 and 2. For example, in a untreated vs treatment drug experiment, set the untreated sample condition to 1 and treatment to 2.
 
+An example is provided in the github folder Example/Example_deltaTE.R .
 
 ```{r create gene groups from deltaTE, message=FALSE, eval=F}
 gene_groups=deltaTE_gene_groups(counts=counts,coldata=coldata,batch=0)
