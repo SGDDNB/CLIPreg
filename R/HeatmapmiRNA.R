@@ -35,7 +35,7 @@ HeatmapmiRNA <-function(res=res)
 
 
   HT1=Heatmap(pvalues,column_title = "miRNA enrichment per gene group",
-              col = colorRampPalette(c("oldlace", "darkred"))(5),name = "-log(P)",
+              col = colorRampPalette(c("oldlace", "darkred"))(5),name = "-log(FDR)",
               column_names_rot=45,show_row_names = T,width = unit(ncol(pvalues),"cm"),
               heatmap_legend_param =list(at = 0:5))
 

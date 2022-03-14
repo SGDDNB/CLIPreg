@@ -42,7 +42,7 @@ HeatmapRBP <-function(res=res,rbp_lfc=rbp_lfc)
   names(colorRBP)=rownames(pvalues)
 
   HT1=Heatmap(pvalues[,-c(ncol(pvalues)-1,ncol(pvalues))],column_title = "RBP enrichment per gene group",
-              col = colorRampPalette(c("oldlace", "darkred"))(5),name = "-log(P)",
+              col = colorRampPalette(c("oldlace", "darkred"))(5),name = "-log(FDR)",
               column_names_rot=45,show_row_names = T,width = unit(ncol(pvalues),"cm"),
               heatmap_legend_param =list(at = 0:5))
 
