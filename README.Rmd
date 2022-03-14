@@ -69,7 +69,7 @@ library(stringr)
 library(DESeq2)
 ```
 
-### Basic usage
+## Basic usage
 
 For testing the package with the example data. This will load the summary data of POSTAR and ENCODE as well as the TPM, lfc and gene_groups from the fibroblast dataset used in the paper.
 ```{r load example data, message=FALSE, eval=F}
@@ -94,9 +94,9 @@ dir.create("Results_CLIPreg")
 Visualise(results=results,folder="Results_CLIPreg")
 ```
 
-### Advance usage
+## Advance usage
 
-#### Step 0 : Run deltaTE
+### Step 0 : Run deltaTE to find gene groups
 This has to be done on your dataset from raw counts of RIBO and RNA as well as a coldata dataframe that can run through DESeq2. Put batch = 1 if you have a batch column in your design.
 The counts must have a first column containing the geneID or gene names, they must be unique. The other columns are the counts of RNA and RIBO. The column names for the counts must be the same names as filled in the "SampleID" column of coldata.
 The coldata dataframe must have column names "SampleID", "SeqType", "Condition" and "Batch". (Batch is an optional column). Condition must contain 1 and 2. For example, in a untreated vs treatment drug experiment, set the untreated sample condition to 1 and treatment to 2.
@@ -109,7 +109,7 @@ gene_groups=deltaTE_gene_groups(counts=counts,coldata=coldata,batch=0)
 
 
 
-#### Step 1: Input datasets
+### Step 1: Input datasets
 
 Let's have a look at the gene_groups file from the example data. It consists of 2 columns containing the "geneID" and the "Gene_group" for all the DE genes. This is as an example on fibroblasts stimulated by TGFB, if you start with your own gene groups, go to next step.
 
@@ -151,7 +151,7 @@ load_ribo_lfc(ribo_lfc_file = "ribo_lfc_file")
 load_ribo_tpm(ribo_tpm_file = "ribo_tpm_file")
 ```
 
-#### Step 2: Data integration and analysis
+### Step 2: Data integration and analysis
 
 Run the enrichment analysis using CLIPreg() function. This takes several minutes depending on how many gene groups and how many genes per gene group there are. If you want to have a look at the example results skip this step.
 
@@ -159,10 +159,10 @@ Run the enrichment analysis using CLIPreg() function. This takes several minutes
 # The CLIPreg function requires a few minutes to run, save the data after running it to be sure not to lose it
 res_Postar=CLIPreg(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
 res_Encode=CLIPreg(RBP_data=RBP_ENCODE,gene_groups=gene_groups)
-#res_miR=CLIPreg(RBP_data=miR_data,gene_groups=gene_groups)
+
 save(res_Encode,file="Res_RBP_Encode.RData")
 save(res_Postar,file="Res_RBP_Postar.RData")
-#save(res_miR,file="Res_miR.RData")
+
 ```
 
 If you want to get the results directly you can load it by using the example data results. The output of CLIPreg() is a list of dataframes. One dataframe per gene group containing the RBP and statistical information calculated during the analysis such as p-value and z-score.
@@ -193,7 +193,7 @@ res=cure_res(res=res,rbp_lfc=rbp_lfc)
 ```
 
 
-#### Step 3: Visualisation
+### Step 3: Visualisation
 
 Generate and save heatmap to pdf. The heatmap represents the -logP of each RBP for each gene group. The blue RBPs are downregulated and the orange RBPs are upregulated. Only RBPs that are significant in at least one gene group are shown.
 
@@ -245,7 +245,7 @@ Plot_GO_RBP(rbp_of_interest="QKI",tpm_ribo = tpm_ribo,Targets=Targets,gene_group
 ```
 
 
-### Analysis of miRNA target enrichment
+## Analysis of miRNA target enrichment
 
 The same analysis can be applied to run miRNA target enrichment. Here is an example of the code that is very similar to the steps followed for the RBPs.
 
@@ -273,14 +273,13 @@ dev.off()
 
 
 # Network and GO
-Draw_network_by_group(rbp_lfc=c("hsa-miR-133a-3p.1","hsa-miR-590-5p","hsa-miR-29a-3p","hsa-miR-30a-5p","hsa-miR-155-5p"),
-                      res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
+Draw_network_by_group(rbp_lfc=c("hsa-miR-133a-3p.1","hsa-miR-590-5p","hsa-miR-29a-3p","hsa-miR-30a-5p","hsa-miR-155-5p"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
 Plot_GO_RBP(rbp_of_interest="hsa-miR-155-5p",tpm_ribo = tpm_ribo,Targets=Targets,gene_groups=gene_groups,GO_to_show=3)
 ```
 
 
 
-### Another example
+## Another example
 
 HeLa stimulated by EGF. groups were obtained by categorizing into TE up and down from data given in the paper. Data preparation can be found in Example/data_processing.R on github.
 
