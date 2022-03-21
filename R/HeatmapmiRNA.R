@@ -25,19 +25,21 @@ HeatmapmiRNA <-function(res=res)
     pvalues = cbind(pvalues, res[[i]]$padj)
   }
 
+  pvalues[which(pvalues>0.05,arr.ind = T)]=1
+
   pvalues = -log10(pvalues)
   pvalues[which(pvalues == Inf, arr.ind = T)] = 5
   rownames(pvalues) = res[[1]]$RBP
   colnames(pvalues) = names(res)
-  pvalues = pvalues[rowSums(pvalues > -log10(0.1)) > 0, ]
+  pvalues = pvalues[rowSums(pvalues > -log10(0.05)) > 0, ]
   pvalues=round(pvalues)
   colnames(pvalues)=sub("_"," ",colnames(pvalues))
 
 
   HT1=Heatmap(pvalues,column_title = "miRNA enrichment per gene group",
-              col = colorRampPalette(c("oldlace", "darkred"))(5),name = "-log(FDR)",
+              col = colorRampPalette(c("oldlace", "darkred"))(max(pvalues)),name = "-log(FDR)",
               column_names_rot=45,show_row_names = T,width = unit(ncol(pvalues),"cm"),
-              heatmap_legend_param =list(at = 0:5))
+              heatmap_legend_param =list(at = 0:max(pvalues)))
 
   return(HT1)
 

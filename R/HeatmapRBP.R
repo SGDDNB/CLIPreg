@@ -25,11 +25,13 @@ HeatmapRBP <-function(res=res,rbp_lfc=rbp_lfc)
     pvalues = cbind(pvalues, res[[i]]$padj)
   }
 
+  pvalues[which(pvalues>0.05,arr.ind = T)]=1
+
   pvalues = -log10(pvalues)
   pvalues[which(pvalues == Inf, arr.ind = T)] = 5
   rownames(pvalues) = res[[1]]$RBP
   colnames(pvalues) = names(res)
-  pvalues = pvalues[rowSums(pvalues > -log10(0.1)) > 0, ]
+  pvalues = pvalues[rowSums(pvalues > -log10(0.05)) > 0, ]
   pvalues=round(pvalues)
   pvalues$status = NA
   pvalues$status[match(rbp_lfc$IDENTIFIER, rownames(pvalues))] = sign(rbp_lfc$FoldChange)
@@ -42,9 +44,9 @@ HeatmapRBP <-function(res=res,rbp_lfc=rbp_lfc)
   names(colorRBP)=rownames(pvalues)
 
   HT1=Heatmap(pvalues[,-c(ncol(pvalues)-1,ncol(pvalues))],column_title = "RBP enrichment per gene group",
-              col = colorRampPalette(c("oldlace", "darkred"))(5),name = "-log(FDR)",
+              col = colorRampPalette(c("oldlace", "darkred"))(max(pvalues)),name = "-log(FDR)",
               column_names_rot=45,show_row_names = T,width = unit(ncol(pvalues),"cm"),
-              heatmap_legend_param =list(at = 0:5))
+              heatmap_legend_param =list(at = 0:max(pvalues)))
 
   HT2=Heatmap(colorRBP,show_column_names=F,
               show_row_names = T,name = "RBP direction",

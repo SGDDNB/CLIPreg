@@ -251,14 +251,22 @@ Plot_GO_RBP(rbp_of_interest="QKI",tpm_ribo = tpm_ribo,Targets=Targets,gene_group
 The same analysis can be applied to run miRNA target enrichment. Here is an example of the code that is very similar to the steps followed for the RBPs.
 
 ```{r Scipt for miRNA,eval=F}
-data("miR_data") # preparation can be found in Example/data_processing.R
+
+data("miR_data") # preparation can be found in Example/data_processing.R on github
+data("miR_info")
 data("gene_groups") # for example on fibroblasts
 Targets=GetTarget(RBP_data=miR_data,background=gene_groups$geneID)
 data("ribo_lfc")
 data("tpm_ribo")
+data("tpm_all_RNA")
+
+tpm_all_RNA=tpm_all_RNA[rowSums(tpm_all_RNA > 0) >= 1, ]
+miR_info=miR_info[miR_info$ensembl_gene_id%in%rownames(tpm_all_RNA),]
+names(miR_data)=tolower(names(miR_data))
+miR_data=subset(miR_data,names(miR_data)%in%tolower(miR_info$mirbase_id))
 
 #res_miR=CLIPreg(RBP_data=miR_data,gene_groups=gene_groups) # Takes several minutes
-#save(res_miR,file="Res_miR.RData")
+#save(res_miR,file="Res_miR0.5.RData")
 data("Res_miR")
 res=CLIPreg::combine(res1=res_miR,res2 = res_miR,FDR=0.1)
 HeatmapmiRNA(res=res)
@@ -310,7 +318,17 @@ Plot_GO_RBP(rbp_of_interest="GRWD1",tpm_ribo = tpm_ribo,Targets=Targets,gene_gro
 data("gene_groups_HeLa_EGF")
 data("ribo_lfc_HeLa_EGF")
 data("tpm_ribo_HeLa_EGF.RData")
+data("tpm_all_RNA_HeLa_EGF")
 data("miR_data")
+data("miR_info")
+
+
+tpm_all_RNA=tpm_all_RNA[rowSums(tpm_all_RNA > 1) >= 1, ]
+miR_info=miR_info[miR_info$ensembl_gene_id%in%rownames(tpm_all_RNA),]
+names(miR_data)=tolower(names(miR_data))
+miR_data=subset(miR_data,names(miR_data)%in%tolower(miR_info$mirbase_id))
+
+
 
 res_miR=CLIPreg(RBP_data=miR_data,gene_groups=gene_groups)
 #save(res_miR,file="Res_miR_HeLa_EGF.RData")
@@ -322,13 +340,6 @@ Draw_network_by_group(rbp_lfc=c("hsa-miR-652-3p","hsa-miR-499a-5p","hsa-miR-99b-
 Plot_GO_RBP(rbp_of_interest="hsa-miR-501-3p",tpm_ribo=tpm_ribo,Targets=Targets,gene_groups=gene_groups,
             GO_to_show=3)
 ```
-
-
-
-
-
-
-
 
 
 

@@ -13,14 +13,38 @@
 # Processing of miRNA file
 
 library(data.table)
+library(miRBaseConverter)
+library(stringr)
 
 # miR file was downloaded from TargetScan context++
-miR=fread("~/Downloads/Predicted_Targets_Context_Scores.default_predictions.txt/Predicted_Targets_Context_Scores.default_predictions.txt")
-miR$`Predicted relative KD`[miR$`Predicted relative KD`=="NULL"]=0
-miR$`Predicted relative KD`=as.numeric(miR$`Predicted relative KD`)
-miR=miR[abs(miR$`Predicted relative KD`)>0]
+miR=fread("C:/Users/e0545037/Downloads/Predicted_Targets_Context_Scores.default_predictions.txt/Predicted_Targets_Context_Scores.default_predictions.txt")
 
+index=str_sub(miR$miRNA,-1,-1)=="p"
+miR$miRNA[index]=gsub('.{3}$', '',miR$miRNA[index] )
+
+miRBase=getAllMiRNAs()
+mart <- useDataset("hsapiens_gene_ensembl", useMart("ensembl"))
+G_list <- getBM(filters= "mirbase_id", attributes= c("ensembl_gene_id","mirbase_id"),values=miRBase$Name,mart= mart)
+
+index=str_sub(G_list$mirbase_id,-1,-1)=="p"
+G_list$mirbase_id[index]=gsub('.{3}$', '',G_list$mirbase_id[index] )
+index=str_sub(G_list$mirbase_id,-2,-2)=="-"
+G_list$mirbase_id[index]=gsub('.{2}$', '',G_list$mirbase_id[index] )
+
+index=str_sub(miRBase$Name,-1,-1)=="p"
+miRBase$Name[index]=gsub('.{3}$', '',miRBase$Name[index] )
+index=str_sub(miRBase$Name,-2,-2)=="-"
+miRBase$Name[index]=gsub('.{2}$', '',miRBase$Name[index] )
+
+# miR$`Predicted relative KD`[miR$`Predicted relative KD`=="NULL"]=0
+# miR$`Predicted relative KD`=as.numeric(miR$`Predicted relative KD`)
+# miR=miR[abs(miR$`Predicted relative KD`)>0]
+
+Thres=-0.5
+miR=miR[tolower(miR$miRNA)%in%tolower(miRBase$Name),]
+miR=miR[miR$`weighted context++ score`<Thres,]
 miR_names=unique(miR$miRNA)
+
 
 miR_data=list()
 
@@ -30,9 +54,17 @@ for (i in miR_names) {
   miR_data[[i]]=gsub("\\..*","",miR_data[[i]])
 }
 miR_data=miR_data[sort(names(miR_data))]
+names(miR_data)
+miR_data=subset(miR_data,tolower(names(miR_data))%in%tolower(G_list$mirbase_id))
 
-save(miR_data,file = "data/miR_data.RData")
+save(miR_data,file = "data/miR_data0.1.RData")
+save(miR_data,file = "data/miR_data0.5.RData")
 
+G_list=G_list[G_list$mirbase_id%in%c(miR_names,tolower(miR_names)),]
+colnames(G_list)=c("geneID","miRBase_ID")
+miR_info=G_list
+
+save(miR_info,file = "data/miR_info.RData")
 
 ### Example of processing data from HeLa cells stimulated by EGF
 
@@ -119,6 +151,47 @@ tpm_ribo=merge(G_list,df,by.y="IDENTIFIER")
 tpm_ribo=tpm_ribo[!duplicated(tpm_ribo$IDENTIFIER),]
 rownames(tpm_ribo)=tpm_ribo$IDENTIFIER
 save(tpm_ribo,file="data/tpm_ribo_HeLa_EGF.RData")
+
+
+###################### to delete
+
+df=res_miR$intensified_up
+df=df[order(df$padj),]
+miR_sig=df$RBP[1:3]
+geneID_sig=miR_info$ensembl_gene_id[miR_info$mirbase_id%in%miR_sig]
+
+ggplot(tpm_all_RNA[geneID_sig,])+geom_point()
+
+df1=as.numeric(tpm_all_RNA[geneID_sig[1],])
+df1=data.frame(tpm=df1,
+               timepoint=factor(rep(c("24h","2h","45min","6h","BSL"),4),
+                                levels = c("BSL","45min","2h","6h","24h")))
+ggplot(df1,aes(x=timepoint,y=tpm))+geom_point()+theme_bw()
+
+#
+
+df2=as.numeric(tpm_all_RNA[geneID_sig[2],])
+df2=data.frame(tpm=df2,
+               timepoint=factor(rep(c("24h","2h","45min","6h","BSL"),4),
+                                levels = c("BSL","45min","2h","6h","24h")))
+ggplot(df2,aes(x=timepoint,y=tpm))+geom_point()+theme_bw()
+
+
+#
+
+df3=as.numeric(tpm_all_RNA[geneID_sig[3],])
+df3=data.frame(tpm=df3,
+               timepoint=factor(rep(c("24h","2h","45min","6h","BSL"),4),
+                                levels = c("BSL","45min","2h","6h","24h")))
+ggplot(df3,aes(x=timepoint,y=tpm))+geom_point()+theme_bw()
+
+#
+
+df4=as.numeric(tpm_all_RNA[geneID_sig[4],])
+df4=data.frame(tpm=df4,
+               timepoint=factor(rep(c("24h","2h","45min","6h","BSL"),4),
+                                levels = c("BSL","45min","2h","6h","24h")))
+ggplot(df4,aes(x=timepoint,y=tpm))+geom_point()+theme_bw()
 
 
 

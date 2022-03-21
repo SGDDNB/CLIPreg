@@ -89,7 +89,11 @@ CLIPreg <-function(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
         overlap$pval[i]=1
       }
     }
-    overlap$padj=p.adjust(overlap$pval,method="fdr")
+
+    index_not_nan=!(overlap$z=="NaN")
+    overlap$padj[index_not_nan]=p.adjust(overlap$pval[index_not_nan],method="fdr")
+    overlap$padj[!index_not_nan]=1
+    #overlap$padj=p.adjust(overlap$pval,method="fdr")
     out[[cl]]=overlap
 
 
