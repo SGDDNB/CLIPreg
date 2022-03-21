@@ -28,22 +28,17 @@ Plot_GO_node_name <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups
     }
   }
 
-  RBPs=c()
-  for (c in names(res)) {
-    res[[c]]=res[[c]][res[[c]]$padj<0.1,]
-    if (length(res[[c]][,1])==0) {
-      res=res[-which(names(res)==c)]
-    }
-    RBPs=c(RBPs,res[[c]]$RBP)
+  if (class(rbp_lfc)=="character") {
+    RBP_kept=rbp_lfc
+  } else {
+    rbp_lfc=rbp_lfc[RBPs,]
+    rbp_lfc=rbp_lfc[order(-abs(rbp_lfc$FoldChange)),]
+    rbp_lfc=rbp_lfc[1:n,]
+
+    RBP_kept=rownames(rbp_lfc)
   }
-  RBPs=unique(RBPs)
-  rm(c)
 
-  rbp_lfc=rbp_lfc[RBPs,]
-  rbp_lfc=rbp_lfc[order(-abs(rbp_lfc$FoldChange)),]
-  rbp_lfc=rbp_lfc[1:n,]
-
-  RBP_kept=rownames(rbp_lfc)
+  n=length(RBP_kept)
 
   gene_groups=gene_groups[gene_groups$Gene_group%in%names(res),]
   adjacency_matrix=as.data.frame(matrix(0,nrow = n+nrow(gene_groups),ncol = n+nrow(gene_groups)))
