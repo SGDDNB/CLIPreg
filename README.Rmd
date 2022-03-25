@@ -112,14 +112,14 @@ gene_groups=deltaTE_gene_groups(counts=counts,coldata=coldata,batch=0)
 
 ### Step 1: Input datasets
 
-Let's have a look at the gene_groups file from the example data. It consists in 2 columns containing the "geneID" and the "Gene_group" for all the DE genes. This is as an example on fibroblasts stimulated by TGFB, if you start with your own gene groups, go to next code line. Ideally, the gene groups are obtained from deltaTE analysis but any method to find gene groups can also be run.
+Let's have a look at the gene_groups file from the example data. It consists in 2 columns containing the "geneID" and the "Gene_group" for all the DE genes. This is as an example on fibroblasts stimulated by TGFB, when you start with your own gene groups, go to next code line. Ideally, the gene groups are obtained from deltaTE analysis but any method to find gene groups can also be run.
 
 ```{r load gene_groups, message=FALSE}
 data("gene_groups")
 head(gene_groups)
 ```
 
-You can input your own gene groups by using the function load_gene_groups() and giving the file location of your gene group file as input. Each gene group must contain "up" or "down" in the name or you won't be able to plot the network and gene ontology.
+To input your own gene groups, use the function load_gene_groups() and give the file location of your gene group file as input. Each gene group must contain "up" or "down" in the name or you won't be able to plot the network and gene ontology.
 
 ```{r load gene_groups from user, message=FALSE, eval=F}
 gene_groups=load_gene_groups(gene_groups_file = "path/to/gene_groups_file.txt")
@@ -149,7 +149,7 @@ head(tpm_ribo[,1:4])
 ```
 
 
-To load your own data use
+To load your own data use:
 ```{r loading your own LFC and TPM, message=FALSE,eval=F}
 # If you want to input your own data
 ribo_lfc=load_ribo_lfc(ribo_lfc_file = "ribo_lfc_file")
@@ -201,7 +201,7 @@ head(res[[1]])
 
 ### Step 3: Visualisation
 
-Generate and save heatmap to pdf. The heatmap represents the -logP of each RBP for each gene group. The blue RBPs are downregulated and the orange RBPs are upregulated. Only RBPs with targets that are significantly enriched in at least one gene group are shown.
+Generate and save heatmap to pdf. The heatmap represents the -logFDR of each RBP for each gene group. The blue RBPs are downregulated and the orange RBPs are upregulated. Only RBPs with targets that are significantly enriched in at least one gene group are shown.
 
 ```{r Generate heatmap,fig.height=15,fig.width=10}
 # Heatmap of RBP scores
@@ -209,7 +209,7 @@ Generate and save heatmap to pdf. The heatmap represents the -logP of each RBP f
 HeatmapRBP(res=res,rbp_lfc=rbp_lfc)
 
 # If there is not at least 1 positive and 1 negative RBP lfc then use the heatmap for miRNA
-# HeatmapmiRNA(res=res)
+# Heatmap_no_fold_change(res=res)
 
 ```
 
@@ -242,6 +242,8 @@ Draw_network_by_group(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_g
 #                        res=res,Targets=Targets,gene_groups=gene_groups,n=3,forwarded = F)
 ```
 
+Gene ontology can be plotted for specific nodes or RBP. The P-value corresponds to Fisher's exact test p-value.
+
 ```{r GO of specific nodes,fig.width=15, message=FALSE,warning=FALSE}
 # plot GO, each plot takes a couple of minutes to generate.
 Plot_GO(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,
@@ -259,7 +261,7 @@ The same analysis can be applied to run miRNA target enrichment. Here is an exam
 
 
 ```{r Scipt for miRNA loading necessary data}
-data("miR_data") # preparation can be found in Pre-processing part of the readme
+data("miR_data") # preparation can be found below in section "Processing of miRNA file"
 data("miR_info")
 data("gene_groups") # for example on fibroblasts
 Targets=GetTarget(RBP_data=miR_data,background=gene_groups$geneID)
@@ -292,11 +294,11 @@ head(res[[1]])
 
 A heatmap can be plotted also for miRNA
 ```{r Scipt for miRNA heatmap}
-HeatmapmiRNA(res=res)
+Heatmap_no_fold_change(res=res)
 
 
 # Suggestion to save the heatmap 
-# e=HeatmapmiRNA(res=res)
+# e=Heatmap_no_fold_change(res=res)
 # location="Heatmap_HeLa_EGF_miRNA.pdf"
 # n=nrow(e@matrix)
 # pdf(location,length(names(res))+3,3+n*0.15)
@@ -314,7 +316,7 @@ Plot_GO_RBP(rbp_of_interest="hsa-mir-301a",tpm_ribo = tpm_ribo,Targets=Targets,g
 
 
 
-## Another example not using deltaTE
+## Example 2: ClipREg without using deltaTE
 
 HeLa stimulated by EGF. Groups were obtained by categorizing into TE_up and TE_down from data given in the paper https://pubmed.ncbi.nlm.nih.gov/30466063/. Data preparation can be found in the "Pre-Processing" part of the readme.
 
@@ -347,11 +349,12 @@ res_HeLa=CLIPreg::combine(res1=res_Encode_HeLa,res2=res_Postar_HeLa,FDR=0.05)
 
 rbp_lfc=rbp_change(res=res_HeLa,ribo_lfc=ribo_lfc) # None of the RBP are changing
 res=cure_res(res=res_HeLa,rbp_lfc=rbp_lfc)
+rbp_lfc
 ```
-
+As we can see, none of the RBP are changing. If you still want to plot the heatmap although no RBP are found changing, you can use the Heatmap_no_fold_change function which doesn't require rbp_lfc
 
 ```{r plots HeLa RBP}
-HeatmapmiRNA(res=res) # The RBP are not changing --> need to use the miRNA heatmap
+Heatmap_no_fold_change(res=res) # The RBP are not changing --> need to use the miRNA heatmap
 ```
 
 Not enoughs RBP are significant with enough targets to give any meaning to the network and gene ontology plot
@@ -379,7 +382,7 @@ res_miR=CLIPreg(RBP_data=miR_data,gene_groups=gene_groups)
 save(res_miR,file="Res_miR_HeLa_EGF.RData")
 res=CLIPreg::combine(res1=res_miR,res2=res_miR,FDR=0.05)
 
-HeatmapmiRNA(res=res) # The RBP are not changing --> need to use the miRNA heatmap
+Heatmap_no_fold_change(res=res) # The RBP are not changing --> need to use the miRNA heatmap
 Targets=GetTarget(RBP_data=miR_data,background=gene_groups$geneID)
 Draw_network_by_group(rbp_lfc=c("hsa-mir-652","hsa-mir-499a","hsa-mir-99b","hsa-mir-875","hsa-mir-501"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
 Plot_GO_RBP(rbp_of_interest="hsa-mir-501",tpm_ribo=tpm_ribo,Targets=Targets,gene_groups=gene_groups,
@@ -467,9 +470,9 @@ save(miR_info,file = "data/miR_info.RData")
 
 ```
 
-### HeLa stimulated by EGF data preparation
+### Example 2: Data pre-processing without using deltaTE
 
-The csv files used for pre-processing can be found in the example folder of CLIPreg's github page.
+The csv files used for pre-processing can be found in the "Example" folder of CLIPreg's github page.
 
 ```{r gene groups preparation HeLa, eval=F}
 BiocManager::install("biomaRt")
