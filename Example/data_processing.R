@@ -133,7 +133,6 @@ rownames(ribo_lfc)=ribo_lfc$IDENTIFIER
 save(ribo_lfc,file="data/ribo_lfc_HeLa_EGF.RData")
 
 # TPM
-
 file="HeLa_EGF_Ribo_TPM.csv"
 df=read.csv(file)
 
