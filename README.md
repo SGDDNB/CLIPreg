@@ -488,6 +488,11 @@ A heatmap can be plotted also for miRNA
 
 ``` r
 HeatmapmiRNA(res=res)
+```
+
+![](man/figures/README-Scipt%20for%20miRNA%20heatmap-1.png)<!-- -->
+
+``` r
 
 
 # Suggestion to save the heatmap 
@@ -503,7 +508,7 @@ Network and GO plots are also available for miRNA
 
 ``` r
 # Network and GO
-Draw_network_by_group(rbp_lfc=c("hsa-mir-133a","hsa-mir-590","hsa-mir-29a","hsa-mir-30a","hsa-mir-155"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
+Draw_network_by_group(rbp_lfc=c("hsa-mir-301a","hsa-mir-454","hsa-mir-544a","hsa-mir-106b","hsa-mir-148b"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = T)
 #> Scale for 'size' is already present. Adding another scale for 'size', which
 #> will replace the existing scale.
 #> Scale for 'colour' is already present. Adding another scale for 'colour',
@@ -513,7 +518,7 @@ Draw_network_by_group(rbp_lfc=c("hsa-mir-133a","hsa-mir-590","hsa-mir-29a","hsa-
 ![](man/figures/README-Scipt%20for%20miRNA%20plots-1.png)<!-- -->
 
 ``` r
-Plot_GO_RBP(rbp_of_interest="hsa-mir-155",tpm_ribo = tpm_ribo,Targets=Targets,gene_groups=gene_groups,GO_to_show=3)
+Plot_GO_RBP(rbp_of_interest="hsa-mir-301a",tpm_ribo = tpm_ribo,Targets=Targets,gene_groups=gene_groups,GO_to_show=3)
 #> 
 #> Building most specific GOs .....
 #>  ( 12282 GO terms found. )
@@ -526,7 +531,7 @@ Plot_GO_RBP(rbp_of_interest="hsa-mir-155",tpm_ribo = tpm_ribo,Targets=Targets,ge
 #> 
 #>           -- Classic Algorithm -- 
 #> 
-#>       the algorithm is scoring 135 nontrivial nodes
+#>       the algorithm is scoring 1097 nontrivial nodes
 #>       parameters: 
 #>           test statistic: fisher
 #> 
@@ -541,7 +546,7 @@ Plot_GO_RBP(rbp_of_interest="hsa-mir-155",tpm_ribo = tpm_ribo,Targets=Targets,ge
 #> 
 #>           -- Classic Algorithm -- 
 #> 
-#>       the algorithm is scoring 1785 nontrivial nodes
+#>       the algorithm is scoring 2735 nontrivial nodes
 #>       parameters: 
 #>           test statistic: fisher
 ```
@@ -708,7 +713,7 @@ save(miR_info,file = "data/miR_info.RData")
 
 ### HeLa stimulated by EGF data preparation
 
-The csv files used for pre-processing can be found in the example flder
+The csv files used for pre-processing can be found in the example folder
 of CLIPreg’s github page.
 
 ``` r

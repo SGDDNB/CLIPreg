@@ -291,7 +291,7 @@ head(res[[1]])
 
 
 A heatmap can be plotted also for miRNA
-```{r Scipt for miRNA heatmap,eval=F}
+```{r Scipt for miRNA heatmap}
 HeatmapmiRNA(res=res)
 
 
@@ -308,8 +308,8 @@ HeatmapmiRNA(res=res)
 Network and GO plots are also available for miRNA
 ```{r Scipt for miRNA plots}
 # Network and GO
-Draw_network_by_group(rbp_lfc=c("hsa-mir-133a","hsa-mir-590","hsa-mir-29a","hsa-mir-30a","hsa-mir-155"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
-Plot_GO_RBP(rbp_of_interest="hsa-mir-155",tpm_ribo = tpm_ribo,Targets=Targets,gene_groups=gene_groups,GO_to_show=3)
+Draw_network_by_group(rbp_lfc=c("hsa-mir-301a","hsa-mir-454","hsa-mir-544a","hsa-mir-106b","hsa-mir-148b"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = T)
+Plot_GO_RBP(rbp_of_interest="hsa-mir-301a",tpm_ribo = tpm_ribo,Targets=Targets,gene_groups=gene_groups,GO_to_show=3)
 ```
 
 
@@ -469,7 +469,7 @@ save(miR_info,file = "data/miR_info.RData")
 
 ### HeLa stimulated by EGF data preparation
 
-The csv files used for pre-processing can be found in the example flder of CLIPreg's github page.
+The csv files used for pre-processing can be found in the example folder of CLIPreg's github page.
 
 ```{r gene groups preparation HeLa, eval=F}
 BiocManager::install("biomaRt")

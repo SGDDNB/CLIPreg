@@ -74,7 +74,7 @@ Plot_GO_RBP <-function(rbp_of_interest="QKI",tpm_ribo = tpm_ribo,Targets=Targets
   ggplot(df, aes(x=Term, y=-log10(Pval),fill="1",color="1")) +
     stat_summary(geom = "bar", fun.y = mean, position = "dodge") +
     xlab("") +
-    ylab("Enrichment (-log(adj.P))") +
+    ylab("Enrichment (-log(P))") +
     ggtitle(paste0("GO of ",rbp_of_interest,"'s targets")) +
     scale_y_continuous(breaks = round(seq(0, max(-log10(df$Pval)), by = 2), 1)) +
     theme_bw(base_size=24) +
