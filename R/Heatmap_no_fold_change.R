@@ -36,7 +36,7 @@ Heatmap_no_fold_change <-function(res=res)
   colnames(pvalues)=sub("_"," ",colnames(pvalues))
 
 
-  HT1=Heatmap(pvalues,column_title = "miRNA enrichment per gene group",
+  HT1=Heatmap(pvalues,column_title = "Regulators enrichment per gene group",
               col = colorRampPalette(c("oldlace", "darkred"))(max(pvalues)),name = "-log(FDR)",
               column_names_rot=45,show_row_names = T,width = unit(ncol(pvalues),"cm"),
               heatmap_legend_param =list(at = 0:max(pvalues)))

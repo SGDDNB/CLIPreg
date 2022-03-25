@@ -137,7 +137,7 @@ gene_groups=deltaTE_gene_groups(counts=counts,coldata=coldata,batch=0)
 Let’s have a look at the gene\_groups file from the example data. It
 consists in 2 columns containing the “geneID” and the “Gene\_group” for
 all the DE genes. This is as an example on fibroblasts stimulated by
-TGFB, if you start with your own gene groups, go to next code line.
+TGFB, when you start with your own gene groups, go to next code line.
 Ideally, the gene groups are obtained from deltaTE analysis but any
 method to find gene groups can also be run.
 
@@ -153,10 +153,10 @@ head(gene_groups)
 #> 6: ENSG00000116649 forwarded_up
 ```
 
-You can input your own gene groups by using the function
-load\_gene\_groups() and giving the file location of your gene group
-file as input. Each gene group must contain “up” or “down” in the name
-or you won’t be able to plot the network and gene ontology.
+To input your own gene groups, use the function load\_gene\_groups() and
+give the file location of your gene group file as input. Each gene group
+must contain “up” or “down” in the name or you won’t be able to plot the
+network and gene ontology.
 
 ``` r
 gene_groups=load_gene_groups(gene_groups_file = "path/to/gene_groups_file.txt")
@@ -233,7 +233,7 @@ head(tpm_ribo[,1:4])
 #> ENSG00000187961  2.228106  3.7949139  3.59028074  3.0119944
 ```
 
-To load your own data use
+To load your own data use:
 
 ``` r
 # If you want to input your own data
@@ -256,8 +256,8 @@ the analysis such as p-value and z-score.
 
 ``` r
 # The CLIPreg function requires a few minutes to run, save the data after running it to be sure not to lose it
-res_Postar=CLIPreg(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
-res_Encode=CLIPreg(RBP_data=RBP_ENCODE,gene_groups=gene_groups)
+res_Postar=CLIPreg(Regulator_data=RBP_POSTAR,gene_groups=gene_groups)
+res_Encode=CLIPreg(Regulator_data=RBP_ENCODE,gene_groups=gene_groups)
 
 save(res_Encode,file="Res_RBP_Encode.RData")
 save(res_Postar,file="Res_RBP_Postar.RData")
@@ -327,7 +327,7 @@ head(rbp_lfc)
 #> FAM120A ENSG00000048828    FAM120A  0.07316692
 #> PUM2    ENSG00000055917       PUM2 -0.09197738
 # Cure res data by removing RBPs that are not in the rbp_lfc dataframe
-res=cure_res(res=res,rbp_lfc=rbp_lfc)
+res=cure_res(res=res,regulators=rbp_lfc)
 head(res[[1]])
 #>       RBP real_overlap simulated_overlap_mean simulated_overlap_sd         z
 #> 6   CELF2          597               673.8591             15.64042 -4.914134
@@ -347,7 +347,7 @@ head(res[[1]])
 
 ### Step 3: Visualisation
 
-Generate and save heatmap to pdf. The heatmap represents the -logP of
+Generate and save heatmap to pdf. The heatmap represents the -logFDR of
 each RBP for each gene group. The blue RBPs are downregulated and the
 orange RBPs are upregulated. Only RBPs with targets that are
 significantly enriched in at least one gene group are shown.
@@ -363,7 +363,7 @@ HeatmapRBP(res=res,rbp_lfc=rbp_lfc)
 ``` r
 
 # If there is not at least 1 positive and 1 negative RBP lfc then use the heatmap for miRNA
-# HeatmapmiRNA(res=res)
+# Heatmap_no_fold_change(res=res)
 ```
 
 Suggestion for saving your heatmap
@@ -398,7 +398,7 @@ containing the RBP of interest
 
 ``` r
 # Draw network of the RBP that are most changing or choose specific RBPs
-Draw_network_by_group(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
+Draw_network_by_group(regulators=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
 ```
 
 ![](man/figures/README-Network-1.png)<!-- -->
@@ -410,16 +410,19 @@ Draw_network_by_group(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_g
 #                        res=res,Targets=Targets,gene_groups=gene_groups,n=3,forwarded = F)
 ```
 
+Gene ontology can be plotted for specific nodes or RBP. The P-value
+corresponds to Fisher’s exact test p-value.
+
 ``` r
 # plot GO, each plot takes a couple of minutes to generate.
-Plot_GO(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,
+Plot_GO(regulators=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,
   tpm_ribo = tpm_ribo,th=200,GO_to_show=3,forwarded = F)
 ```
 
 ![](man/figures/README-GO%20of%20specific%20nodes-1.png)<!-- -->
 
 ``` r
-Plot_GO_node_name(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,
+Plot_GO_node_name(regulators=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,
                   tpm_ribo = tpm_ribo,Nodes_to_keep=c(19,15),GO_to_show=3,forwarded = F)
 ```
 
@@ -438,10 +441,10 @@ an example of the code that is very similar to the steps followed for
 the RBPs.
 
 ``` r
-data("miR_data") # preparation can be found in Pre-processing part of the readme
+data("miR_data") # preparation can be found below in section "Processing of miRNA file"
 data("miR_info")
 data("gene_groups") # for example on fibroblasts
-Targets=GetTarget(RBP_data=miR_data,background=gene_groups$geneID)
+Targets=GetTarget(Regulator_data=miR_data,background=gene_groups$geneID)
 data("ribo_lfc")
 data("tpm_ribo")
 data("tpm_all_RNA")
@@ -458,7 +461,7 @@ details in each gene group.
 
 ``` r
 #This is done on the example set, you can skip to next code for the results
-res_miR=CLIPreg(RBP_data=miR_data,gene_groups=gene_groups) # Takes several minutes
+res_miR=CLIPreg(Regulator_data=miR_data,gene_groups=gene_groups) # Takes several minutes
 save(res_miR,file="Res_miR.RData")
 ```
 
@@ -487,7 +490,7 @@ head(res[[1]])
 A heatmap can be plotted also for miRNA
 
 ``` r
-HeatmapmiRNA(res=res)
+Heatmap_no_fold_change(res=res)
 ```
 
 ![](man/figures/README-Scipt%20for%20miRNA%20heatmap-1.png)<!-- -->
@@ -496,7 +499,7 @@ HeatmapmiRNA(res=res)
 
 
 # Suggestion to save the heatmap 
-# e=HeatmapmiRNA(res=res)
+# e=Heatmap_no_fold_change(res=res)
 # location="Heatmap_HeLa_EGF_miRNA.pdf"
 # n=nrow(e@matrix)
 # pdf(location,length(names(res))+3,3+n*0.15)
@@ -508,7 +511,8 @@ Network and GO plots are also available for miRNA
 
 ``` r
 # Network and GO
-Draw_network_by_group(rbp_lfc=c("hsa-mir-301a","hsa-mir-454","hsa-mir-544a","hsa-mir-106b","hsa-mir-148b"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = T)
+# As we don't have fold change for miRNA, you can input miR names in the regulators for the plots.
+Draw_network_by_group(regulators=c("hsa-mir-301a","hsa-mir-454","hsa-mir-544a","hsa-mir-106b","hsa-mir-148b"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = T)
 #> Scale for 'size' is already present. Adding another scale for 'size', which
 #> will replace the existing scale.
 #> Scale for 'colour' is already present. Adding another scale for 'colour',
@@ -553,7 +557,7 @@ Plot_GO_RBP(rbp_of_interest="hsa-mir-301a",tpm_ribo = tpm_ribo,Targets=Targets,g
 
 ![](man/figures/README-Scipt%20for%20miRNA%20plots-2.png)<!-- -->
 
-## Another example not using deltaTE
+## Example 2: CLIPreg without using deltaTE
 
 HeLa stimulated by EGF. Groups were obtained by categorizing into TE\_up
 and TE\_down from data given in the paper
@@ -575,8 +579,8 @@ Targets_HeLa=combine_targets(RBP_list1=RBP_ENCODE,RBP_list2=RBP_POSTAR,backgroun
 Run RBP target enrichment.
 
 ``` r
-res_Postar_HeLa=CLIPreg(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
-res_Encode_HeLa=CLIPreg(RBP_data=RBP_ENCODE,gene_groups=gene_groups)
+res_Postar_HeLa=CLIPreg(Regulator_data=RBP_POSTAR,gene_groups=gene_groups)
+res_Encode_HeLa=CLIPreg(Regulator_data=RBP_ENCODE,gene_groups=gene_groups)
 
 save(res_Encode_HeLa,file="Res_Encode_HeLa.RData")
 save(res_Postar_HeLa,file="Res_Postar_HeLa.RData")
@@ -588,20 +592,44 @@ data("Res_Postar_HeLa")
 res_HeLa=CLIPreg::combine(res1=res_Encode_HeLa,res2=res_Postar_HeLa,FDR=0.05)
 
 rbp_lfc=rbp_change(res=res_HeLa,ribo_lfc=ribo_lfc) # None of the RBP are changing
-res=cure_res(res=res_HeLa,rbp_lfc=rbp_lfc)
+res_HeLa=cure_res(res=res_HeLa,regulators=rbp_lfc)
+rbp_lfc
+#>                  geneID IDENTIFIER  FoldChange
+#> FKBP4   ENSG00000004478      FKBP4 -0.14794320
+#> AKAP8L  ENSG00000011243     AKAP8L -0.25094281
+#> FAM120A ENSG00000048828    FAM120A  0.07316692
+#> YBX3    ENSG00000060138       YBX3  0.04605895
+#> DDX24   ENSG00000089737      DDX24 -0.02952209
+#> TIA1    ENSG00000116001       TIA1 -0.17198740
+#> GTF2F1  ENSG00000125651     GTF2F1  0.05483682
+#> ILF3    ENSG00000129351       ILF3 -0.06083720
+#> PPIL4   ENSG00000131013      PPIL4  0.19073440
+#> ZRANB2  ENSG00000132485     ZRANB2  0.18935468
+#> TBRG4   ENSG00000136270      TBRG4 -0.18033802
+#> SLTM    ENSG00000137776       SLTM -0.11829053
+#> LSM11   ENSG00000155858      LSM11  0.26538760
+#> SUPV3L1 ENSG00000156502    SUPV3L1  0.06192888
+#> LARP4   ENSG00000161813      LARP4 -0.15813233
+#> CSTF2T  ENSG00000177613     CSTF2T  0.17996868
+#> EWSR1   ENSG00000182944      EWSR1  0.04042333
+#> PCBP2   ENSG00000197111      PCBP2 -0.06077447
 ```
 
+As we can see, none of the RBP are changing. If you still want to plot
+the heatmap although no RBP are found changing, you can use the
+Heatmap\_no\_fold\_change function which doesn’t require regulators.
+
 ``` r
-HeatmapmiRNA(res=res) # The RBP are not changing --> need to use the miRNA heatmap
+Heatmap_no_fold_change(res=res_HeLa) # The RBP are not changing --> need to use the miRNA heatmap
 ```
 
 ![](man/figures/README-plots%20HeLa%20RBP-1.png)<!-- -->
 
-Not enoughs RBP are significant with enough targets to give any meaning
+Not enough RBP are significant with enough targets to give any meaning
 to the network and gene ontology plot
 
 ``` r
-# Draw_network_by_group(rbp_lfc=c("GRWD1","GRSF1","SUGP2","DHX30","LSM11"),res=res,Targets=Targets_HeLa,gene_groups=gene_groups,n=5,forwarded = F)
+# Draw_network_by_group(regulators=c("GRWD1","GRSF1","SUGP2","DHX30","LSM11"),res=res,Targets=Targets_HeLa,gene_groups=gene_groups,n=5,forwarded = F)
 # Plot_GO_RBP(rbp_of_interest="GRWD1",tpm_ribo = tpm_ribo,Targets=Targets_HeLa,gene_groups=gene_groups,GO_to_show=3)
 ```
 
@@ -623,13 +651,13 @@ tpm_all_RNA=tpm_all_RNA[rowSums(tpm_all_RNA > 1) >= 1, ]
 miR_info=miR_info[miR_info$ensembl_gene_id%in%rownames(tpm_all_RNA),]
 miR_data=subset(miR_data,names(miR_data)%in%miR_info$mirbase_id)
 
-res_miR=CLIPreg(RBP_data=miR_data,gene_groups=gene_groups)
+res_miR=CLIPreg(Regulator_data=miR_data,gene_groups=gene_groups)
 save(res_miR,file="Res_miR_HeLa_EGF.RData")
 res=CLIPreg::combine(res1=res_miR,res2=res_miR,FDR=0.05)
 
-HeatmapmiRNA(res=res) # The RBP are not changing --> need to use the miRNA heatmap
-Targets=GetTarget(RBP_data=miR_data,background=gene_groups$geneID)
-Draw_network_by_group(rbp_lfc=c("hsa-mir-652","hsa-mir-499a","hsa-mir-99b","hsa-mir-875","hsa-mir-501"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
+Heatmap_no_fold_change(res=res) # need to use the Heatmap_no_fold_change
+Targets=GetTarget(Regulator_data=miR_data,background=gene_groups$geneID)
+Draw_network_by_group(regulators=c("hsa-mir-652","hsa-mir-499a","hsa-mir-99b","hsa-mir-875","hsa-mir-501"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
 Plot_GO_RBP(rbp_of_interest="hsa-mir-501",tpm_ribo=tpm_ribo,Targets=Targets,gene_groups=gene_groups,
             GO_to_show=3)
 ```
@@ -643,6 +671,23 @@ Plot_GO_RBP(rbp_of_interest="hsa-mir-501",tpm_ribo=tpm_ribo,Targets=Targets,gene
 
 # Processing of CLIPseq summary files
 
+data("Example_bed")
+Example_bed
+#>   chrom chromStart  chromEnd                                       name score
+#> 1 chr10  100000152 100000166  human_RBP_CLIPdb_PAR-CLIP_PARalyzer194179     0
+#> 2 chr10  100000152 100000166  human_RBP_CLIPdb_PAR-CLIP_PARalyzer628883     0
+#> 3 chr10  100000152 100000167 human_RBP_CLIPdb_PAR-CLIP_PARalyzer5906935     0
+#> 4 chr10  100000152 100000167 human_RBP_CLIPdb_PAR-CLIP_PARalyzer6193374     0
+#> 5 chr10  100000156 100000168 human_RBP_CLIPdb_PAR-CLIP_PARalyzer2957449     0
+#> 6 chr10  100000156 100000168 human_RBP_CLIPdb_PAR-CLIP_PARalyzer3234693     0
+#>   strand thickStart           thickEnd itemRgb          blockCount blockSizes
+#> 1      +     HNRNPC PAR-CLIP,PARalyzer HEK293T GSE56010,GSM1350196  0.7479220
+#> 2      +     HNRNPC PAR-CLIP,PARalyzer HEK293T GSE56010,GSM1350196  0.7479220
+#> 3      +     HNRNPC PAR-CLIP,PARalyzer HEK293T GSE56010,GSM1350200  0.5935826
+#> 4      +     HNRNPC PAR-CLIP,PARalyzer HEK293T GSE56010,GSM1350200  0.5935826
+#> 5      +     HNRNPC PAR-CLIP,PARalyzer HEK293T GSE56010,GSM1350198  0.6989123
+#> 6      +     HNRNPC PAR-CLIP,PARalyzer HEK293T GSE56010,GSM1350198  0.6989123
+
 # Step 1 : Download all RBP clip-seq bed files from encode and combine them into 1 be
 # Step 2 : Filter to keep high score peaks only. >8fold enrichment and P value <10e-5
 # Step 3 : Intersect bed file with Ensembl genes gtf file to find target genes
@@ -650,6 +695,36 @@ Plot_GO_RBP(rbp_of_interest="hsa-mir-501",tpm_ribo=tpm_ribo,Targets=Targets,gene
 
 # For Postar data, download from POSTAR3 website CLIPdb
 # Start from step3 of ENCODE
+
+# The RBP_data format, obtained after processing the bed file, needs to be a list of RBPs with each RBP containing a vector of target geneIDs. For Example :
+data("RBP_ENCODE")
+RBP_ENCODE[c("POLR2G","PPIL4","SBDS")]
+#> $POLR2G
+#>  [1] "ENSG00000150527" "ENSG00000258941" "ENSG00000124782" "ENSG00000096063"
+#>  [5] "ENSG00000152767" "ENSG00000078403" "ENSG00000105220" "ENSG00000178764"
+#>  [9] "ENSG00000104419" "ENSG00000157933" "ENSG00000116285" "ENSG00000117394"
+#> [13] "ENSG00000162337" "ENSG00000112715" "ENSG00000049618" "ENSG00000141526"
+#> [17] "ENSG00000184640" "ENSG00000183255" "ENSG00000114268" "ENSG00000174485"
+#> [21] "ENSG00000157985" "ENSG00000163811" "ENSG00000157827" "ENSG00000198648"
+#> [25] "ENSG00000134318" "ENSG00000176171" "ENSG00000155034" "ENSG00000136478"
+#> [29] "ENSG00000074047" "ENSG00000176853" "ENSG00000144366" "ENSG00000115295"
+#> 
+#> $PPIL4
+#>  [1] "ENSG00000106415" "ENSG00000169122" "ENSG00000153317" "ENSG00000029534"
+#>  [5] "ENSG00000197965" "ENSG00000151414" "ENSG00000185420" "ENSG00000014216"
+#>  [9] "ENSG00000144674" "ENSG00000198431" "ENSG00000164117" "ENSG00000170242"
+#> [13] "ENSG00000106034" "ENSG00000009954" "ENSG00000078304" "ENSG00000105220"
+#> [17] "ENSG00000078674" "ENSG00000147454" "ENSG00000156467" "ENSG00000257315"
+#> [21] "ENSG00000153187" "ENSG00000143401" "ENSG00000124942" "ENSG00000131747"
+#> [25] "ENSG00000089280" "ENSG00000119231" "ENSG00000174485" "ENSG00000164104"
+#> [29] "ENSG00000151466" "ENSG00000143797" "ENSG00000115310" "ENSG00000126883"
+#> [33] "ENSG00000183087" "ENSG00000075407" "ENSG00000054277" "ENSG00000112531"
+#> [37] "ENSG00000188994" "ENSG00000172432" "ENSG00000173926" "ENSG00000113013"
+#> 
+#> $SBDS
+#> [1] "ENSG00000136574" "ENSG00000101558" "ENSG00000171310" "ENSG00000182326"
+#> [5] "ENSG00000124486" "ENSG00000109971" "ENSG00000111678" "ENSG00000102265"
+#> [9] "ENSG00000166224"
 ```
 
 ### Processing of miRNA file
@@ -711,10 +786,10 @@ miR_info$mirbase_id=tolower(miR_info$mirbase_id)
 save(miR_info,file = "data/miR_info.RData")
 ```
 
-### HeLa stimulated by EGF data preparation
+### Example 2: Data pre-processing without using deltaTE
 
-The csv files used for pre-processing can be found in the example folder
-of CLIPreg’s github page.
+The csv files used for pre-processing can be found in the “Example”
+folder of CLIPreg’s github page.
 
 ``` r
 BiocManager::install("biomaRt")
