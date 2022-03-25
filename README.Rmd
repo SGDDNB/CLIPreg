@@ -395,10 +395,13 @@ Plot_GO_RBP(rbp_of_interest="hsa-mir-501",tpm_ribo=tpm_ribo,Targets=Targets,gene
 ### CLIP data preparation
 
 
-```{r Encode postar processing,eval=F}
+```{r Encode postar processing}
 
 
 # Processing of CLIPseq summary files
+
+data("Example_bed")
+Example_bed
 
 # Step 1 : Download all RBP clip-seq bed files from encode and combine them into 1 be
 # Step 2 : Filter to keep high score peaks only. >8fold enrichment and P value <10e-5
