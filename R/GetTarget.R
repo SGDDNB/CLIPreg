@@ -12,7 +12,7 @@
 #'
 #'
 #'
-GetTarget <-function(RBP_data=RBP_POSTAR, background=gene_groups$geneID)
+GetTarget <-function(Regulator_data=RBP_POSTAR, background=gene_groups$geneID)
 {
   #To ignore the warnings during usage
   options(warn=-1)
@@ -20,7 +20,7 @@ GetTarget <-function(RBP_data=RBP_POSTAR, background=gene_groups$geneID)
   options(stringsAsFactors=FALSE);
 
   for (i in names(RBP_data)) {
-    RBP_data[[i]]=subset(RBP_data[[i]],RBP_data[[i]]%in%background)
+    Regulator_data[[i]]=subset(Regulator_data[[i]],Regulator_data[[i]]%in%background)
     }
-  return(RBP_data)
+  return(Regulator_data)
 }
