@@ -40,7 +40,7 @@ miRBase$Name[index]=gsub('.{2}$', '',miRBase$Name[index] )
 # miR$`Predicted relative KD`=as.numeric(miR$`Predicted relative KD`)
 # miR=miR[abs(miR$`Predicted relative KD`)>0]
 
-Thres=-0.5
+Thres=-0.1
 miR=miR[tolower(miR$miRNA)%in%tolower(miRBase$Name),]
 miR=miR[miR$`weighted context++ score`<Thres,]
 miR_names=unique(miR$miRNA)
@@ -54,16 +54,16 @@ for (i in miR_names) {
   miR_data[[i]]=gsub("\\..*","",miR_data[[i]])
 }
 miR_data=miR_data[sort(names(miR_data))]
-names(miR_data)
 miR_data=subset(miR_data,tolower(names(miR_data))%in%tolower(G_list$mirbase_id))
+names(miR_data)=tolower(names(miR_data))
 
-save(miR_data,file = "data/miR_data0.1.RData")
-save(miR_data,file = "data/miR_data0.5.RData")
+save(miR_data,file = "data/miR_data.RData")
 
 G_list=G_list[G_list$mirbase_id%in%c(miR_names,tolower(miR_names)),]
 colnames(G_list)=c("geneID","miRBase_ID")
 miR_info=G_list
 
+miR_info$mirbase_id=tolower(miR_info$mirbase_id)
 save(miR_info,file = "data/miR_info.RData")
 
 ### Example of processing data from HeLa cells stimulated by EGF

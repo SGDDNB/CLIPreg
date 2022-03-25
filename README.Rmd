@@ -112,7 +112,7 @@ gene_groups=deltaTE_gene_groups(counts=counts,coldata=coldata,batch=0)
 
 ### Step 1: Input datasets
 
-Let's have a look at the gene_groups file from the example data. It consists of 2 columns containing the "geneID" and the "Gene_group" for all the DE genes. This is as an example on fibroblasts stimulated by TGFB, if you start with your own gene groups, go to next step. Ideally, the gene groups are obtained from deltaTE analysis but any method to find gene groups can also be run.
+Let's have a look at the gene_groups file from the example data. It consists in 2 columns containing the "geneID" and the "Gene_group" for all the DE genes. This is as an example on fibroblasts stimulated by TGFB, if you start with your own gene groups, go to next code line. Ideally, the gene groups are obtained from deltaTE analysis but any method to find gene groups can also be run.
 
 ```{r load gene_groups, message=FALSE}
 data("gene_groups")
@@ -125,13 +125,14 @@ You can input your own gene groups by using the function load_gene_groups() and 
 gene_groups=load_gene_groups(gene_groups_file = "path/to/gene_groups_file.txt")
 ```
 
-Load POSTAR and ENCODE RBP data. Those are 2 public datasets which are processed in order to have lists of vector. Each vector is named after 1 RBP and contains the geneID of all the targets of that RBP. Combine both data in a target list in the variable Targets.
+Load POSTAR and ENCODE RBP data. Those are 2 public datasets which are processed in order to have lists of vector. See "Pre-proessing" part of this readme to find out more details.  Each vector is named after 1 RBP and contains the geneID of all the targets of that RBP. Combine both data in a target list in the variable Targets.
 combine_targets  function is a summary of both RBP data by filtering only targets which are present in the background. This is to save time for the later analysis in the clipreg function. 
 
 ```{r load RBP data, message=FALSE}
 data("RBP_ENCODE")
 data("RBP_POSTAR")
 Targets=combine_targets(RBP_list1=RBP_ENCODE,RBP_list2=RBP_POSTAR,background=gene_groups$geneID)
+Targets[c("POLR2G","PPIL4","SBDS")]
 ```
 
 Load the fold change and identify the RBPs. If you have your own then provide your own data.
@@ -144,7 +145,7 @@ data("ribo_lfc")
 data("tpm_ribo")
 
 head(ribo_lfc)
-head(tpm_ribo)
+head(tpm_ribo[,1:4])
 ```
 
 
@@ -157,7 +158,7 @@ tpm_ribo=load_ribo_tpm(ribo_tpm_file = "ribo_tpm_file") # make sure rownames(tpm
 
 ### Step 2: Data integration and analysis
 
-Run the enrichment analysis using CLIPreg() function. This takes several minutes depending on how many gene groups and how many genes per gene group there are. If you want to have a look at the example results skip this step.
+Run the enrichment analysis using CLIPreg() function. This takes several minutes depending on how many gene groups and how many genes per gene group there are. If you want to have a look at the example results skip these 4 lines of code.
 For each RBP in each gene group, this function computes the over representation of the RBP's targets by calculating z-score, p-value and padj (corresponding to FDR).
 
 The output of CLIPreg() is a list of dataframes. One dataframe per gene group containing the RBP and statistical information calculated during the analysis such as p-value and z-score.
@@ -173,18 +174,16 @@ save(res_Postar,file="Res_RBP_Postar.RData")
 ```
 
 If you want to get the results directly you can load it by using the example data results. 
-
 ```{r load res, message=FALSE}
 data("res_Encode")
 data("res_Postar")
 head(res_Encode[[1]])
 ```
 
-Then we want to combine POSTAR and ENCODE to work with only one dataframe and only keep RBPs that are significant in at least one gene group.
+Then we want to combine POSTAR and ENCODE to work with only one dataframe and only keep RBPs that are significant in at least one gene group. If an RBP is present in both POSTAR and ENCODE, only the most significant result is kept.
 
 ```{r combining POSTAR and ENCODE, message=FALSE}
-
-res=CLIPreg::combine(res1=res_Encode,res2=res_Postar,FDR=0.1)
+res=CLIPreg::combine(res1=res_Encode,res2=res_Postar,FDR=0.05)
 head(res[[1]])
 ```
 
@@ -196,7 +195,7 @@ rbp_lfc=rbp_change(res=res,ribo_lfc=ribo_lfc)
 head(rbp_lfc)
 # Cure res data by removing RBPs that are not in the rbp_lfc dataframe
 res=cure_res(res=res,rbp_lfc=rbp_lfc)
-#head(res)
+head(res[[1]])
 ```
 
 
@@ -217,11 +216,11 @@ HeatmapRBP(res=res,rbp_lfc=rbp_lfc)
 Suggestion for saving your heatmap
 ```{r save heatmap to pdf, eval=F}
 # Save the heatmap
-e=HeatmapRBP(res=res,rbp_lfc=rbp_lfc)
+p=HeatmapRBP(res=res,rbp_lfc=rbp_lfc)
 location="Heatmap_fibroblasts.pdf"
-n=length(e$tree_row$order)
+n=length(p$tree_row$order)
 pdf(location,length(names(res)),3+n*0.15)
-e
+p
 dev.off()
 ```
 
@@ -257,9 +256,10 @@ Plot_GO_RBP(rbp_of_interest="QKI",tpm_ribo = tpm_ribo,Targets=Targets,gene_group
 
 The same analysis can be applied to run miRNA target enrichment. Here is an example of the code that is very similar to the steps followed for the RBPs.
 
-```{r Scipt for miRNA,eval=F}
 
-data("miR_data") # preparation can be found in Example/data_processing.R on github
+
+```{r Scipt for miRNA loading necessary data}
+data("miR_data") # preparation can be found in Pre-processing part of the readme
 data("miR_info")
 data("gene_groups") # for example on fibroblasts
 Targets=GetTarget(RBP_data=miR_data,background=gene_groups$geneID)
@@ -267,27 +267,46 @@ data("ribo_lfc")
 data("tpm_ribo")
 data("tpm_all_RNA")
 
-tpm_all_RNA=tpm_all_RNA[rowSums(tpm_all_RNA > 0) >= 1, ]
-miR_info=miR_info[miR_info$ensembl_gene_id%in%rownames(tpm_all_RNA),]
-names(miR_data)=tolower(names(miR_data))
-miR_data=subset(miR_data,names(miR_data)%in%tolower(miR_info$mirbase_id))
 
-#res_miR=CLIPreg(RBP_data=miR_data,gene_groups=gene_groups) # Takes several minutes
-#save(res_miR,file="Res_miR0.5.RData")
+# It's important to only keep miR which are detected transcriptionally
+tpm_all_RNA=tpm_all_RNA[rowSums(tpm_all_RNA > 1) >= 1, ]
+miR_info=miR_info[miR_info$ensembl_gene_id%in%rownames(tpm_all_RNA),]
+miR_data=subset(miR_data,names(miR_data)%in%miR_info$mirbase_id)
+```
+You can then run the CLIPreg function to the data to get the enrichment details in each gene group.
+
+```{r Scipt for miRNA run CLIPreg,eval=F}
+#This is done on the example set, you can skip to next code for the results
+res_miR=CLIPreg(RBP_data=miR_data,gene_groups=gene_groups) # Takes several minutes
+save(res_miR,file="Res_miR.RData")
+```
+
+
+The output format is the same as for CLIPreg run on RBPs
+```{r Scipt for miRNA showing results}
 data("Res_miR")
-res=CLIPreg::combine(res1=res_miR,res2 = res_miR,FDR=0.1)
+res=CLIPreg::combine(res1=res_miR,res2 = res_miR,FDR=0.05)
+head(res[[1]])
+```
+
+
+A heatmap can be plotted also for miRNA
+```{r Scipt for miRNA heatmap,eval=F}
 HeatmapmiRNA(res=res)
 
 
-# Save the heatmap
-e=HeatmapmiRNA(res=res)
-location="Heatmap_HeLa_EGF_miRNA.pdf"
-n=nrow(e@matrix)
-pdf(location,length(names(res))+3,3+n*0.15)
-e
-dev.off()
+# Suggestion to save the heatmap 
+# e=HeatmapmiRNA(res=res)
+# location="Heatmap_HeLa_EGF_miRNA.pdf"
+# n=nrow(e@matrix)
+# pdf(location,length(names(res))+3,3+n*0.15)
+# e
+# dev.off()
 
+```
 
+Network and GO plots are also available for miRNA
+```{r Scipt for miRNA plots}
 # Network and GO
 Draw_network_by_group(rbp_lfc=c("hsa-miR-133a-3p.1","hsa-miR-590-5p","hsa-miR-29a-3p","hsa-miR-30a-5p","hsa-miR-155-5p"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
 Plot_GO_RBP(rbp_of_interest="hsa-miR-155-5p",tpm_ribo = tpm_ribo,Targets=Targets,gene_groups=gene_groups,GO_to_show=3)
@@ -297,34 +316,40 @@ Plot_GO_RBP(rbp_of_interest="hsa-miR-155-5p",tpm_ribo = tpm_ribo,Targets=Targets
 
 ## Another example not using deltaTE
 
-HeLa stimulated by EGF. Groups were obtained by categorizing into TE_up and TE_down from data given in the paper https://pubmed.ncbi.nlm.nih.gov/30466063/. Data preparation can be found in Example/data_processing.R on github.
+HeLa stimulated by EGF. Groups were obtained by categorizing into TE_up and TE_down from data given in the paper https://pubmed.ncbi.nlm.nih.gov/30466063/. Data preparation can be found in the "Pre-Processing" part of the readme.
 
+First loading the required tables.
 ``` {r CLIPreg on HeLa stimulated by EGF, fig.width=15, message=FALSE,warning=FALSE,eval=F}
 # RBP analysis
 data("gene_groups_HeLa_EGF")
 data("ribo_lfc_HeLa_EGF")
 data("tpm_ribo_HeLa_EGF.RData")
-
 data("RBP_ENCODE")
 data("RBP_POSTAR")
 Targets=combine_targets(RBP_list1=RBP_ENCODE,RBP_list2=RBP_POSTAR,background=gene_groups$geneID)
+```
 
+
+Run RBP target enrichment.
+```{r Running CLIPreg on HeLa main}
 res_Postar=CLIPreg(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
 res_Encode=CLIPreg(RBP_data=RBP_ENCODE,gene_groups=gene_groups)
+res=CLIPreg::combine(res1=res_Encode,res2=res_Postar,FDR=0.05)
 
-res=CLIPreg::combine(res1=res_Encode,res2=res_Postar,FDR=0.1)
-rbp_lfc=rbp_change(res=res,ribo_lfc=ribo_lfc)
+rbp_lfc=rbp_change(res=res,ribo_lfc=ribo_lfc) # None of the RBP are changing
 res=cure_res(res=res,rbp_lfc=rbp_lfc)
+```
 
+
+```{r plots HeLa RBP,}
 HeatmapmiRNA(res=res) # The RBP are not changing --> need to use the miRNA heatmap
 Draw_network_by_group(rbp_lfc=c("GRWD1","GRSF1","SUGP2","DHX30","LSM11"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
 Plot_GO_RBP(rbp_of_interest="GRWD1",tpm_ribo = tpm_ribo,Targets=Targets,gene_groups=gene_groups,GO_to_show=3)
-
 ```
 
+miRNA analysis can also be applied to this data. Look at "Analysis of miRNA target enrichment" in this readme for more details about how miR enrichment steps work.
 ``` {r miR on HeLa stimulated by EGF, fig.width=15, message=FALSE,warning=FALSE,eval=F}
 # miRNA analysis
-
 data("gene_groups_HeLa_EGF")
 data("ribo_lfc_HeLa_EGF")
 data("tpm_ribo_HeLa_EGF.RData")
@@ -335,14 +360,11 @@ data("miR_info")
 
 tpm_all_RNA=tpm_all_RNA[rowSums(tpm_all_RNA > 1) >= 1, ]
 miR_info=miR_info[miR_info$ensembl_gene_id%in%rownames(tpm_all_RNA),]
-names(miR_data)=tolower(names(miR_data))
-miR_data=subset(miR_data,names(miR_data)%in%tolower(miR_info$mirbase_id))
-
-
+miR_data=subset(miR_data,names(miR_data)%in%miR_info$mirbase_id)
 
 res_miR=CLIPreg(RBP_data=miR_data,gene_groups=gene_groups)
-#save(res_miR,file="Res_miR_HeLa_EGF.RData")
-res=CLIPreg::combine(res1=res_miR,res2=res_miR,FDR=0.1)
+save(res_miR,file="Res_miR_HeLa_EGF.RData")
+res=CLIPreg::combine(res1=res_miR,res2=res_miR,FDR=0.05)
 
 HeatmapmiRNA(res=res) # The RBP are not changing --> need to use the miRNA heatmap
 Targets=GetTarget(RBP_data=miR_data,background=gene_groups$geneID)
@@ -351,7 +373,13 @@ Plot_GO_RBP(rbp_of_interest="hsa-miR-501-3p",tpm_ribo=tpm_ribo,Targets=Targets,g
             GO_to_show=3)
 ```
 
+## Pre-processing
 
+### CLIP data preparation
+
+### miR data preparation
+
+### HeLa stimulated by EGF data preparation
 
 
 
