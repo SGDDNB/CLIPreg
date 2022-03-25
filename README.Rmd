@@ -173,11 +173,13 @@ save(res_Postar,file="Res_RBP_Postar.RData")
 
 ```
 
-If you want to get the results directly you can load it by using the example data results. 
+If you want to get the results directly you can load it by using the example data results. The result is a list of 8 dataframes, 8 being the number of the gene groups found in this dataset. Each dataframe contains a statistic summary of the enrichment of the targets of the RBP. The CLIPreg function calculates the over-representation of RBP targets in each of the gene groups. This is done by calculating the empirical p-value of the frequency of interactions between any given RBP and each individual DeltaTE group by comparing the number of observed interactions with a null distribution generated from repeated shuffling (n = 100,000 iterations) of the RBP-mRNA interactions.
+real_overlap corresponds to the actual overlap between the RBP targets and the gene group while simulated_overlap_mean and sd correspond to the mean and average of the null distribution.
+
 ```{r load res, message=FALSE}
 data("res_Encode")
 data("res_Postar")
-head(res_Encode[[1]])
+head(res_Encode$exclusive_down)
 ```
 
 Then we want to combine POSTAR and ENCODE to work with only one dataframe and only keep RBPs that are significant in at least one gene group. If an RBP is present in both POSTAR and ENCODE, only the most significant result is kept.
@@ -242,7 +244,7 @@ Draw_network_by_group(regulators=rbp_lfc,res=res,Targets=Targets,gene_groups=gen
 #                        res=res,Targets=Targets,gene_groups=gene_groups,n=3,forwarded = F)
 ```
 
-Gene ontology can be plotted for specific nodes or RBP. The P-value corresponds to Fisher's exact test p-value.
+Gene ontology can be plotted for specific nodes or RBP. The P-value corresponds to Fisher's exact test p-value. This p-value is obtained following the steps of the topGO vignette package. This p-value is not corrected.
 
 ```{r GO of specific nodes,fig.width=15, message=FALSE,warning=FALSE}
 # plot GO, each plot takes a couple of minutes to generate.
