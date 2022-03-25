@@ -308,8 +308,8 @@ HeatmapmiRNA(res=res)
 Network and GO plots are also available for miRNA
 ```{r Scipt for miRNA plots}
 # Network and GO
-Draw_network_by_group(rbp_lfc=c("hsa-miR-133a-3p.1","hsa-miR-590-5p","hsa-miR-29a-3p","hsa-miR-30a-5p","hsa-miR-155-5p"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
-Plot_GO_RBP(rbp_of_interest="hsa-miR-155-5p",tpm_ribo = tpm_ribo,Targets=Targets,gene_groups=gene_groups,GO_to_show=3)
+Draw_network_by_group(rbp_lfc=c("hsa-mir-133a","hsa-mir-590","hsa-mir-29a","hsa-mir-30a","hsa-mir-155"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
+Plot_GO_RBP(rbp_of_interest="hsa-mir-155",tpm_ribo = tpm_ribo,Targets=Targets,gene_groups=gene_groups,GO_to_show=3)
 ```
 
 
@@ -368,8 +368,8 @@ res=CLIPreg::combine(res1=res_miR,res2=res_miR,FDR=0.05)
 
 HeatmapmiRNA(res=res) # The RBP are not changing --> need to use the miRNA heatmap
 Targets=GetTarget(RBP_data=miR_data,background=gene_groups$geneID)
-Draw_network_by_group(rbp_lfc=c("hsa-miR-652-3p","hsa-miR-499a-5p","hsa-miR-99b-5p","hsa-miR-875-5p","hsa-miR-501-3p"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
-Plot_GO_RBP(rbp_of_interest="hsa-miR-501-3p",tpm_ribo=tpm_ribo,Targets=Targets,gene_groups=gene_groups,
+Draw_network_by_group(rbp_lfc=c("hsa-mir-652","hsa-mir-499a","hsa-mir-99b","hsa-mir-875","hsa-mir-501"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
+Plot_GO_RBP(rbp_of_interest="hsa-mir-501",tpm_ribo=tpm_ribo,Targets=Targets,gene_groups=gene_groups,
             GO_to_show=3)
 ```
 
