@@ -2,22 +2,24 @@
 #'
 #' @description This function draw a network from CLIPreg output. It plots the n most changing RBP and their targets group by TE category
 #'
-#' @param symbol rbp_lfc, res, Targets, gene_groups, n
+#' @param symbol regulators, res, Targets, gene_groups, n
 #'
 #' @return Plot network
 #'
-#' @examples Draw_network(rbp_lfc=rbp_lfc,res=res_both,gene_groups=gene_groups,n=5)
+#' @examples Draw_network(regulators=rbp_lfc,res=res_both,gene_groups=gene_groups,n=5)
 #'
 #' @export
 #'
 #'
 #'
-Draw_network_by_group <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded=F)
+Draw_network_by_group <-function(regulators=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded=F)
 {
   #To ignore the warnings during usage
   options(warn=-1)
   options("getSymbols.warning4.0"=FALSE)
   options(stringsAsFactors=FALSE);
+
+  rbp_lfc=regulators
 
   if (forwarded==F) {
     fw=which(grepl("forwarded",names(res)))

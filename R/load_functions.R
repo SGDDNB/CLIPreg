@@ -99,7 +99,8 @@ rbp_change=function(res=res,ribo_lfc=ribo_lfc){
 #' @examples
 #' @export
 #'
-cure_res=function(res=res,rbp_lfc=rbp_lfc){
+cure_res=function(res=res,regulators=rbp_lfc){
+  rbp_lfc=regulators
   for (n in 1:length(names(res))) {
     res[[n]]=res[[n]][res[[n]]$RBP%in%as.character(rbp_lfc$IDENTIFIER),]
   }
@@ -114,9 +115,9 @@ cure_res=function(res=res,rbp_lfc=rbp_lfc){
 #' @export
 #'
 combine_targets=function(RBP_list1=RBP_ENCODE,RBP_list2=RBP_POSTAR,background=gene_groups$geneID){
-  TargetsEncode=GetTarget(RBP_data = RBP_list1,background = background)
+  TargetsEncode=GetTarget(Regulator_data = RBP_list1,background = background)
   if (exists("RBP_list2")) {
-    TargetsPOSTAR=GetTarget(RBP_data = RBP_list2,background = background)
+    TargetsPOSTAR=GetTarget(Regulator_data = RBP_list2,background = background)
   } else {TargetsPOSTAR=c()}
   Targets=c(TargetsEncode,TargetsPOSTAR)
   Targets=split(unlist(Targets, use.names = FALSE), rep(names(Targets), lengths(Targets)))

@@ -2,23 +2,23 @@
 #'
 #' @description Calculates the enrichment of each RBP for each gene group
 #'
-#' @param symbol folder, RBP_data, gene_groups
+#' @param symbol folder, Regulator_data, gene_groups
 #'
 #' @return List of gene_groups containing dataframe with all the enrichment score for each RBP
 #'
-#' @examples CLIPreg(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
+#' @examples CLIPreg(Regulator_data=RBP_POSTAR,gene_groups=gene_groups)
 #' @export
 #'
 #'
 #'
-CLIPreg <-function(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
+CLIPreg <-function(Regulator_data=RBP_POSTAR,gene_groups=gene_groups)
 {
   #To ignore the warnings during usage
   options(warn=-1)
   options("getSymbols.warning4.0"=FALSE)
   options(stringsAsFactors=FALSE);
 
-  RBP_data=RBP_data[sort(names(RBP_data))]
+  Regulator_data=Regulator_data[sort(names(Regulator_data))]
 
   numCores <- detectCores()
   registerDoParallel(numCores-1)  # use multicore, set to the number of our cores
@@ -30,12 +30,12 @@ CLIPreg <-function(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
     fmatch(x, table, nomatch = 0L) > 0L
   }
 
-  rbp_names=names(RBP_data)
+  rbp_names=names(Regulator_data)
   categories=unique(gene_groups$Gene_group)
   out=list()
   for (cl in categories) {
     print(cl)
-    RBP=RBP_data
+    RBP=Regulator_data
     gene_group=gene_groups$geneID[gene_groups$Gene_group==cl]
     nb_genes=length(gene_group)
 

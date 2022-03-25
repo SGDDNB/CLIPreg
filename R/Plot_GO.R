@@ -13,7 +13,7 @@
 #'
 #'
 #'
-Plot_GO <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,
+Plot_GO <-function(regulators=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,
                   tpm_ribo=tpm_ribo,th=200,GO_to_show=3,forwarded=F)
 {
   #To ignore the warnings during usage
@@ -21,6 +21,7 @@ Plot_GO <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_grou
   options("getSymbols.warning4.0"=FALSE)
   options(stringsAsFactors=FALSE);
 
+  rbp_lfc=regulators
 
   if (forwarded==F) {
     fw=which(grepl("forwarded",names(res)))

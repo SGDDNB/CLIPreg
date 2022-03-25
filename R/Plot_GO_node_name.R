@@ -13,13 +13,15 @@
 #'
 #'
 #'
-Plot_GO_node_name <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,
+Plot_GO_node_name <-function(regulators=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,
                              tpm_ribo = tpm_ribo,Nodes_to_keep=c(19,15),GO_to_show=3,forwarded=F)
 {
   #To ignore the warnings during usage
   options(warn=-1)
   options("getSymbols.warning4.0"=FALSE)
   options(stringsAsFactors=FALSE);
+
+  rbp_lfc=regulators
 
   if (forwarded==F) {
     fw=which(grepl("forwarded",names(res)))

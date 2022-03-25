@@ -165,8 +165,8 @@ The output of CLIPreg() is a list of dataframes. One dataframe per gene group co
 
 ```{r run enrichment analysis, message=FALSE,eval=F}
 # The CLIPreg function requires a few minutes to run, save the data after running it to be sure not to lose it
-res_Postar=CLIPreg(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
-res_Encode=CLIPreg(RBP_data=RBP_ENCODE,gene_groups=gene_groups)
+res_Postar=CLIPreg(Regulator_data=RBP_POSTAR,gene_groups=gene_groups)
+res_Encode=CLIPreg(Regulator_data=RBP_ENCODE,gene_groups=gene_groups)
 
 save(res_Encode,file="Res_RBP_Encode.RData")
 save(res_Postar,file="Res_RBP_Postar.RData")
@@ -194,7 +194,7 @@ Extract the RBP fold change from the ribo_lfc and keep only detected RBPs in res
 rbp_lfc=rbp_change(res=res,ribo_lfc=ribo_lfc)
 head(rbp_lfc)
 # Cure res data by removing RBPs that are not in the rbp_lfc dataframe
-res=cure_res(res=res,rbp_lfc=rbp_lfc)
+res=cure_res(res=res,regulators=rbp_lfc)
 head(res[[1]])
 ```
 
@@ -235,7 +235,7 @@ From the results, the user can choose a number of RBP to draw the network for by
 
 ```{r Network,message=FALSE,warning=FALSE}
 # Draw network of the RBP that are most changing or choose specific RBPs
-Draw_network_by_group(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
+Draw_network_by_group(regulators=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
 
 # You can subset your RBP_lfc to keep only your RBPs of interest. Make sure n = the number of RBP you want to plot.
 # Draw_network_by_group(rbp_lfc=c("CELF2","HNRNPF","DDX24"),
@@ -246,9 +246,9 @@ Gene ontology can be plotted for specific nodes or RBP. The P-value corresponds 
 
 ```{r GO of specific nodes,fig.width=15, message=FALSE,warning=FALSE}
 # plot GO, each plot takes a couple of minutes to generate.
-Plot_GO(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,
+Plot_GO(regulators=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,
   tpm_ribo = tpm_ribo,th=200,GO_to_show=3,forwarded = F)
-Plot_GO_node_name(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,
+Plot_GO_node_name(regulators=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,
                   tpm_ribo = tpm_ribo,Nodes_to_keep=c(19,15),GO_to_show=3,forwarded = F)
 Plot_GO_RBP(rbp_of_interest="QKI",tpm_ribo = tpm_ribo,Targets=Targets,gene_groups=gene_groups,GO_to_show=3)
 ```
@@ -264,7 +264,7 @@ The same analysis can be applied to run miRNA target enrichment. Here is an exam
 data("miR_data") # preparation can be found below in section "Processing of miRNA file"
 data("miR_info")
 data("gene_groups") # for example on fibroblasts
-Targets=GetTarget(RBP_data=miR_data,background=gene_groups$geneID)
+Targets=GetTarget(Regulator_data=miR_data,background=gene_groups$geneID)
 data("ribo_lfc")
 data("tpm_ribo")
 data("tpm_all_RNA")
@@ -279,7 +279,7 @@ You can then run the CLIPreg function to the data to get the enrichment details 
 
 ```{r Scipt for miRNA run CLIPreg,eval=F}
 #This is done on the example set, you can skip to next code for the results
-res_miR=CLIPreg(RBP_data=miR_data,gene_groups=gene_groups) # Takes several minutes
+res_miR=CLIPreg(Regulator_data=miR_data,gene_groups=gene_groups) # Takes several minutes
 save(res_miR,file="Res_miR.RData")
 ```
 
@@ -310,7 +310,8 @@ Heatmap_no_fold_change(res=res)
 Network and GO plots are also available for miRNA
 ```{r Scipt for miRNA plots}
 # Network and GO
-Draw_network_by_group(rbp_lfc=c("hsa-mir-301a","hsa-mir-454","hsa-mir-544a","hsa-mir-106b","hsa-mir-148b"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = T)
+# As we don't have fold change for miRNA, you can input miR names in the regulators for the plots.
+Draw_network_by_group(regulators=c("hsa-mir-301a","hsa-mir-454","hsa-mir-544a","hsa-mir-106b","hsa-mir-148b"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = T)
 Plot_GO_RBP(rbp_of_interest="hsa-mir-301a",tpm_ribo = tpm_ribo,Targets=Targets,gene_groups=gene_groups,GO_to_show=3)
 ```
 
@@ -334,8 +335,8 @@ Targets_HeLa=combine_targets(RBP_list1=RBP_ENCODE,RBP_list2=RBP_POSTAR,backgroun
 
 Run RBP target enrichment.
 ```{r Running CLIPreg on HeLa main,eval=F}
-res_Postar_HeLa=CLIPreg(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
-res_Encode_HeLa=CLIPreg(RBP_data=RBP_ENCODE,gene_groups=gene_groups)
+res_Postar_HeLa=CLIPreg(Regulator_data=RBP_POSTAR,gene_groups=gene_groups)
+res_Encode_HeLa=CLIPreg(Regulator_data=RBP_ENCODE,gene_groups=gene_groups)
 
 save(res_Encode_HeLa,file="Res_Encode_HeLa.RData")
 save(res_Postar_HeLa,file="Res_Postar_HeLa.RData")
@@ -351,7 +352,7 @@ rbp_lfc=rbp_change(res=res_HeLa,ribo_lfc=ribo_lfc) # None of the RBP are changin
 res=cure_res(res=res_HeLa,rbp_lfc=rbp_lfc)
 rbp_lfc
 ```
-As we can see, none of the RBP are changing. If you still want to plot the heatmap although no RBP are found changing, you can use the Heatmap_no_fold_change function which doesn't require rbp_lfc
+As we can see, none of the RBP are changing. If you still want to plot the heatmap although no RBP are found changing, you can use the Heatmap_no_fold_change function which doesn't require regulators.
 
 ```{r plots HeLa RBP}
 Heatmap_no_fold_change(res=res) # The RBP are not changing --> need to use the miRNA heatmap
@@ -359,7 +360,7 @@ Heatmap_no_fold_change(res=res) # The RBP are not changing --> need to use the m
 
 Not enoughs RBP are significant with enough targets to give any meaning to the network and gene ontology plot
 ```{r network not enough genes,eval=F}
-# Draw_network_by_group(rbp_lfc=c("GRWD1","GRSF1","SUGP2","DHX30","LSM11"),res=res,Targets=Targets_HeLa,gene_groups=gene_groups,n=5,forwarded = F)
+# Draw_network_by_group(regulators=c("GRWD1","GRSF1","SUGP2","DHX30","LSM11"),res=res,Targets=Targets_HeLa,gene_groups=gene_groups,n=5,forwarded = F)
 # Plot_GO_RBP(rbp_of_interest="GRWD1",tpm_ribo = tpm_ribo,Targets=Targets_HeLa,gene_groups=gene_groups,GO_to_show=3)
 ```
 
@@ -378,13 +379,13 @@ tpm_all_RNA=tpm_all_RNA[rowSums(tpm_all_RNA > 1) >= 1, ]
 miR_info=miR_info[miR_info$ensembl_gene_id%in%rownames(tpm_all_RNA),]
 miR_data=subset(miR_data,names(miR_data)%in%miR_info$mirbase_id)
 
-res_miR=CLIPreg(RBP_data=miR_data,gene_groups=gene_groups)
+res_miR=CLIPreg(Regulator_data=miR_data,gene_groups=gene_groups)
 save(res_miR,file="Res_miR_HeLa_EGF.RData")
 res=CLIPreg::combine(res1=res_miR,res2=res_miR,FDR=0.05)
 
-Heatmap_no_fold_change(res=res) # The RBP are not changing --> need to use the miRNA heatmap
-Targets=GetTarget(RBP_data=miR_data,background=gene_groups$geneID)
-Draw_network_by_group(rbp_lfc=c("hsa-mir-652","hsa-mir-499a","hsa-mir-99b","hsa-mir-875","hsa-mir-501"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
+Heatmap_no_fold_change(res=res) # need to use the Heatmap_no_fold_change
+Targets=GetTarget(Regulator_data=miR_data,background=gene_groups$geneID)
+Draw_network_by_group(regulators=c("hsa-mir-652","hsa-mir-499a","hsa-mir-99b","hsa-mir-875","hsa-mir-501"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
 Plot_GO_RBP(rbp_of_interest="hsa-mir-501",tpm_ribo=tpm_ribo,Targets=Targets,gene_groups=gene_groups,
             GO_to_show=3)
 ```
