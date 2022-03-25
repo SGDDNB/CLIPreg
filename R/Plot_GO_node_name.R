@@ -31,7 +31,6 @@ Plot_GO_node_name <-function(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups
   if (class(rbp_lfc)=="character") {
     RBP_kept=rbp_lfc
   } else {
-    rbp_lfc=rbp_lfc[RBPs,]
     rbp_lfc=rbp_lfc[order(-abs(rbp_lfc$FoldChange)),]
     rbp_lfc=rbp_lfc[1:n,]
 

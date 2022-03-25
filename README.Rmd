@@ -237,13 +237,13 @@ From the results, the user can choose a number of RBP to draw the network for by
 # Draw network of the RBP that are most changing or choose specific RBPs
 Draw_network_by_group(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
 
-# You can subset your RBP_lfc to keep only your RBPs of interest
+# You can subset your RBP_lfc to keep only your RBPs of interest. Make sure n = the number of RBP you want to plot.
 # Draw_network_by_group(rbp_lfc=c("CELF2","HNRNPF","DDX24"),
-#                       res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
+#                        res=res,Targets=Targets,gene_groups=gene_groups,n=3,forwarded = F)
 ```
 
 ```{r GO of specific nodes,fig.width=15, message=FALSE,warning=FALSE}
-# plot GO
+# plot GO, each plot takes a couple of minutes to generate.
 Plot_GO(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,
   tpm_ribo = tpm_ribo,th=200,GO_to_show=3,forwarded = F)
 Plot_GO_node_name(rbp_lfc=rbp_lfc,res=res,Targets=Targets,gene_groups=gene_groups,n=5,
