@@ -97,7 +97,7 @@ Visualise(results=results,folder="Results_CLIPreg")
 ## Advance usage
 
 ### Step 0 : Run deltaTE to find gene groups
-This has to be done on your dataset from raw counts of RIBO and RNA as well as a coldata dataframe that can run through DESeq2. Put batch = 1 if you have a batch column in your design.
+This has to be done on the user's dataset from raw counts of RIBO and RNA as well as a coldata dataframe that can run through DESeq2. Put batch = 1 if there is a batch column in the design.
 The counts must have a first column containing the geneID or gene names, they must be unique. The other columns are the raw counts of RNA and RIBO. The column names for the counts must be the same names as filled in the "SampleID" column of coldata.
 The coldata dataframe must have column names "SampleID", "SeqType", "Condition" and "Batch". (Batch is an optional column). Condition must contain 1 and 2. For example, in an untreated vs treatment drug experiment, set the untreated sample condition to 1 and treatment to 2.
 
@@ -144,7 +144,7 @@ data("ribo_lfc")
 data("tpm_ribo")
 
 head(ribo_lfc)
-#head(tpm_ribo)
+head(tpm_ribo)
 ```
 
 
@@ -295,9 +295,9 @@ Plot_GO_RBP(rbp_of_interest="hsa-miR-155-5p",tpm_ribo = tpm_ribo,Targets=Targets
 
 
 
-## Another example
+## Another example not using deltaTE
 
-HeLa stimulated by EGF. groups were obtained by categorizing into TE up and down from data given in the paper. Data preparation can be found in Example/data_processing.R on github.
+HeLa stimulated by EGF. Groups were obtained by categorizing into TE_up and TE_down from data given in the paper https://pubmed.ncbi.nlm.nih.gov/30466063/. Data preparation can be found in Example/data_processing.R on github.
 
 ``` {r CLIPreg on HeLa stimulated by EGF, fig.width=15, message=FALSE,warning=FALSE,eval=F}
 # RBP analysis
@@ -320,6 +320,9 @@ HeatmapmiRNA(res=res) # The RBP are not changing --> need to use the miRNA heatm
 Draw_network_by_group(rbp_lfc=c("GRWD1","GRSF1","SUGP2","DHX30","LSM11"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
 Plot_GO_RBP(rbp_of_interest="GRWD1",tpm_ribo = tpm_ribo,Targets=Targets,gene_groups=gene_groups,GO_to_show=3)
 
+```
+
+``` {r miR on HeLa stimulated by EGF, fig.width=15, message=FALSE,warning=FALSE,eval=F}
 # miRNA analysis
 
 data("gene_groups_HeLa_EGF")
