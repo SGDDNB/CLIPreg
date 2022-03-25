@@ -326,25 +326,34 @@ data("ribo_lfc_HeLa_EGF")
 data("tpm_ribo_HeLa_EGF.RData")
 data("RBP_ENCODE")
 data("RBP_POSTAR")
-Targets=combine_targets(RBP_list1=RBP_ENCODE,RBP_list2=RBP_POSTAR,background=gene_groups$geneID)
+Targets_HeLa=combine_targets(RBP_list1=RBP_ENCODE,RBP_list2=RBP_POSTAR,background=gene_groups$geneID)
 ```
 
 
 Run RBP target enrichment.
 ```{r Running CLIPreg on HeLa main}
-res_Postar=CLIPreg(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
-res_Encode=CLIPreg(RBP_data=RBP_ENCODE,gene_groups=gene_groups)
-res=CLIPreg::combine(res1=res_Encode,res2=res_Postar,FDR=0.05)
+res_Postar_HeLa=CLIPreg(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
+res_Encode_HeLa=CLIPreg(RBP_data=RBP_ENCODE,gene_groups=gene_groups)
 
-rbp_lfc=rbp_change(res=res,ribo_lfc=ribo_lfc) # None of the RBP are changing
-res=cure_res(res=res,rbp_lfc=rbp_lfc)
+save(res_Encode_HeLa,file="Res_Encode_HeLa.RData")
+save(res_Postar_HeLa,file="Res_Postar_HeLa.RData")
+
+```
+
+```{r clean data HeLa RBP res}
+data("Res_Encode_HeLa")
+data("Res_Postar_HeLa")
+res_HeLa=CLIPreg::combine(res1=res_Encode_HeLa,res2=res_Postar_HeLa,FDR=0.05)
+
+rbp_lfc=rbp_change(res=res_HeLa,ribo_lfc=ribo_lfc) # None of the RBP are changing
+res=cure_res(res=res_HeLa,rbp_lfc=rbp_lfc)
 ```
 
 
 ```{r plots HeLa RBP,}
 HeatmapmiRNA(res=res) # The RBP are not changing --> need to use the miRNA heatmap
-Draw_network_by_group(rbp_lfc=c("GRWD1","GRSF1","SUGP2","DHX30","LSM11"),res=res,Targets=Targets,gene_groups=gene_groups,n=5,forwarded = F)
-Plot_GO_RBP(rbp_of_interest="GRWD1",tpm_ribo = tpm_ribo,Targets=Targets,gene_groups=gene_groups,GO_to_show=3)
+Draw_network_by_group(rbp_lfc=c("GRWD1","GRSF1","SUGP2","DHX30","LSM11"),res=res,Targets=Targets_HeLa,gene_groups=gene_groups,n=5,forwarded = F)
+Plot_GO_RBP(rbp_of_interest="GRWD1",tpm_ribo = tpm_ribo,Targets=Targets_HeLa,gene_groups=gene_groups,GO_to_show=3)
 ```
 
 miRNA analysis can also be applied to this data. Look at "Analysis of miRNA target enrichment" in this readme for more details about how miR enrichment steps work.
