@@ -308,6 +308,8 @@ Heatmap_no_fold_change(res=res)
 # dev.off()
 
 ```
+We found that miRNAs targets were enriched in the forwarded down and buffered up groups as shown in this heatmap. These were both groups where the RNA levels are downregulated which aligns with the known function of miRNAs to silence or downregulate RNA transcription. Moreover we also found some miRNAs that have been known to be important in fibroblast activation such as miR-199a-5p which is known to promote pathogenic activation of fibroblast by regulating CAV1 gene (Lino Cardenas et al., 2013). We not only found CAV1 as a target of miR-199a-5p in the forwarded down group but also 100s/1000s of other targets that could potentially be playing a role in this miRNA’s regulatory network towards fibroblast activation.
+
 
 Network and GO plots are also available for miRNA
 ```{r Scipt for miRNA plots}
