@@ -19,7 +19,7 @@ GetTarget <-function(Regulator_data=RBP_POSTAR, background=gene_groups$geneID)
   options("getSymbols.warning4.0"=FALSE)
   options(stringsAsFactors=FALSE);
 
-  for (i in names(RBP_data)) {
+  for (i in names(Regulator_data)) {
     Regulator_data[[i]]=subset(Regulator_data[[i]],Regulator_data[[i]]%in%background)
     }
   return(Regulator_data)
