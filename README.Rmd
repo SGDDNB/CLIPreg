@@ -331,7 +331,7 @@ Targets_HeLa=combine_targets(RBP_list1=RBP_ENCODE,RBP_list2=RBP_POSTAR,backgroun
 
 
 Run RBP target enrichment.
-```{r Running CLIPreg on HeLa main}
+```{r Running CLIPreg on HeLa main,eval=F}
 res_Postar_HeLa=CLIPreg(RBP_data=RBP_POSTAR,gene_groups=gene_groups)
 res_Encode_HeLa=CLIPreg(RBP_data=RBP_ENCODE,gene_groups=gene_groups)
 
@@ -350,10 +350,14 @@ res=cure_res(res=res_HeLa,rbp_lfc=rbp_lfc)
 ```
 
 
-```{r plots HeLa RBP,}
+```{r plots HeLa RBP}
 HeatmapmiRNA(res=res) # The RBP are not changing --> need to use the miRNA heatmap
-Draw_network_by_group(rbp_lfc=c("GRWD1","GRSF1","SUGP2","DHX30","LSM11"),res=res,Targets=Targets_HeLa,gene_groups=gene_groups,n=5,forwarded = F)
-Plot_GO_RBP(rbp_of_interest="GRWD1",tpm_ribo = tpm_ribo,Targets=Targets_HeLa,gene_groups=gene_groups,GO_to_show=3)
+```
+
+Not enoughs RBP are significant with enough targets to give any meaning to the network and gene ontology plot
+```{r network not enough genes,eval=F}
+# Draw_network_by_group(rbp_lfc=c("GRWD1","GRSF1","SUGP2","DHX30","LSM11"),res=res,Targets=Targets_HeLa,gene_groups=gene_groups,n=5,forwarded = F)
+# Plot_GO_RBP(rbp_of_interest="GRWD1",tpm_ribo = tpm_ribo,Targets=Targets_HeLa,gene_groups=gene_groups,GO_to_show=3)
 ```
 
 miRNA analysis can also be applied to this data. Look at "Analysis of miRNA target enrichment" in this readme for more details about how miR enrichment steps work.
