@@ -264,26 +264,37 @@ save(res_Postar,file="Res_RBP_Postar.RData")
 ```
 
 If you want to get the results directly you can load it by using the
-example data results.
+example data results. The result is a list of 8 dataframes, 8 being the
+number of the gene groups found in this dataset. Each dataframe contains
+a statistic summary of the enrichment of the targets of the RBP. The
+CLIPreg function calculates the over-representation of RBP targets in
+each of the gene groups. This is done by calculating the empirical
+p-value of the frequency of interactions between any given RBP and each
+individual DeltaTE group by comparing the number of observed
+interactions with a null distribution generated from repeated shuffling
+(n = 100,000 iterations) of the RBP-mRNA interactions. real\_overlap
+corresponds to the actual overlap between the RBP targets and the gene
+group while simulated\_overlap\_mean and sd correspond to the mean and
+average of the null distribution.
 
 ``` r
 data("res_Encode")
 data("res_Postar")
-head(res_Encode[[1]])
+head(res_Encode$exclusive_down)
 #>       RBP real_overlap simulated_overlap_mean simulated_overlap_sd          z
-#> 1 ZC3H11A          268              282.41101            12.590167 -1.1446242
-#> 2    GNL3           14               15.73466             3.306621 -0.5246020
-#> 3  HNRNPM          345              396.49065            14.077142 -3.6577488
-#> 4   RBM15          461              476.04563            14.839723 -1.0138754
-#> 5   DDX24          370              406.79695            14.246241 -2.5829235
-#> 6   XRCC6          142              146.71529             9.573704 -0.4925252
-#>      pval padj
-#> 1 0.86594    1
-#> 2 0.63920    1
-#> 3 0.99986    1
-#> 4 0.83574    1
-#> 5 0.99474    1
-#> 6 0.66889    1
+#> 1 ZC3H11A           81               57.33332             6.529801  3.6244105
+#> 2    GNL3            4                3.18980             1.719746  0.4711161
+#> 3  HNRNPM           77               80.43285             7.323014 -0.4687756
+#> 4   RBM15          112               96.60761             7.707256  1.9971297
+#> 5   DDX24          121               82.58047             7.407222  5.1867666
+#> 6   XRCC6           46               29.75390             4.971406  3.2679082
+#>      pval         padj
+#> 1 0.00023 5.850000e-04
+#> 2 0.21196 2.952300e-01
+#> 3 0.65267 7.814891e-01
+#> 4 0.02041 3.411386e-02
+#> 5 0.00001 3.078947e-05
+#> 6 0.00061 1.486875e-03
 ```
 
 Then we want to combine POSTAR and ENCODE to work with only one
@@ -411,7 +422,9 @@ Draw_network_by_group(regulators=rbp_lfc,res=res,Targets=Targets,gene_groups=gen
 ```
 
 Gene ontology can be plotted for specific nodes or RBP. The P-value
-corresponds to Fisher’s exact test p-value.
+corresponds to Fisher’s exact test p-value. This p-value is obtained
+following the steps of the topGO vignette package. This p-value is not
+corrected.
 
 ``` r
 # plot GO, each plot takes a couple of minutes to generate.
