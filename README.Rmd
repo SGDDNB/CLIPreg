@@ -136,7 +136,7 @@ Targets[c("POLR2G","PPIL4","SBDS")]
 ```
 
 Load the fold change and identify the RBPs. If you have your own then provide your own data.
-ribo_lfc has 3 variables : "geneID", "IDENTIFIER" and "FoldChange". ribo_lfc only contains genes that have been filtered to be significantly changing at the ribo level.
+ribo_lfc has 3 variables : "geneID", "IDENTIFIER" and "Log2FoldChange". ribo_lfc only contains genes that have been filtered to be significantly changing at the ribo level.
 tpm_ribo must have only counts as columns and geneID as rownames 
 
 ```{r loading LFC and TPM, message=FALSE}
@@ -230,7 +230,7 @@ A bubble plot can be generated to see the overall representation of the RBPs' ta
 
 ```{r Bubble plot, message=FALSE}
 # Bubble plot gene_groups if gene_groups are from DeltaTE. FDR has to be lower or equal to the FDR put in CLIPreg::combine() step
-BubbleRBPs(res = res,gene_groups = gene_groups,rbp_lfc = rbp_lfc,FDR=0.05)
+BubbleRBPs(res = res,gene_groups = gene_groups,FDR=0.05)
 ```
 
 From the results, the user can choose a number of RBP to draw the network for by n. This will pick the n most changing RBPs based on fold change for the network. In the case where the user wants to draw a network with specific RBPs, he can input rpb_lfc as a character vector containing the RBP of interest
@@ -531,13 +531,13 @@ df=read.csv(file)
 df[which(is.na(df),arr.ind = T)]=1
 
 geneNames=unique(df$IDENTIFIER)
-ribo_lfc=data.frame(IDENTIFIER=geneNames,FoldChange=0)
+ribo_lfc=data.frame(IDENTIFIER=geneNames,Log2FoldChange=0)
 
 for (i in 1:nrow(df)) {
   lowest_pval=min(df[i,6:8])
   if (lowest_pval<0.05) {
     lowest_pval_index=which(df[i,6:8]==min(df[i,6:8]))[1]
-    ribo_lfc[ribo_lfc$IDENTIFIER==df$IDENTIFIER[i],"FoldChange"]=df[i,lowest_pval_index+2]
+    ribo_lfc[ribo_lfc$IDENTIFIER==df$IDENTIFIER[i],"Log2FoldChange"]=df[i,lowest_pval_index+2]
   }
 }
 

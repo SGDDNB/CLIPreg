@@ -2,17 +2,17 @@
 #'
 #' @description Use gene groups from DeltaTE output to generate enrichement plot of RBPs
 #'
-#' @param symbol RBP_res, gene_groups, rbp_lfc
+#' @param symbol RBP_res, gene_groups
 #'
 #' @return NULL. Generates a bubble plot
 #'
-#' @examples BubbleRBPs(RBP_res=res,gene_groups=gene_groups,rbp_lfc=rbp_lfc)
+#' @examples BubbleRBPs(RBP_res=res,gene_groups=gene_groups,FDR=0.1)
 #'
 #' @export
 #'
 #'
 #'
-BubbleRBPs <-function(res=res,gene_groups=gene_groups,rbp_lfc=rbp_lfc,FDR=0.1)
+BubbleRBPs <-function(res=res,gene_groups=gene_groups,FDR=0.1)
 {
   #To ignore the warnings during usage
   options(warn=-1)

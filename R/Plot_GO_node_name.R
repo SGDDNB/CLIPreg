@@ -33,7 +33,7 @@ Plot_GO_node_name <-function(regulators=rbp_lfc,res=res,Targets=Targets,gene_gro
   if (class(rbp_lfc)=="character") {
     RBP_kept=rbp_lfc
   } else {
-    rbp_lfc=rbp_lfc[order(-abs(rbp_lfc$FoldChange)),]
+    rbp_lfc=rbp_lfc[order(-abs(rbp_lfc$Log2FoldChange)),]
     rbp_lfc=rbp_lfc[1:n,]
 
     RBP_kept=rownames(rbp_lfc)
