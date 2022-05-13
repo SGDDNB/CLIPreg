@@ -206,8 +206,8 @@ Targets[c("POLR2G","PPIL4","SBDS")]
 
 Load the fold change and identify the RBPs. If you have your own then
 provide your own data. ribo\_lfc has 3 variables : “geneID”,
-“IDENTIFIER” and “FoldChange”. ribo\_lfc only contains genes that
-have been filtered to be significantly changing at the ribo level.
+“IDENTIFIER” and “Log2FoldChange”. ribo\_lfc only contains genes
+that have been filtered to be significantly changing at the ribo level.
 tpm\_ribo must have only counts as columns and geneID as rownames
 
 ``` r
@@ -216,13 +216,13 @@ data("ribo_lfc")
 data("tpm_ribo")
 
 head(ribo_lfc)
-#>                          geneID IDENTIFIER FoldChange
-#> ENSG00000000003 ENSG00000000003     TSPAN6  0.3669041
-#> ENSG00000000419 ENSG00000000419       DPM1  0.1026692
-#> ENSG00000000457 ENSG00000000457      SCYL3 -0.4238081
-#> ENSG00000000971 ENSG00000000971        CFH -0.2162611
-#> ENSG00000001084 ENSG00000001084       GCLC -0.1003380
-#> ENSG00000001461 ENSG00000001461     NIPAL3 -0.3866424
+#>                          geneID IDENTIFIER Log2FoldChange
+#> ENSG00000000003 ENSG00000000003     TSPAN6      0.3669041
+#> ENSG00000000419 ENSG00000000419       DPM1      0.1026692
+#> ENSG00000000457 ENSG00000000457      SCYL3     -0.4238081
+#> ENSG00000000971 ENSG00000000971        CFH     -0.2162611
+#> ENSG00000001084 ENSG00000001084       GCLC     -0.1003380
+#> ENSG00000001461 ENSG00000001461     NIPAL3     -0.3866424
 head(tpm_ribo[,1:4])
 #>                 H24M00_24  H02M00_24   H00M45_24  H06M00_24
 #> ENSG00000186092  0.000000  0.0000000  0.00000000  0.0000000
@@ -330,13 +330,13 @@ keep the changing ones.
 # Change of RBPs
 rbp_lfc=rbp_change(res=res,ribo_lfc=ribo_lfc)
 head(rbp_lfc)
-#>                  geneID IDENTIFIER  FoldChange
-#> FKBP4   ENSG00000004478      FKBP4 -0.14794320
-#> AKAP8L  ENSG00000011243     AKAP8L -0.25094281
-#> PTBP1   ENSG00000011304      PTBP1 -0.06274011
-#> CELF2   ENSG00000048740      CELF2 -0.27227128
-#> FAM120A ENSG00000048828    FAM120A  0.07316692
-#> PUM2    ENSG00000055917       PUM2 -0.09197738
+#>                  geneID IDENTIFIER Log2FoldChange
+#> FKBP4   ENSG00000004478      FKBP4    -0.14794320
+#> AKAP8L  ENSG00000011243     AKAP8L    -0.25094281
+#> PTBP1   ENSG00000011304      PTBP1    -0.06274011
+#> CELF2   ENSG00000048740      CELF2    -0.27227128
+#> FAM120A ENSG00000048828    FAM120A     0.07316692
+#> PUM2    ENSG00000055917       PUM2    -0.09197738
 # Cure res data by removing RBPs that are not in the rbp_lfc dataframe
 res=cure_res(res=res,regulators=rbp_lfc)
 head(res[[1]])
@@ -396,7 +396,7 @@ names to deltaTE groups.
 
 ``` r
 # Bubble plot gene_groups if gene_groups are from DeltaTE. FDR has to be lower or equal to the FDR put in CLIPreg::combine() step
-BubbleRBPs(res = res,gene_groups = gene_groups,rbp_lfc = rbp_lfc,FDR=0.05)
+BubbleRBPs(res = res,gene_groups = gene_groups,FDR=0.05)
 ```
 
 ![](man/figures/README-Bubble%20plot-1.png)<!-- -->
@@ -619,25 +619,25 @@ res_HeLa=CLIPreg::combine(res1=res_Encode_HeLa,res2=res_Postar_HeLa,FDR=0.05)
 rbp_lfc=rbp_change(res=res_HeLa,ribo_lfc=ribo_lfc) # None of the RBP are changing
 res_HeLa=cure_res(res=res_HeLa,regulators=rbp_lfc)
 rbp_lfc
-#>                  geneID IDENTIFIER  FoldChange
-#> FKBP4   ENSG00000004478      FKBP4 -0.14794320
-#> AKAP8L  ENSG00000011243     AKAP8L -0.25094281
-#> FAM120A ENSG00000048828    FAM120A  0.07316692
-#> YBX3    ENSG00000060138       YBX3  0.04605895
-#> DDX24   ENSG00000089737      DDX24 -0.02952209
-#> TIA1    ENSG00000116001       TIA1 -0.17198740
-#> GTF2F1  ENSG00000125651     GTF2F1  0.05483682
-#> ILF3    ENSG00000129351       ILF3 -0.06083720
-#> PPIL4   ENSG00000131013      PPIL4  0.19073440
-#> ZRANB2  ENSG00000132485     ZRANB2  0.18935468
-#> TBRG4   ENSG00000136270      TBRG4 -0.18033802
-#> SLTM    ENSG00000137776       SLTM -0.11829053
-#> LSM11   ENSG00000155858      LSM11  0.26538760
-#> SUPV3L1 ENSG00000156502    SUPV3L1  0.06192888
-#> LARP4   ENSG00000161813      LARP4 -0.15813233
-#> CSTF2T  ENSG00000177613     CSTF2T  0.17996868
-#> EWSR1   ENSG00000182944      EWSR1  0.04042333
-#> PCBP2   ENSG00000197111      PCBP2 -0.06077447
+#>                  geneID IDENTIFIER Log2FoldChange
+#> FKBP4   ENSG00000004478      FKBP4    -0.14794320
+#> AKAP8L  ENSG00000011243     AKAP8L    -0.25094281
+#> FAM120A ENSG00000048828    FAM120A     0.07316692
+#> YBX3    ENSG00000060138       YBX3     0.04605895
+#> DDX24   ENSG00000089737      DDX24    -0.02952209
+#> TIA1    ENSG00000116001       TIA1    -0.17198740
+#> GTF2F1  ENSG00000125651     GTF2F1     0.05483682
+#> ILF3    ENSG00000129351       ILF3    -0.06083720
+#> PPIL4   ENSG00000131013      PPIL4     0.19073440
+#> ZRANB2  ENSG00000132485     ZRANB2     0.18935468
+#> TBRG4   ENSG00000136270      TBRG4    -0.18033802
+#> SLTM    ENSG00000137776       SLTM    -0.11829053
+#> LSM11   ENSG00000155858      LSM11     0.26538760
+#> SUPV3L1 ENSG00000156502    SUPV3L1     0.06192888
+#> LARP4   ENSG00000161813      LARP4    -0.15813233
+#> CSTF2T  ENSG00000177613     CSTF2T     0.17996868
+#> EWSR1   ENSG00000182944      EWSR1     0.04042333
+#> PCBP2   ENSG00000197111      PCBP2    -0.06077447
 ```
 
 As we can see, none of the RBP are changing. If you still want to plot
@@ -861,13 +861,13 @@ df=read.csv(file)
 df[which(is.na(df),arr.ind = T)]=1
 
 geneNames=unique(df$IDENTIFIER)
-ribo_lfc=data.frame(IDENTIFIER=geneNames,FoldChange=0)
+ribo_lfc=data.frame(IDENTIFIER=geneNames,Log2FoldChange=0)
 
 for (i in 1:nrow(df)) {
   lowest_pval=min(df[i,6:8])
   if (lowest_pval<0.05) {
     lowest_pval_index=which(df[i,6:8]==min(df[i,6:8]))[1]
-    ribo_lfc[ribo_lfc$IDENTIFIER==df$IDENTIFIER[i],"FoldChange"]=df[i,lowest_pval_index+2]
+    ribo_lfc[ribo_lfc$IDENTIFIER==df$IDENTIFIER[i],"Log2FoldChange"]=df[i,lowest_pval_index+2]
   }
 }
 
