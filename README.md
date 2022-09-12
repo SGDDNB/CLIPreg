@@ -383,7 +383,7 @@ Suggestion for saving your heatmap
 # Save the heatmap
 p=HeatmapRBP(res=res,rbp_lfc=rbp_lfc)
 location="Heatmap_fibroblasts.pdf"
-n=length(p$tree_row$order)
+n=length(p@ht_list$`RBP direction`@matrix)
 pdf(location,length(names(res)),3+n*0.15)
 p
 dev.off()
